@@ -1,0 +1,128 @@
+SystemGenerators: 
+  description: Generators for electricity generation only. Electricity production sources are limited to Renewables, Nuclear, Natural Gas, Hydrogen, Hydro, Coal, Lignite, Oil.
+  sources: 
+    - Renewables
+    - Nuclear
+    - Natural Gas
+    - Hydrogen
+    - Hydro
+    - Coal
+    - Lignite
+    - Oil
+  class: Generator
+
+SystemBatteries: 
+  description: Contains batteries used for electricity storage. Propeties include, Battery Generation and Battery Load
+  sources: 
+    - Residential Batteries
+    - Tertiary Batteries
+    - Utility Batteries
+  class: Battery
+
+SystemPower2X: 
+  description: Contains electrolysers used for converting electricity to hydrogen.
+  sources: 
+    - H2 Import Electrolysers
+    - Offshore Electrolysers
+    - Hydrogen Market Electrolysers
+    - Industrial Electrolysers
+  class: Power2X
+
+SystemRegions: 
+  description: Contains Electricity Regions
+  sources: 
+    - Electricity Regions
+  class: Region
+
+SystemNodes: 
+  description: Contains nodes for the electricity system, including residential, tertiary, industry, transport and AI. Properties include, Power demand, Price and Unserved energy.
+  sources: 
+    - Residential
+    - Tertiary
+    - Industry
+    - Transport
+    - AI
+  class: Node
+
+SystemLines: 
+  description: Contains electricity lines including market connecting to sectors. Properties are flows and grid capacities
+  sources: 
+    - Market Connections
+    - Connection from sectors to electricity market
+  class: Line
+
+SystemHeatPlants: 
+  description: Contains hybrid heating plants for dwellings with methane boilers and electricity heat pumps
+  sources: 
+    - Methane Boilers
+    - Electricity Heat Pumps
+  class: HeatPlant
+
+SystemHeatNodes: 
+  description: Contains heating nodes from space and water heating
+  sources: 
+    - Space Heating
+    - Water Heating
+  class: HeatNode
+
+SystemGasFields: 
+  description: Contains gas fields for Hydrogen, Methane and CO".
+  categories: 
+    - H2 Imports
+    - White Hydrogen
+    - Biogenic CO2
+    - Biomethane
+    - Natural Gas
+  sources: 
+    - Hydrogen
+    - Methane
+    - CO2
+  class: Gas Field
+
+SystemGasPlants: 
+  description: These are production plants for Methonol and Kerosene production. Also contains Steam Methane Reforming (SMR), converting methane to hydrogen.
+  sources: 
+    - Methonol Production
+    - Kerosene Production
+    - Steam Methane Reforming
+  class: Gas Plant
+
+SystemGasPipelines: 
+  description: Contains pipelines for Hydrogen including imports, methane, CO2, ekerosene and methonol
+  sources: 
+    - Hydrogen
+    - Methane
+    - CO2
+    - Ekerosene
+    - Methonol
+  class: Gas Pipeline
+
+SystemGasNodes: 
+  description: Contains gas nodes for hydrogen, methane, CO2, ekerosene and methonol
+  sources: 
+    - Hydrogen
+    - Methane
+    - CO2
+    - Ekerosene
+    - Methonol
+  class: Gas Node
+
+SystemGasStorages: 
+  description: Contains gas storages for hydrogen, methane, CO2, ekerosene and methonol
+  sources: 
+    - Hydrogen
+    - Methane
+    - CO2
+    - Ekerosene
+    - Methonol
+  class: Gas Storage
+
+SystemGasDemands: 
+  description: Contains gas demands for hydrogen, methane, CO2, ekerosene and methonol
+  sources: 
+    - Hydrogen
+    - Methane
+    - CO2
+    - Ekerosene
+    - Methonol
+  class: Gas Demand

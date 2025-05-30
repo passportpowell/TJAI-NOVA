@@ -1,0 +1,266 @@
+{
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "ivan_agent",
+        "options": {
+          "responseMode": "lastNode"
+        },
+        "authentication": "none"
+      },
+      "name": "Ivan Agent Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [200, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Global configuration for Ivan agent\nreturn {\n  json: {\n    config: {\n      llmApiUrl: 'https://api.openai.com/v1/chat/completions',\n      technicalModel: 'gpt-4',\n      knowledgeBasePath: './knowledge_db',\n      imageApiUrl: 'https://api.openai.com/v1/images/generations'\n    }\n  }\n};"
+      },
+      "name": "Ivan Configuration",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 1,
+      "position": [200, 150]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Process incoming task for Ivan\nconst data = $input.json;\nconst task = data.body.task;\nconst sessionId = data.body.sessionId;\n\nif (!task || !sessionId) {\n  throw new Error('Missing required parameters: task and sessionId');\n}\n\n// Determine the type of technical task\nlet taskType = 'unknown';\nconst taskDesc = task.description.toLowerCase();\n\nif (taskDesc.includes('image') || taskDesc.includes('visualization') || taskDesc.includes('diagram')) {\n  taskType = 'image_generation';\n} else if (taskDesc.includes('code') || taskDesc.includes('script') || taskDesc.includes('implement')) {\n  taskType = 'code_generation';\n} else if (taskDesc.includes('technical') || taskDesc.includes('specification')) {\n  taskType = 'technical_documentation';\n}\n\nreturn {\n  json: {\n    task,\n    sessionId,\n    taskType\n  }\n};"
+      },
+      "name": "Process Ivan Task",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 1,
+      "position": [400, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$json.taskType}}",
+              "operation": "equals",
+              "value2": "image_generation"
+            }
+          ]
+        }
+      },
+      "name": "Task Type?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [600, 300]
+    },
+    {
+      "parameters": {
+        "url": "={{$node[\"Ivan Configuration\"].json.config.llmApiUrl}}",
+        "method": "POST",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "Authorization",
+              "value": "Bearer sk-proj"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "model",
+              "value": "={{$node[\"Ivan Configuration\"].json.config.technicalModel}}"
+            },
+            {
+              "name": "messages",
+              "value": "=[{\"role\":\"system\",\"content\":\"You are a technical specialist skilled in writing code, creating specifications, and implementing solutions. Generate high-quality code or technical documentation as requested.\"},{\"role\":\"user\",\"content\":$node[\"Process Ivan Task\"].json.task.description}]"
+            },
+            {
+              "name": "temperature",
+              "value": "0.2"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Generate Code/Docs",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [800, 400]
+    },
+    {
+      "parameters": {
+        "url": "={{$node[\"Ivan Configuration\"].json.config.imageApiUrl}}",
+        "method": "POST",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "Authorization",
+              "value": "Bearer YOUR_API_KEY"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "prompt",
+              "value": "={{$node[\"Process Ivan Task\"].json.task.description}}"
+            },
+            {
+              "name": "n",
+              "value": "1"
+            },
+            {
+              "name": "size",
+              "value": "1024x1024"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Generate Image",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [800, 200]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Process image generation results\nconst imageResponse = $input.json;\n\n// Format the response with image URL(s)\nconst images = imageResponse.data || [];\nconst imageUrls = images.map(img => img.url || 'Image URL not available');\n\n// Update task status\nconst task = $node[\"Process Ivan Task\"].json.task;\nconst updatedTask = { ...task };\nupdatedTask.status = 'completed';\nupdatedTask.result = {\n  type: 'image',\n  imageUrls,\n  generatedAt: new Date().toISOString(),\n  prompt: task.description\n};\n\nreturn {\n  json: {\n    success: true,\n    message: \"Image generated successfully\",\n    task: updatedTask,\n    sessionId: $node[\"Process Ivan Task\"].json.sessionId\n  }\n};"
+      },
+      "name": "Process Image Results",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 1,
+      "position": [1000, 200]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Process code or technical documentation results\nconst llmResponse = $input.json;\nconst technicalResponse = llmResponse.choices[0].message.content;\n\n// Extract code blocks if present\nlet codeBlocks = [];\nlet regex = /```([\\s\\S]*?)```/g;\nlet match;\n\nwhile ((match = regex.exec(technicalResponse)) !== null) {\n  codeBlocks.push(match[1]);\n}\n\n// Update task status\nconst task = $node[\"Process Ivan Task\"].json.task;\nconst updatedTask = { ...task };\nupdatedTask.status = 'completed';\nupdatedTask.result = {\n  type: $node[\"Process Ivan Task\"].json.taskType,\n  content: technicalResponse,\n  codeBlocks: codeBlocks.length > 0 ? codeBlocks : null,\n  generatedAt: new Date().toISOString()\n};\n\nreturn {\n  json: {\n    success: true,\n    message: \"Technical content generated successfully\",\n    task: updatedTask,\n    sessionId: $node[\"Process Ivan Task\"].json.sessionId\n  }\n};"
+      },
+      "name": "Process Code Results",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 1,
+      "position": [1000, 400]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Store result in knowledge base\nconst { task, sessionId } = $input.json;\n\n// Simulate storing to knowledge base\nconsole.log(`Storing technical result for task ${task.id} to knowledge base for session ${sessionId}`);\n\nreturn {\n  json: {\n    success: true,\n    message: \"Technical result stored in knowledge base\",\n    task\n  }\n};"
+      },
+      "name": "Store in Knowledge Base",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 1,
+      "position": [1200, 300]
+    },
+    {
+      "parameters": {},
+      "name": "Return Ivan Result",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [1400, 300]
+    }
+  ],
+  "connections": {
+    "Ivan Agent Webhook": {
+      "main": [
+        [
+          {
+            "node": "Process Ivan Task",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Process Ivan Task": {
+      "main": [
+        [
+          {
+            "node": "Task Type?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Task Type?": {
+      "main": [
+        [
+          {
+            "node": "Generate Image",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Generate Code/Docs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Image": {
+      "main": [
+        [
+          {
+            "node": "Process Image Results",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Code/Docs": {
+      "main": [
+        [
+          {
+            "node": "Process Code Results",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Process Image Results": {
+      "main": [
+        [
+          {
+            "node": "Store in Knowledge Base",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Process Code Results": {
+      "main": [
+        [
+          {
+            "node": "Store in Knowledge Base",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Store in Knowledge Base": {
+      "main": [
+        [
+          {
+            "node": "Return Ivan Result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  }
+}

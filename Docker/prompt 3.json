@@ -1,0 +1,14 @@
+{
+  "name": "Merge Prompt + Classification",
+  "type": "n8n-nodes-base.merge",
+  "typeVersion": 1,
+  "position": [
+    -2080,
+    1180
+  ],
+  "parameters": {
+    "mode": "combine",
+    "combineBy": "position",
+    "outputDataFrom": "input1input2"
+  }
+}

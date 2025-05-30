@@ -1,0 +1,6 @@
+Key,Function,dev_version,live_version,Name,Input 1,Description
+iterate_and_print_steps,sandbox.iterate_and_print_steps.iterate_and_print_steps,v2.0,,iterate_and_print_steps,"A script to iterate numbers from 1 up to an input variable value, printing each number with a prefix 'Step: ' on separate lines.",['end_number']
+print_steps,sandbox.print_steps.print_steps,v4.0,,print_steps,"A script to iterate from 1 to a user-inputted number, printing each step with a prefix 'Step: '.",['end_number']
+display_steps,sandbox.display_steps.display_steps,v7.0,,display_steps,"A script to iterate from 1 to a user-defined number, formatting the output with a prefix for each iteration.",['user_defined_number']
+generate_steps,sandbox.generate_steps.generate_steps,v1.0,,generate_steps,"A Python script that dynamically generates a series of steps based on a user-defined input, iterating from 1 up to a specified number and printing each step in sequence with the iteration number prefixed by ""Step:"".",['end']
+print_iteration_steps,sandbox.print_iteration_steps.print_iteration_steps,v2.0,,print_iteration_steps,"A script to dynamically iterate from 1 up to a user-specified number, printing each step.",['upper_limit']

@@ -1,0 +1,717 @@
+{
+  "nodes": [
+    {
+      "parameters": {
+        "language": "python",
+        "pythonCode": "from datetime import datetime\n\ndata = items[0]['json']\n\nprompt = (\n    data.get('chatInput')\n    or data.get('message')\n    or data.get('prompt')\n    or \"No prompt\"\n)\n\nhistory = data.get('history', [])\ntimestamp = datetime.utcnow().isoformat()\nsession_id = str(int(datetime.utcnow().timestamp() * 1000))\n\nreturn [{\n    \"json\": {\n        \"prompt\": prompt,\n        \"history\": history,\n        \"timestamp\": timestamp,\n        \"sessionId\": session_id\n    }\n}]\n"
+      },
+      "id": "8a93690d-0448-4710-be63-6b6b03c95405",
+      "name": "Prepare Internal Input",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -3300,
+        1180
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "passThrough"
+      },
+      "id": "6abaddb3-f7ff-4c91-962d-0682d90f4bf8",
+      "name": "Merge Inputs",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 1,
+      "position": [
+        -3080,
+        1180
+      ]
+    },
+    {
+      "parameters": {
+        "dataType": "string",
+        "value1": "={{ $json.routeTo }}",
+        "rules": {
+          "rules": [
+            {
+              "value2": "Emil"
+            },
+            {
+              "value2": "Ivan",
+              "output": 1
+            },
+            {
+              "value2": "Lola",
+              "output": 2
+            },
+            {
+              "value2": "Nova",
+              "output": 3
+            }
+          ]
+        }
+      },
+      "id": "738ac85c-0ada-482e-bfb1-1cb3333ea2de",
+      "name": "Route to Agent",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 1,
+      "position": [
+        -1448,
+        1159
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "{{ $json }}\n",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Content-Type",
+                "value": "text/html"
+              }
+            ]
+          }
+        }
+      },
+      "id": "826996f8-565f-4e23-8c9c-8af439f5e82d",
+      "name": "Return Agent Response",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [
+        248,
+        1180
+      ]
+    },
+    {
+      "parameters": {
+        "language": "python",
+        "pythonCode": "from datetime import datetime\nimport re\n\ndata = items[0].get('json', {})\n\nprompt_raw = data.get('prompt', '')\nprompt = prompt_raw.lower()\ntimestamp = data.get('timestamp', datetime.utcnow().isoformat())\nsession_id = data.get('sessionId', 'unknown')\n\nresponse = \"🤖 Emil is ready, but no recognizable action was found.\"\ncountry = \"a specified region\"\n\nwords = prompt.split()\nindex_build = next((i for i, word in enumerate(words) if \"build\" in word), -1)\nindex_analyse = next((i for i, word in enumerate(words) if \"analyse\" in word), -1)\n\ndef find_capitalized_word(start_index):\n    for word in words[start_index + 1:]:\n        if re.match(r\"^[A-Z]\", word):  # Capitalized word heuristic\n            return word\n    return \"a specified region\"\n\nif index_build != -1 and len(words) > index_build + 2:\n    country = find_capitalized_word(index_build)\n    response = f\"🏗️ Building model for {country}\"\nelif index_analyse != -1 and len(words) > index_analyse + 2:\n    country = find_capitalized_word(index_analyse)\n    response = f\"📊 Analysing data for {country}\"\n\nreturn [{\n    \"json\": {\n        \"agent\": \"Emil\",\n        \"response\": response,\n        \"prompt\": prompt_raw,\n        \"timestamp\": timestamp,\n        \"sessionId\": session_id\n    }\n}]\n"
+      },
+      "id": "ec15bbc9-414c-44f3-8df6-9351f6359494",
+      "name": "Emil Result Handler",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -412,
+        880
+      ]
+    },
+    {
+      "parameters": {
+        "language": "python",
+        "pythonCode": "from datetime import datetime\n\ndata = items[0].get('json', {})\n\nprompt_raw = data.get('prompt', '')\nprompt = prompt_raw.lower()\ntimestamp = data.get('timestamp', datetime.utcnow().isoformat())\nsession_id = data.get('sessionId', 'unknown')\n\nresponse = \"🤖 Ivan is ready, but no recognizable task was found.\"\n\nif \"chart\" in prompt or \"graph\" in prompt or \"image\" in prompt or \"visual\" in prompt:\n    response = \"📊 Creating a chart or image based on the prompt...\"\nelif \"script\" in prompt or \"python\" in prompt or \"code\" in prompt:\n    response = \"💻 Generating a Python script or code snippet for your task...\"\n\nreturn [{\n    \"json\": {\n        \"agent\": \"Ivan\",\n        \"response\": response,\n        \"prompt\": prompt_raw,\n        \"timestamp\": timestamp,\n        \"sessionId\": session_id\n    }\n}]\n"
+      },
+      "id": "a888a550-8a32-47e8-bc48-887cc575a066",
+      "name": "Ivan Result Handler",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -412,
+        1080
+      ]
+    },
+    {
+      "parameters": {
+        "language": "python",
+        "pythonCode": "from datetime import datetime\n\ndata = items[0].get('json', {})\n\nprompt_raw = data.get('prompt', '')\nprompt = prompt_raw.lower()\ntimestamp = data.get('timestamp', datetime.utcnow().isoformat())\nsession_id = data.get('sessionId', 'unknown')\n\nresponse = \"🤖 Lola is ready, but no recognizable writing task was found.\"\n\n# Detect writing-related tasks\nif any(word in prompt for word in [\"report\", \"summary\", \"summarize\", \"draft\", \"write\", \"document\"]):\n    response = \"📝 Drafting a report or written summary based on your request...\"\nelif any(word in prompt for word in [\"proofread\", \"edit\", \"refine\", \"rephrase\"]):\n    response = \"✍️ Reviewing and improving the provided text...\"\n\nreturn [{\n    \"json\": {\n        \"agent\": \"Lola\",\n        \"response\": response,\n        \"prompt\": prompt_raw,\n        \"timestamp\": timestamp,\n        \"sessionId\": session_id\n    }\n}]\n"
+      },
+      "id": "d768eeb3-76f3-4d74-8deb-32b21ea89a73",
+      "name": "Lola Result Handler",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -412,
+        1280
+      ]
+    },
+    {
+      "parameters": {
+        "language": "python",
+        "pythonCode": "from datetime import datetime\n\ndata = items[0].get('json', {})\n\nresult = data.get('response', 'No response')\nprompt = data.get('prompt', '')\ntimestamp = data.get('timestamp', datetime.utcnow().isoformat())\nsession_id = data.get('sessionId', 'unknown')\n\nreturn [{\n    \"json\": {\n        \"agent\": \"Nova\",\n        \"response\": result,\n        \"prompt\": prompt,\n        \"timestamp\": timestamp,\n        \"sessionId\": session_id\n    }\n}]\n"
+      },
+      "id": "5dd3c9df-6cfe-487c-8638-e65257a085fd",
+      "name": "Nova Result Handler",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -412,
+        1480
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "wCP9jJ9Go2cUuDyM",
+          "mode": "list",
+          "cachedResultName": "Emil"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {
+          "waitForSubWorkflow": false
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        -632,
+        880
+      ],
+      "id": "674a3bf9-db09-4676-9cfd-270179e497b7",
+      "name": "Execute Emil"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "IqQJPBNlxLtN9o12",
+          "mode": "list",
+          "cachedResultName": "Ivan"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {
+          "waitForSubWorkflow": false
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        -632,
+        1080
+      ],
+      "id": "0a951cb8-5821-4ac7-9906-7dfd61d694b8",
+      "name": "Execute Ivan"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "7KAw7rjPD9u8SNfj",
+          "mode": "list",
+          "cachedResultName": "Lola"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {
+          "waitForSubWorkflow": false
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        -632,
+        1280
+      ],
+      "id": "c84530d8-a512-4239-b56d-66ca62c93e02",
+      "name": "Execute Lola"
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "language": "python",
+        "pythonCode": "from datetime import datetime\n\ndata = item.get('json', {})\n\nprompt = data.get('prompt', 'No prompt received')\nhistory = data.get('history', [])\nsession_id = data.get('sessionId', 'unknown-session')\ntimestamp = data.get('timestamp', datetime.utcnow().isoformat())\n\nreturn {\n    \"json\": {\n        \"prompt\": prompt,\n        \"history\": history,\n        \"sessionId\": session_id,\n        \"timestamp\": timestamp\n    }\n}\n"
+      },
+      "id": "1ee2a7f3-bfe9-40b3-87e1-6328c307970b",
+      "name": "Nova Prepare Input",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1228,
+        1480
+      ]
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4.1-nano",
+          "mode": "list",
+          "cachedResultName": "GPT-4.1-NANO"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "You are Nova, a multi-agent coordination assistant. Your primary role is to understand user requests, identify intents, and coordinate the appropriate specialized agents to fulfill these requests.\n\n### Your Core Responsibilities:\n1. Understand the user's complete request\n2. Identify discrete intents if multiple tasks are mentioned\n3. For each intent, determine the most appropriate agent and function\n4. Maintain conversation context for follow-up questions\n5. Provide direct, accurate, and helpful responses\n\n### Agent System:\nYou coordinate with four specialized agents:\n\n- **Nova** (That's you):\n  - General reasoning and knowledge questions\n  - Mathematical calculations\n  - Web searches when needed\n  - Conversation management\n  - Opening websites\n\n- **Emil**:\n  - Energy modeling (PLEXOS, XMLs, capacity setups)\n  - Data analysis and technical processing\n  - Parameter extraction and scenario definition\n  - Data Analysis\n  - Results analysis\n\n- **Lola**:\n  - Report generation and formatting\n  - Copywriting and proofreading\n  - Summary creation\n  - Natural language processing and refinement\n\n- **Ivan**:\n  - Image generation and visualization\n  - Python script development\n  - Technical code implementation\n\n### Response Guidelines:\n- Be clear, concise, and accurate\n- Maintain contextual awareness across interactions\n- For multi-intent queries, address all parts in a structured manner\n- Show your work for calculations and technical questions\n- If knowledge is insufficient, acknowledge limitations and offer to search\n- Always prioritize the most helpful and accurate response\n\n### Examples:\n\nExample 1: General Knowledge\nUser: \"What is the capital of France?\"\nYou: [Provide direct answer about Paris with key facts]\n\nExample 2: Multi-Intent Request\nUser: \"Build an energy model for solar in Spain and write a report on the results\"\nProcessing:\n- Intent 1: \"Build an energy model for solar in Spain\" → Emil (energy modeling)\n- Intent 2: \"Write a report on the results\" → Lola (report generation)\n\nExample 3: Follow-up Question\nUser: \"What was discussed in session 3?\"\nYou: [Retrieve and summarize the conversation from session 3]\n\nExample 4: Technical Query\nUser: \"What's 237 × 45?\"\nYou: [Calculate and show the working: 237 × 45 = 10,665]\n\nExample 5: Energy Modeling\nUser: \"Run a model for solar and wind generation in Germany\"\nYou: [Determine this requires Emil for energy modeling, identify parameters needed (location: Germany, generation: solar,wind)]\n\nFor structured task assignment, use the following JSON format:\n```json\n{\n  \"intents\": [\n    {\n      \"intent\": \"Specific user sub-task or instruction\",\n      \"agent\": \"AgentName\",\n      \"function\": \"exact_function_name\"\n    }\n  ]\n}",
+              "role": "system"
+            },
+            {
+              "content": "={{ $json.prompt }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "7883d787-5ecf-4fe4-8526-959b6daecbcb",
+      "name": "Nova OpenAI Answer",
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        -1008,
+        1480
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "s2LqJsvl4DbHnCTw",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "language": "python",
+        "pythonCode": "from datetime import datetime\n\ndata = items[0].get('json', {})\n\n# Safely extract response content\nai_response = data.get('message', {}).get('content', 'No response')\nprompt = data.get('prompt', '')\nsession_id = data.get('sessionId', 'unknown')\ntimestamp = data.get('timestamp', datetime.utcnow().isoformat())\n\nreturn [{\n    \"json\": {\n        \"agent\": \"Nova\",\n        \"response\": ai_response,\n        \"prompt\": prompt,\n        \"timestamp\": timestamp,\n        \"sessionId\": session_id\n    }\n}]\n"
+      },
+      "id": "3dc9ee3b-9151-437a-9810-4930c3b1aa76",
+      "name": "Nova Format Output",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -632,
+        1480
+      ]
+    },
+    {
+      "parameters": {
+        "public": true,
+        "initialMessages": "Hi there,\n\nMy name is NOVA and I will be your coordinator today. How can I help?",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -3520,
+        1180
+      ],
+      "id": "abb2baa5-6b1e-4a64-828b-a6300cfb4fbf",
+      "name": "When chat message received",
+      "webhookId": "e47d6724-c354-4791-aef6-877d7b992b07"
+    },
+    {
+      "parameters": {
+        "numberInputs": 4
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.1,
+      "position": [
+        -192,
+        1159
+      ],
+      "id": "54a397a5-3915-489f-9211-19de37cdca6f",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "jsCode": "const texts = [];\n\nfor (const item of items) {\n  const data = item.json || {};\n  const agent = data.agent || '';\n  const response = data.response || '';\n\n  if (agent) {\n    texts.push(`<strong>🧠 ${agent}:</strong><br>${response.replace(/\\n/g, '<br>')}`);\n  } else if (response) {\n    texts.push(response.replace(/\\n/g, '<br>'));\n  }\n}\n\nconst combinedResponse = texts.join('<br><br>');\n\nreturn [{\n  json: {\n    html: combinedResponse  // ✅ wrapped manually\n  }\n}];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        28,
+        1180
+      ],
+      "id": "d633bb63-4a77-498c-b4dd-a619db8eed89",
+      "name": "Combined Resposne"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4.1-nano",
+          "mode": "list",
+          "cachedResultName": "GPT-4.1-NANO"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "\"messages\": {\n  \"values\": [\n    {\n      \"role\": \"system\",\n      \"content\": \"You are a prompt splitting assistant.\\n\\nYour job is to read a user's message and return a structured list of clearly separated tasks or intents.\\n\\nEach intent should be concise, complete, and free of overlapping parts. Output only a JSON array of the form:\\n[\\n  { \\\"prompt\\\": \\\"<intent 1>\\\" },\\n  { \\\"prompt\\\": \\\"<intent 2>\\\" }\\n]\\n\\nDo not include explanations or extra text. Just the JSON.\"\n    },\n    {\n      \"role\": \"user\",\n      \"content\": \"={{ $json.prompt }}\"\n    }\n  ]\n}\n",
+              "role": "system"
+            },
+            {
+              "content": "={{ $json.prompt }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "00b0f85b-da3d-4a90-96b8-e8042f555646",
+      "name": "Split Multiple Intents",
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        -2860,
+        1180
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "s2LqJsvl4DbHnCTw",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "language": "python",
+        "pythonCode": "import json\nfrom datetime import datetime\n\nresults = []\ntimestamp = datetime.utcnow().isoformat()\nsession_id = items[0]['json'].get('sessionId', f\"session-{int(datetime.utcnow().timestamp())}\")\nhistory = items[0]['json'].get('history', [])\n\n# Parse the stringified JSON from OpenAI\ntry:\n    prompt_list = json.loads(items[0]['json']['message']['content'])\nexcept Exception as e:\n    raise ValueError(f\"Failed to parse LLM response: {e}\")\n\n# Format each intent\nfor idx, entry in enumerate(prompt_list):\n    results.append({\n        \"json\": {\n            \"prompt\": entry['prompt'],\n            \"promptIndex\": idx,\n            \"sessionId\": session_id,\n            \"timestamp\": timestamp,\n            \"history\": history\n        }\n    })\n\nreturn results\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -2484,
+        1180
+      ],
+      "id": "f0066d7e-5bc5-4d87-869b-26282a7dbd1f",
+      "name": "Format Split Intents"
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "language": "python",
+        "pythonCode": "from datetime import datetime\nimport json\n\ndata = item.get('json', {})\n\nprompt = data.get('prompt', '')\nhistory = data.get('history', [])\ntimestamp = data.get('timestamp', datetime.utcnow().isoformat())\nsession_id = data.get('sessionId', 'unknown')\n\n# Parse LLM response\ntry:\n    llm_result = json.loads(data.get('message', {}).get('content', '{}'))\n    category = llm_result.get('category', 'general')\n    agent = llm_result.get('agent', 'Nova')\n    function = llm_result.get('function', 'answer_general_question')\nexcept Exception:\n    category = 'general'\n    agent = 'Nova'\n    function = 'answer_general_question'\n\nreturn {\n    \"json\": {\n        \"prompt\": prompt,\n        \"history\": history,\n        \"timestamp\": timestamp,\n        \"sessionId\": session_id,\n        \"category\": category,\n        \"routeTo\": agent,\n        \"function\": function\n    }\n}\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1668,
+        1180
+      ],
+      "id": "163a0084-a6ea-42e2-a1b3-a46fcae20cbb",
+      "name": "Format Split Intents1"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4.1-nano",
+          "mode": "list",
+          "cachedResultName": "GPT-4.1-NANO"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "You are a smart assistant that classifies user prompts into structured task instructions.\n\nEach prompt must be analyzed for:\n1. The task **category** (e.g., energy_model, report, chart, code, math, general_question)\n2. The appropriate **agent** to handle it (Emil, Lola, Ivan, Nova)\n3. The function that should be used (e.g., process_emil_request, write_report, generate_python_script)\n\nAvailable agents and their responsibilities:\n\n- **Emil**:\n  - Builds and runs energy models (e.g., PLEXOS)\n  - Performs data analysis and simulations\n  - Extracts parameters like location, generation type, energy carrier\n  - Functions: `process_emil_request`, `analyze_results`\n\n- **Lola**:\n  - Writes reports or summaries\n  - Refines or proofreads content\n  - Functions: `write_report`, `copywrite`, `proofread`\n\n- **Ivan**:\n  - Generates visualizations or Python scripts\n  - Functions: `generate_python_script`, `generate_image`\n\n- **Nova**:\n  - General reasoning, math, chat, and web browsing\n  - Functions: `do_maths`, `ai_chat_session`, `open_website`, `answer_general_question`\n\nYour response **must be a JSON object** in the following format:\n\n```json\n{\n  \"category\": \"<task_category>\",\n  \"agent\": \"<agent_name>\",\n  \"function\": \"<function_name>\"\n}\n",
+              "role": "system"
+            },
+            {
+              "content": "={{ $json.prompt }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "182f7a69-df45-4faa-94fa-3e1934d34615",
+      "name": "Categorize Prompt1",
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        -2264,
+        1255
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "s2LqJsvl4DbHnCTw",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.1,
+      "position": [
+        -1888,
+        1180
+      ],
+      "id": "f074bf7d-5490-4379-a3be-39f8b6464d0f",
+      "name": "Merge Prompt + Classification"
+    }
+  ],
+  "connections": {
+    "Prepare Internal Input": {
+      "main": [
+        [
+          {
+            "node": "Merge Inputs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge Inputs": {
+      "main": [
+        [
+          {
+            "node": "Split Multiple Intents",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Route to Agent": {
+      "main": [
+        [
+          {
+            "node": "Execute Emil",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Execute Ivan",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Execute Lola",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Nova Prepare Input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Emil Result Handler": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ivan Result Handler": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Lola Result Handler": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 2
+          }
+        ]
+      ]
+    },
+    "Nova Result Handler": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 3
+          }
+        ]
+      ]
+    },
+    "Execute Emil": {
+      "main": [
+        [
+          {
+            "node": "Emil Result Handler",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute Ivan": {
+      "main": [
+        [
+          {
+            "node": "Ivan Result Handler",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute Lola": {
+      "main": [
+        [
+          {
+            "node": "Lola Result Handler",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Nova Prepare Input": {
+      "main": [
+        [
+          {
+            "node": "Nova OpenAI Answer",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Nova OpenAI Answer": {
+      "main": [
+        [
+          {
+            "node": "Nova Format Output",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Nova Format Output": {
+      "main": [
+        [
+          {
+            "node": "Nova Result Handler",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "Prepare Internal Input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Combined Resposne",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Combined Resposne": {
+      "main": [
+        [
+          {
+            "node": "Return Agent Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Multiple Intents": {
+      "main": [
+        [
+          {
+            "node": "Format Split Intents",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format Split Intents": {
+      "main": [
+        [
+          {
+            "node": "Merge Prompt + Classification",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Categorize Prompt1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format Split Intents1": {
+      "main": [
+        [
+          {
+            "node": "Route to Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Categorize Prompt1": {
+      "main": [
+        [
+          {
+            "node": "Merge Prompt + Classification",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Merge Prompt + Classification": {
+      "main": [
+        [
+          {
+            "node": "Format Split Intents1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "meta": {
+    "instanceId": "42b14e125a07b4268f5179226a03439d17b657e140781a38da9546beb98e0073"
+  }
+}

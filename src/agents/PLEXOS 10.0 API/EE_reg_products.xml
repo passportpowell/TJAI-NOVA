@@ -1,0 +1,603 @@
+<?xml version="1.0" standalone="yes"?>
+<DocumentElement>
+  <Products>
+  	<ID>1</ID>
+		<ProductName>MASTER</ProductName>
+		<Version>2.0</Version>
+  </Products>
+  <Products>
+  	<ID>2</ID>
+		<ProductName>MOSEK Base Product</ProductName>
+		<Version>2.0</Version>
+  </Products>
+  <Products>
+  	<ID>3</ID>
+		<ProductName>PLEXOS Support for MOSEK</ProductName>
+		<Version>2.0</Version>
+  </Products>
+  <Products>
+  	<ID>4</ID>
+		<ProductName>MOSEK Mixed Integer</ProductName>
+		<Version>2.0</Version>
+  </Products>
+  <Products>
+  	<ID>5</ID>
+		<ProductName>PLEXOS Interface</ProductName>
+		<Version>2.0</Version>
+	</Products>
+  <Products>
+  	<ID>6</ID>
+		<ProductName>PLEXOS Diagnostics</ProductName>
+		<Version>2.0</Version>
+	</Products>
+  <Products>
+  	<ID>7</ID>
+		<ProductName>PLEXOS Base Product</ProductName>
+		<Version>2.0</Version>
+	</Products>
+  <Products>
+  	<ID>8</ID>
+		<ProductName>PLEXOS Module 1</ProductName>
+		<Version>2.0</Version>
+	</Products>
+  <Products>
+  	<ID>9</ID>
+		<ProductName>PLEXOS Module 2</ProductName>
+		<Version>2.0</Version>
+	</Products>
+  <Products>
+  	<ID>10</ID>
+		<ProductName>PLEXOS Module 3</ProductName>
+		<Version>2.0</Version>
+	</Products>
+  <Products>
+  	<ID>11</ID>
+		<ProductName>PLEXOS Module 4</ProductName>
+		<Version>2.0</Version>
+	</Products>
+  <Products>
+  	<ID>12</ID>
+		<ProductName>PLEXOS LT Plan</ProductName>
+		<Version>2.0</Version>
+	</Products>
+  <Products>
+  	<ID>13</ID>
+		<ProductName>PLEXOS Connect</ProductName>
+		<Version>2.0</Version>
+	</Products>
+  <Products>
+  	<ID>14</ID>
+		<ProductName>PLEXOS Support for Gurobi</ProductName>
+		<Version>2.0</Version>
+	</Products>
+  <Products>
+  	<ID>15</ID>
+		<ProductName>PLEXOS Gas Model</ProductName>
+		<Version>2.0</Version>
+	</Products>
+  <Products>
+  	<ID>16</ID>
+		<ProductName>PLEXOS Support for GLPK</ProductName>
+		<Version>2.0</Version>
+	</Products>
+  <Products>
+  	<ID>17</ID>
+		<ProductName>PLEXOS Module 10</ProductName>
+		<Version>2.0</Version>
+	</Products>
+  <Products>
+  	<ID>18</ID>
+		<ProductName>PLEXOS Module 11</ProductName>
+		<Version>2.0</Version>
+	</Products>
+  <Products>
+  	<ID>19</ID>
+		<ProductName>PLEXOS Module 12</ProductName>
+		<Version>2.0</Version>
+	</Products>
+  <Products>
+  	<ID>20</ID>
+		<ProductName>PLEXOS Version 5</ProductName>
+		<Version>2.0</Version>
+	</Products>
+  <Products>
+  	<ID>21</ID>
+		<ProductName>PLEXOS Support for CPLEX</ProductName>
+		<Version>2.0</Version>
+	</Products>
+  <Products>
+  	<ID>22</ID>
+		<ProductName>PLEXOS Support for Xpress-MP</ProductName>
+		<Version>2.0</Version>
+	</Products>
+  <Products>
+  	<ID>23</ID>
+		<ProductName>MOSEK Conic</ProductName>
+		<Version>2.0</Version>
+	</Products>
+  <Products>
+  	<ID>24</ID>
+		<ProductName>PLEXOS Version 6</ProductName>
+		<Version>2.0</Version>
+	</Products>
+  <Products>
+  	<ID>25</ID>
+		<ProductName>Xpress-MP Base Product</ProductName>
+		<Version>2.0</Version>
+	</Products>
+  <Products>
+  	<ID>26</ID>
+		<ProductName>Xpress-MP Parallel</ProductName>
+		<Version>2.0</Version>
+	</Products>
+  <Products>
+  	<ID>27</ID>
+		<ProductName>PLEXOS Support for SoPlex &amp; SCIP</ProductName>
+		<Version>2.0</Version>
+	</Products>
+  <Products>
+  	<ID>28</ID>
+		<ProductName>PLEXOS Support for Sulum</ProductName>
+		<Version>2.0</Version>
+	</Products>
+  <Products>
+  	<ID>29</ID>
+		<ProductName>PLEXOS Version 7</ProductName>
+		<Version>2.0</Version>
+	</Products>
+  <Products>
+  	<ID>30</ID>
+		<ProductName>Gurobi Base Product</ProductName>
+		<Version>2.0</Version>
+	</Products>
+  <Products>
+  	<ID>-1</ID>
+		<ProductName>MASTER</ProductName>
+		<Version>3.0</Version>
+  </Products>    
+  <Products>
+  	<ID>-2</ID>
+		<ProductName>MOSEK Base Product</ProductName>
+		<Version>3.0</Version>
+  </Products>
+  <Products>
+  	<ID>-3</ID>
+		<ProductName>PLEXOS Support for MOSEK</ProductName>
+		<Version>3.0</Version>
+  </Products>
+  <Products>
+  	<ID>-4</ID>
+		<ProductName>MOSEK Mixed Integer</ProductName>
+		<Version>3.0</Version>
+  </Products>
+  <Products>
+  	<ID>-5</ID>
+		<ProductName>PLEXOS Interface</ProductName>
+		<Version>3.0</Version>
+	</Products>
+  <Products>
+  	<ID>-7</ID>
+		<ProductName>PLEXOS Base Product</ProductName>
+		<Version>3.0</Version>
+	</Products>
+  <Products>
+  	<ID>-13</ID>
+		<ProductName>PLEXOS Connect</ProductName>
+		<Version>3.0</Version>
+	</Products>
+  <Products>
+  	<ID>-14</ID>
+		<ProductName>PLEXOS Support for Gurobi</ProductName>
+		<Version>3.0</Version>
+	</Products>
+  <Products>
+  	<ID>-16</ID>
+		<ProductName>PLEXOS Support for GLPK</ProductName>
+		<Version>3.0</Version>
+	</Products>	
+  <Products>
+  	<ID>-21</ID>
+		<ProductName>PLEXOS Support for CPLEX</ProductName>
+		<Version>3.0</Version>
+	</Products>
+  <Products>
+  	<ID>-22</ID>
+		<ProductName>PLEXOS Support for Xpress-MP</ProductName>
+		<Version>3.0</Version>
+	</Products>
+  <Products>
+  	<ID>-23</ID>
+		<ProductName>MOSEK Conic</ProductName>
+		<Version>3.0</Version>
+	</Products>	
+  <Products>
+  	<ID>-25</ID>
+		<ProductName>Xpress-MP Base Product</ProductName>
+		<Version>3.0</Version>
+	</Products>
+  <Products>
+  	<ID>-26</ID>
+		<ProductName>Xpress-MP Parallel</ProductName>
+		<Version>3.0</Version>
+	</Products>
+  <Products>
+  	<ID>-27</ID>
+		<ProductName>PLEXOS Support for SoPlex &amp; SCIP</ProductName>
+		<Version>3.0</Version>
+	</Products>
+  <Products>
+  	<ID>-30</ID>
+		<ProductName>Gurobi Base Product</ProductName>
+		<Version>3.0</Version>
+	</Products>
+	<Products>
+  	<ID>100</ID>
+		<ProductName>PLEXOS Integrated Energy Model</ProductName>
+		<Version>3.0</Version>
+  </Products>  
+	<Products>
+  	<ID>101</ID>
+		<ProductName>PLEXOS for Power Systems</ProductName>
+		<Version>3.0</Version>
+  </Products>  
+  <Products>
+  	<ID>102</ID>
+		<ProductName>PLEXOS Value-based Reliability</ProductName>
+		<Version>3.0</Version>
+  </Products>  
+  <Products>
+  	<ID>103</ID>
+		<ProductName>PLEXOS Real-time</ProductName>
+		<Version>3.0</Version>
+  </Products>  
+  <Products>
+  	<ID>104</ID>
+		<ProductName>PLEXOS for Gas</ProductName>
+		<Version>3.0</Version>
+  </Products>  
+  <Products>
+  	<ID>105</ID>
+		<ProductName>PLEXOS for Water</ProductName>
+		<Version>3.0</Version>
+  </Products> 
+  <Products>
+  	<ID>106</ID>
+		<ProductName>PLEXOS Trial</ProductName>
+		<Version>3.0</Version>
+  </Products> 
+  <Products>
+  	<ID>1000</ID>
+		<ProductName>PLEXOS API</ProductName>
+		<Version>3.0</Version>
+  </Products> 
+  <Products>
+    <ID>2</ID>
+	<ProductName>Company</ProductName>
+    <Version>3.0</Version>
+  </Products>
+  <Products>
+    <ID>3</ID>
+	<ProductName>Market</ProductName>
+    <Version>3.0</Version>
+  </Products>
+  <Products>
+    <ID>4</ID>
+	<ProductName>Financial Contract</ProductName>
+    <Version>3.0</Version>
+  </Products>
+  <Products>
+    <ID>5</ID>
+	<ProductName>Transmission Right</ProductName>
+    <Version>3.0</Version>
+  </Products>
+  <Products>
+    <ID>6</ID>
+	<ProductName>Cournot</ProductName>
+    <Version>3.0</Version>
+  </Products>
+  <Products>
+    <ID>7</ID>
+	<ProductName>RSI</ProductName>
+    <Version>3.0</Version>
+  </Products>
+  <Products>
+    <ID>8</ID>
+	<ProductName>Region</ProductName>
+    <Version>3.0</Version>
+  </Products>
+  <Products>
+    <ID>9</ID>
+	<ProductName>Zone</ProductName>
+    <Version>3.0</Version>
+  </Products>
+  <Products>
+    <ID>10</ID>
+	<ProductName>Node</ProductName>
+    <Version>3.0</Version>
+  </Products>
+  <Products>
+    <ID>11</ID>
+	<ProductName>Line</ProductName>
+    <Version>3.0</Version>
+  </Products>
+  <Products>
+    <ID>12</ID>
+	<ProductName>MLF</ProductName>
+    <Version>3.0</Version>
+  </Products>
+  <Products>
+    <ID>13</ID>
+	<ProductName>Transformer</ProductName>
+    <Version>3.0</Version>
+  </Products>
+  <Products>
+    <ID>14</ID>
+	<ProductName>Flow Control</ProductName>
+    <Version>3.0</Version>
+  </Products>
+  <Products>
+    <ID>15</ID>
+	<ProductName>Interface</ProductName>
+    <Version>3.0</Version>
+  </Products>
+  <Products>
+    <ID>16</ID>
+	<ProductName>Reserve</ProductName>
+    <Version>3.0</Version>
+  </Products>
+  <Products>
+    <ID>17</ID>
+	<ProductName>Contingency</ProductName>
+    <Version>3.0</Version>
+  </Products>
+  <Products>
+    <ID>18</ID>
+	<ProductName>Fuel</ProductName>
+    <Version>3.0</Version>
+  </Products>
+  <Products>
+    <ID>19</ID>
+	<ProductName>Storage</ProductName>
+    <Version>3.0</Version>
+  </Products>
+  <Products>
+    <ID>20</ID>
+	<ProductName>Waterway</ProductName>
+    <Version>3.0</Version>
+  </Products>
+  <Products>
+    <ID>21</ID>
+	<ProductName>Emission</ProductName>
+    <Version>3.0</Version>
+  </Products>
+  <Products>
+    <ID>22</ID>
+	<ProductName>Generator</ProductName>
+    <Version>3.0</Version>
+  </Products>
+  <Products>
+    <ID>23</ID>
+	<ProductName>Power Station</ProductName>
+    <Version>3.0</Version>
+  </Products>
+  <Products>
+    <ID>24</ID>
+	<ProductName>Fuel Contract</ProductName>
+    <Version>3.0</Version>
+  </Products>
+  <Products>
+    <ID>25</ID>
+	<ProductName>Physical Contract</ProductName>
+    <Version>3.0</Version>
+  </Products>
+  <Products>
+    <ID>26</ID>
+	<ProductName>Purchaser</ProductName>
+    <Version>3.0</Version>
+  </Products>
+  <Products>
+    <ID>27</ID>
+	<ProductName>Constraint</ProductName>
+    <Version>3.0</Version>
+  </Products>
+  <Products>
+    <ID>29</ID>
+	<ProductName>Data File</ProductName>
+    <Version>3.0</Version>
+  </Products>
+  <Products>
+    <ID>31</ID>
+	<ProductName>Variable</ProductName>
+    <Version>3.0</Version>
+  </Products>
+  <Products>
+    <ID>32</ID>
+	<ProductName>Horizon</ProductName>
+    <Version>3.0</Version>
+  </Products>
+  <Products>
+    <ID>33</ID>
+	<ProductName>Report</ProductName>
+    <Version>3.0</Version>
+  </Products>
+  <Products>
+    <ID>34</ID>
+	<ProductName>Timeslice</ProductName>
+    <Version>3.0</Version>
+  </Products>
+  <Products>
+    <ID>35</ID>
+	<ProductName>Scenario</ProductName>
+    <Version>3.0</Version>
+  </Products>
+  <Products>
+    <ID>36</ID>
+	<ProductName>Model</ProductName>
+    <Version>3.0</Version>
+  </Products>
+  <Products>
+    <ID>37</ID>
+	<ProductName>Project</ProductName>
+    <Version>3.0</Version>
+  </Products>
+  <Products>
+    <ID>38</ID>
+	<ProductName>LT Plan</ProductName>
+    <Version>3.0</Version>
+  </Products>
+  <Products>
+    <ID>39</ID>
+	<ProductName>PASA</ProductName>
+    <Version>3.0</Version>
+  </Products>
+  <Products>
+    <ID>40</ID>
+	<ProductName>MT Schedule</ProductName>
+    <Version>3.0</Version>
+  </Products>
+  <Products>
+    <ID>41</ID>
+	<ProductName>ST Schedule</ProductName>
+    <Version>3.0</Version>
+  </Products>
+  <Products>
+    <ID>43</ID>
+	<ProductName>Transmission</ProductName>
+    <Version>3.0</Version>
+  </Products>
+  <Products>
+    <ID>44</ID>
+	<ProductName>Production</ProductName>
+    <Version>3.0</Version>
+  </Products>
+  <Products>
+    <ID>45</ID>
+	<ProductName>Competition</ProductName>
+    <Version>3.0</Version>
+  </Products>
+  <Products>
+    <ID>46</ID>
+	<ProductName>Stochastic</ProductName>
+    <Version>3.0</Version>
+  </Products>
+  <Products>
+    <ID>47</ID>
+	<ProductName>Performance</ProductName>
+    <Version>3.0</Version>
+  </Products>
+  <Products>
+    <ID>48</ID>
+	<ProductName>Diagnostic</ProductName>
+    <Version>3.0</Version>
+  </Products>
+  <Products>
+    <ID>49</ID>
+	<ProductName>Gas Field</ProductName>
+    <Version>3.0</Version>
+  </Products>
+  <Products>
+    <ID>50</ID>
+	<ProductName>Gas Storage</ProductName>
+    <Version>3.0</Version>
+  </Products>
+  <Products>
+    <ID>51</ID>
+	<ProductName>Gas Pipeline</ProductName>
+    <Version>3.0</Version>
+  </Products>
+  <Products>
+    <ID>52</ID>
+	<ProductName>Gas Node</ProductName>
+    <Version>3.0</Version>
+  </Products>
+  <Products>
+    <ID>53</ID>
+	<ProductName>Gas Demand</ProductName>
+    <Version>3.0</Version>
+  </Products>
+  <Products>
+    <ID>54</ID>
+	<ProductName>List</ProductName>
+    <Version>3.0</Version>
+  </Products>
+  <Products>
+    <ID>55</ID>
+	<ProductName>Abatement</ProductName>
+    <Version>3.0</Version>
+  </Products>
+  <Products>
+    <ID>56</ID>
+	<ProductName>Gas Zone</ProductName>
+    <Version>3.0</Version>
+  </Products>
+  <Products>
+    <ID>57</ID>
+	<ProductName>Decision Variable</ProductName>
+    <Version>3.0</Version>
+  </Products>
+  <Products>
+    <ID>58</ID>
+	<ProductName>Global</ProductName>
+    <Version>3.0</Version>
+  </Products>
+  <Products>
+    <ID>59</ID>
+	<ProductName>Hub</ProductName>
+    <Version>3.0</Version>
+  </Products>
+  <Products>
+    <ID>60</ID>
+	<ProductName>Gas Basin</ProductName>
+    <Version>3.0</Version>
+  </Products>
+  <Products>
+    <ID>61</ID>
+	<ProductName>Battery</ProductName>
+    <Version>3.0</Version>
+  </Products>
+  <Products>
+    <ID>62</ID>
+	<ProductName>Maintenance</ProductName>
+    <Version>3.0</Version>
+  </Products>
+  <Products>
+    <ID>63</ID>
+	<ProductName>Water Plant</ProductName>
+    <Version>3.0</Version>
+  </Products>
+  <Products>
+    <ID>64</ID>
+	<ProductName>Water Storage</ProductName>
+    <Version>3.0</Version>
+  </Products>
+  <Products>
+    <ID>65</ID>
+	<ProductName>Water Pipeline</ProductName>
+    <Version>3.0</Version>
+  </Products>
+  <Products>
+    <ID>66</ID>
+	<ProductName>Water Node</ProductName>
+    <Version>3.0</Version>
+  </Products>
+  <Products>
+    <ID>67</ID>
+	<ProductName>Water Demand</ProductName>
+    <Version>3.0</Version>
+  </Products>
+  <Products>
+    <ID>68</ID>
+	<ProductName>Water Zone</ProductName>
+    <Version>3.0</Version>
+  </Products>
+  <Products>
+    <ID>69</ID>
+	<ProductName>Gas Contract</ProductName>
+    <Version>3.0</Version>
+  </Products>
+  <Products>
+    <ID>70</ID>
+	<ProductName>Gas Plant</ProductName>
+    <Version>3.0</Version>
+  </Products>  
+  </DocumentElement>

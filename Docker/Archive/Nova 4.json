@@ -1,0 +1,547 @@
+{
+  "nodes": [
+    {
+      "parameters": {
+        "jsCode": "\nconst aiResponse = $json.message?.content || 'No response';\nconst prompt = $json.prompt || '';\nconst sessionId = $json.sessionId || 'unknown';\nconst timestamp = $json.timestamp || new Date().toISOString();\n\nreturn [{\n  json: {\n    agent: 'Nova',\n    response: aiResponse,\n    prompt,\n    timestamp,\n    sessionId\n  }\n}];\n"
+      },
+      "id": "b0eeff2d-82ae-4c72-aeb1-5f393ca41add",
+      "name": "Nova Format Output",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        676,
+        1760
+      ]
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4.1-nano",
+          "mode": "list",
+          "cachedResultName": "GPT-4.1-NANO"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "You are Nova. Answer the user's question clearly and helpfully.",
+              "role": "system"
+            },
+            {
+              "content": "={{ $json.prompt }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "aef98ea7-5819-44d4-989d-3138a2826cd5",
+      "name": "Nova OpenAI Answer",
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        300,
+        1760
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "s2LqJsvl4DbHnCTw",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "\n// Prepare raw input and ensure required fields\nconst { prompt, history, sessionId, timestamp } = $json;\n\nreturn [{\n  json: {\n    prompt: prompt || \"No prompt received\",\n    history: history || [],\n    sessionId: sessionId || \"unknown-session\",\n    timestamp: timestamp || new Date().toISOString()\n  }\n}];\n"
+      },
+      "id": "8be3bf9c-27af-4fca-9797-c0f23c80d850",
+      "name": "Nova Prepare Input",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        80,
+        1760
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "7KAw7rjPD9u8SNfj",
+          "mode": "list",
+          "cachedResultName": "Lola"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {
+          "waitForSubWorkflow": false
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        676,
+        1560
+      ],
+      "id": "0667aefe-b1d4-4001-9007-9c9c0ab8c7d7",
+      "name": "Execute Lola"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "IqQJPBNlxLtN9o12",
+          "mode": "list",
+          "cachedResultName": "Ivan"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {
+          "waitForSubWorkflow": false
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        676,
+        1360
+      ],
+      "id": "ff5df047-222e-4010-8ca6-749f48167863",
+      "name": "Execute Ivan"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "wCP9jJ9Go2cUuDyM",
+          "mode": "list",
+          "cachedResultName": "Emil"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {
+          "waitForSubWorkflow": false
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        676,
+        1160
+      ],
+      "id": "b3176b8b-85a7-4cf5-bb9a-8113fd38abd3",
+      "name": "Execute Emil"
+    },
+    {
+      "parameters": {
+        "jsCode": "\nconst result = $json.response || 'No response';\nconst prompt = $json.prompt || '';\nconst timestamp = $json.timestamp || new Date().toISOString();\nconst sessionId = $json.sessionId || 'unknown';\n\nreturn [{\n  json: {\n    agent: 'Nova',\n    response: result,\n    prompt,\n    timestamp,\n    sessionId\n  }\n}];\n"
+      },
+      "id": "13292ea0-856d-4641-8f56-05843d2eec03",
+      "name": "Nova Result Handler",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        896,
+        1760
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "\nconst prompt = $json.prompt?.toLowerCase() || \"no prompt\";\n\nlet category = \"general\";\nif (prompt.includes(\"model\") || prompt.includes(\"energy\")) {\n  category = \"energy_model\";\n} else if (prompt.includes(\"report\") || prompt.includes(\"summary\") || prompt.includes(\"write\")) {\n  category = \"report\";\n} else if (prompt.includes(\"chart\") || prompt.includes(\"image\") || prompt.includes(\"visual\")) {\n  category = \"chart\";\n} else if (prompt.includes(\"script\") || prompt.includes(\"python\")) {\n  category = \"code\";\n} else if (/\\d+\\s*[+\\-*/]\\s*\\d+/.test(prompt)) {\n  category = \"math\";\n}\n\nlet agent = \"Nova\";\nif (category === \"energy_model\") agent = \"Emil\";\nelse if (category === \"report\") agent = \"Lola\";\nelse if (category === \"chart\" || category === \"code\") agent = \"Ivan\";\n\nreturn [{\n  json: {\n    prompt: $json.prompt,\n    history: $json.history,\n    timestamp: $json.timestamp,\n    sessionId: $json.sessionId,\n    category,\n    routeTo: agent\n  }\n}];\n"
+      },
+      "id": "161b8207-e953-470a-a650-074751be2638",
+      "name": "Categorize Prompt",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -360,
+        1460
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "\nconst result = $json.response || 'No response';\nconst prompt = $json.prompt || '';\nconst timestamp = $json.timestamp || new Date().toISOString();\nconst sessionId = $json.sessionId || 'unknown';\n\nreturn [{\n  json: {\n    agent: 'Lola',\n    response: result,\n    prompt,\n    timestamp,\n    sessionId\n  }\n}];\n"
+      },
+      "id": "7ab9e375-a6b8-47eb-8693-21917956eff1",
+      "name": "Lola Result Handler",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        896,
+        1560
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "\nconst result = $json.response || 'No response';\nconst prompt = $json.prompt || '';\nconst timestamp = $json.timestamp || new Date().toISOString();\nconst sessionId = $json.sessionId || 'unknown';\n\nreturn [{\n  json: {\n    agent: 'Ivan',\n    response: result,\n    prompt,\n    timestamp,\n    sessionId\n  }\n}];\n"
+      },
+      "id": "d19e342c-1fed-4c23-bb9b-774f6ae06e3e",
+      "name": "Ivan Result Handler",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        896,
+        1360
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "\nconst result = $json.response || 'No response';\nconst prompt = $json.prompt || '';\nconst timestamp = $json.timestamp || new Date().toISOString();\nconst sessionId = $json.sessionId || 'unknown';\n\nreturn [{\n  json: {\n    agent: 'Emil',\n    response: result,\n    prompt,\n    timestamp,\n    sessionId\n  }\n}];\n"
+      },
+      "id": "3166997d-e6a6-4e84-884f-d9dd61fdd099",
+      "name": "Emil Result Handler",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        896,
+        1160
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "options": {}
+      },
+      "id": "d214f8a4-9a48-4db4-ad61-d178df26cd6b",
+      "name": "Return Agent Response",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [
+        1116,
+        1460
+      ]
+    },
+    {
+      "parameters": {
+        "dataType": "string",
+        "value1": "={{ $json.routeTo }}",
+        "rules": {
+          "rules": [
+            {
+              "value2": "Emil"
+            },
+            {
+              "value2": "Ivan",
+              "output": 1
+            },
+            {
+              "value2": "Lola",
+              "output": 2
+            },
+            {
+              "value2": "Nova",
+              "output": 3
+            }
+          ]
+        }
+      },
+      "id": "6bb0e885-2535-4828-b826-0b883f0e9676",
+      "name": "Route to Agent",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 1,
+      "position": [
+        -140,
+        1439
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "// Extract prompt and history\nconst prompt = $json.body?.prompt || $json.prompt;\nconst history = $json.body?.history || $json.history || [];\n\nif (!prompt) {\n  return { error: 'Missing prompt' };\n}\n\nreturn {\n  json: {\n    prompt,\n    history,\n    timestamp: new Date().toISOString()\n  }\n};"
+      },
+      "id": "c775a138-8951-45df-802a-76dec1e887d5",
+      "name": "Extract Prompt",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        -800,
+        1560
+      ]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "nova",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "3214bf4f-c563-41af-8234-56d0edae4fb5",
+      "name": "Nova Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        -1020,
+        1560
+      ],
+      "webhookId": "041b5d78-f0c4-48ab-9ab9-166defe2c703"
+    },
+    {
+      "parameters": {
+        "mode": "passThrough"
+      },
+      "id": "3f442567-3686-4d1b-be10-40c11dd1d013",
+      "name": "Merge Inputs",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 1,
+      "position": [
+        -580,
+        1460
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "\nconst prompt = $json.prompt || \"No prompt\";\nconst history = $json.history || [];\n\nreturn [{\n  json: {\n    prompt,\n    history,\n    timestamp: new Date().toISOString(),\n    sessionId: Date.now().toString()\n  }\n}];\n"
+      },
+      "id": "ef5f0469-6225-4d3b-a959-2972c5f12970",
+      "name": "Prepare Internal Input",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -800,
+        1360
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "f778b430-1b99-49f9-9203-914b962e41d6",
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        -1020,
+        1360
+      ]
+    }
+  ],
+  "connections": {
+    "Nova Format Output": {
+      "main": [
+        [
+          {
+            "node": "Nova Result Handler",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Nova OpenAI Answer": {
+      "main": [
+        [
+          {
+            "node": "Nova Format Output",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Nova Prepare Input": {
+      "main": [
+        [
+          {
+            "node": "Nova OpenAI Answer",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute Lola": {
+      "main": [
+        [
+          {
+            "node": "Lola Result Handler",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute Ivan": {
+      "main": [
+        [
+          {
+            "node": "Ivan Result Handler",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute Emil": {
+      "main": [
+        [
+          {
+            "node": "Emil Result Handler",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Nova Result Handler": {
+      "main": [
+        [
+          {
+            "node": "Return Agent Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Categorize Prompt": {
+      "main": [
+        [
+          {
+            "node": "Route to Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Lola Result Handler": {
+      "main": [
+        [
+          {
+            "node": "Return Agent Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ivan Result Handler": {
+      "main": [
+        [
+          {
+            "node": "Return Agent Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Emil Result Handler": {
+      "main": [
+        [
+          {
+            "node": "Return Agent Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Route to Agent": {
+      "main": [
+        [
+          {
+            "node": "Execute Emil",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Execute Ivan",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Execute Lola",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Nova Prepare Input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Prompt": {
+      "main": [
+        [
+          {
+            "node": "Merge Inputs",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Nova Webhook": {
+      "main": [
+        [
+          {
+            "node": "Extract Prompt",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge Inputs": {
+      "main": [
+        [
+          {
+            "node": "Categorize Prompt",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Internal Input": {
+      "main": [
+        [
+          {
+            "node": "Merge Inputs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Start": {
+      "main": [
+        [
+          {
+            "node": "Prepare Internal Input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "42b14e125a07b4268f5179226a03439d17b657e140781a38da9546beb98e0073"
+  }
+}

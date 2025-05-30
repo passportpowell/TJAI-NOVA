@@ -1,0 +1,815 @@
+{
+  "name": "Nova Outlook Management",
+  "nodes": [
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.text }}",
+        "options": {
+          "systemMessage": "=Role:\n\nYou are an email management assistant responsible for handling emails professionally. only emails must be formatted in HTML and signed off as \"Sil.\"\n\nTask:\n\nManage emails efficiently using the appropriate email management tools based on user requests.\n\nInstructions:\n\n  - Sending Emails: Use \"Send Email\" to send emails.\n  - Creating Drafts: Use \"Create Draft\" if the user requests a draft.\n  - Retrieving Emails: Use \"Get Emails\" to fetch emails when requested.\n  - Retrieving Labels: Use \"Get Labels\" to fetch email labels.\n  - Labeling Emails:\n1. Use \"Get Emails\" to obtain the message ID.\n2. Use \"Get Labels\" to retrieve the label ID.\n3. Use \"Label Email\" to apply the label.\n  - Replying to Emails:\n1. Use \"Get Emails\" to retrieve the message ID.\n2. Use \"Reply Email\" to respond to the email.\n\nRules\n\n- Ensure proper use of tools based on the email task required.\nas Final Notes\n- only output the text\n- When being asked to Get events Than give all of the events from the specific day or days, and also give me all of the free time slots I have.\n\nHere is the current date/time: {{ $now }}"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        320,
+        160
+      ],
+      "id": "66768ed7-b13a-42c1-8556-0815b60e6aa9",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $('Telegram Trigger').item.json.message.chat.id }}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        -160,
+        540
+      ],
+      "id": "38498b7d-c468-4349-96fc-c82440b3771e",
+      "name": "Window Buffer Memory"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "={{ $json.output }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        740,
+        160
+      ],
+      "id": "11ab1510-5daf-44ae-8b9c-6abe442d0ab4",
+      "name": "Telegram",
+      "webhookId": "2fa5e398-1eb7-4c6c-8967-5f4cc7808333",
+      "credentials": {
+        "telegramApi": {
+          "id": "3UNn4J5jTmhLvD8i",
+          "name": "Telegram account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "audio",
+        "operation": "transcribe",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        140,
+        0
+      ],
+      "id": "1d4817bf-075b-43dd-875d-87623b44457b",
+      "name": "Transcribe",
+      "credentials": {
+        "openAiApi": {
+          "id": "7ZcVYt128DzR7OkI",
+          "name": "OpenAi account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "502e50b6-9903-44c0-9a0d-a3bc772eae71",
+                    "leftValue": "={{ $json.message.voice.file_id }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "string",
+                      "operation": "exists",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Audio"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "442d61ad-3a99-4d7a-93cf-753a7c877460",
+                    "leftValue": "={{ $json.message.text || \"\" }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "string",
+                      "operation": "exists",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Text"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        -180,
+        140
+      ],
+      "id": "76800891-9aa4-43c6-b86d-35b06e7d99de",
+      "name": "Text or Audio"
+    },
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -340,
+        140
+      ],
+      "id": "67d84eb2-453a-49c2-b00b-29e31294acd8",
+      "name": "Telegram Trigger",
+      "webhookId": "c0eee8d7-a6cd-42b5-8ea9-47c43e79c2ec",
+      "notesInFlow": false,
+      "credentials": {
+        "telegramApi": {
+          "id": "3UNn4J5jTmhLvD8i",
+          "name": "Telegram account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "fileId": "={{ $json.message.voice.file_id }}"
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        0
+      ],
+      "id": "2a03d4a5-4bdd-4aa8-aa60-eb53a8b3a6f3",
+      "name": "Dowload file",
+      "webhookId": "1fe1ac8f-0983-40fb-bb18-6029c1e99c91",
+      "credentials": {
+        "telegramApi": {
+          "id": "VmO2xc1P0EYw4cB8",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -260,
+        460
+      ],
+      "id": "f3d9b2ff-8868-4ade-b3a6-a6bae19f50c2",
+      "name": "OpenAI",
+      "credentials": {
+        "openAiApi": {
+          "id": "7ZcVYt128DzR7OkI",
+          "name": "OpenAi account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "toRecipients": "={{ $fromAI(\"emailReceiver\") }}",
+        "subject": "={{ $fromAI(\"subject\") }}",
+        "bodyContent": "={{ $fromAI(\"emailBody\") }}",
+        "additionalFields": {
+          "bodyContentType": "Text"
+        }
+      },
+      "type": "n8n-nodes-base.microsoftOutlookTool",
+      "typeVersion": 2,
+      "position": [
+        420,
+        960
+      ],
+      "id": "12f4d7fe-da06-49b9-ac05-8539fcc08f5d",
+      "name": "Send Email",
+      "webhookId": "b04987cc-cd4a-4513-bd95-45c9ce041b42",
+      "credentials": {
+        "microsoftOutlookOAuth2Api": {
+          "id": "jZXuetupvaDStBip",
+          "name": "Microsoft Outlook account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "reply",
+        "messageId": {
+          "__rl": true,
+          "value": "={{ $fromAI(\"Message_ID\") }}",
+          "mode": "id"
+        },
+        "message": "={{ $fromAI(\"emailBody\") }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.microsoftOutlookTool",
+      "typeVersion": 2,
+      "position": [
+        540,
+        960
+      ],
+      "id": "b90e785f-ddb3-4fc0-8410-d4428578c892",
+      "name": "Reply Email",
+      "webhookId": "b04987cc-cd4a-4513-bd95-45c9ce041b42",
+      "credentials": {
+        "microsoftOutlookOAuth2Api": {
+          "id": "jZXuetupvaDStBip",
+          "name": "Microsoft Outlook account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "draft",
+        "subject": "={{ $fromAI(\"subject\") }}",
+        "bodyContent": "={{ $fromAI(\"emailBody\") }}",
+        "additionalFields": {
+          "bodyContentType": "Text",
+          "toRecipients": "={{ $fromAI(\"emailReciever\") }}"
+        }
+      },
+      "type": "n8n-nodes-base.microsoftOutlookTool",
+      "typeVersion": 2,
+      "position": [
+        660,
+        920
+      ],
+      "id": "f9628cd1-a5cd-4775-8f48-9bbe775acaf4",
+      "name": "Create draft",
+      "webhookId": "b04987cc-cd4a-4513-bd95-45c9ce041b42",
+      "credentials": {
+        "microsoftOutlookOAuth2Api": {
+          "id": "jZXuetupvaDStBip",
+          "name": "Microsoft Outlook account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "limit": 20,
+        "filtersUI": {
+          "values": {
+            "filters": {
+              "receivedAfter": "={{ (new Date($fromAI(\"receivedAfter\")).toISOString().split('.')[0] + 'Z').trim() }}",
+              "receivedBefore": "={{ (new Date($fromAI(\"receivedBefore\")).toISOString().split('.')[0] + 'Z').trim() }}",
+              "sender": "={{ $fromAI(\"emailSearch\") }}"
+            }
+          }
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.microsoftOutlookTool",
+      "typeVersion": 2,
+      "position": [
+        900,
+        740
+      ],
+      "id": "72ee5e4c-b620-4c23-9529-0bcadac9421a",
+      "name": "Get Emails",
+      "webhookId": "b04987cc-cd4a-4513-bd95-45c9ce041b42",
+      "credentials": {
+        "microsoftOutlookOAuth2Api": {
+          "id": "jZXuetupvaDStBip",
+          "name": "Microsoft Outlook account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "folder",
+        "operation": "getAll",
+        "returnAll": true,
+        "filters": {},
+        "options": {}
+      },
+      "type": "n8n-nodes-base.microsoftOutlookTool",
+      "typeVersion": 2,
+      "position": [
+        1200,
+        440
+      ],
+      "id": "14e734bc-3de2-4875-92a5-8de3c64edb49",
+      "name": "Get Folders",
+      "webhookId": "b04987cc-cd4a-4513-bd95-45c9ce041b42",
+      "credentials": {
+        "microsoftOutlookOAuth2Api": {
+          "id": "jZXuetupvaDStBip",
+          "name": "Microsoft Outlook account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "move",
+        "messageId": {
+          "__rl": true,
+          "value": "={{ $fromAI(\"Message_ID\") }}",
+          "mode": "id"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "AQMkADAwATNiZmYAZS05MWM3LWQxOGUtMDACLTAwCgAuAAADBAQAzV6Szp1Otk8MRqQbGPwBAJpdNI-185BErtWdSQ1E5YQAAAAO5xdtAAAA",
+          "mode": "list",
+          "cachedResultName": "Important",
+          "cachedResultUrl": "https://outlook.office365.com/mail/AQMkADAwATNiZmYAZS05MWM3LWQxOGUtMDACLTAwCgAuAAADBAQAzV6Szp1Otk8MRqQbGPwBAJpdNI%2F185BErtWdSQ1E5YQAAAAO5xdtAAAA"
+        }
+      },
+      "type": "n8n-nodes-base.microsoftOutlookTool",
+      "typeVersion": 2,
+      "position": [
+        1100,
+        540
+      ],
+      "id": "ad87b5d2-dc4b-41fa-9c41-ea0c5388caec",
+      "name": "Folder Emails",
+      "webhookId": "b04987cc-cd4a-4513-bd95-45c9ce041b42",
+      "credentials": {
+        "microsoftOutlookOAuth2Api": {
+          "id": "jZXuetupvaDStBip",
+          "name": "Microsoft Outlook account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "folder",
+        "displayName": "={{ $fromAI(\"labelName\") }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.microsoftOutlookTool",
+      "typeVersion": 2,
+      "position": [
+        1000,
+        640
+      ],
+      "id": "3716e092-226d-4eb2-a43c-7dad75017566",
+      "name": "Create Folder",
+      "webhookId": "b04987cc-cd4a-4513-bd95-45c9ce041b42",
+      "credentials": {
+        "microsoftOutlookOAuth2Api": {
+          "id": "jZXuetupvaDStBip",
+          "name": "Microsoft Outlook account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "event",
+        "operation": "create",
+        "calendarId": {
+          "__rl": true,
+          "value": "AQMkADAwATM0MDAAMS1jOTNkLTNmNmQtMDACLTAwCgBGAAADb3tmypOxD0K5v6SLDVlUIwcAiPDQO3XtREW9skyKMzIlvAAAAgEGAAAAiPDQO3XtREW9skyKMzIlvAAAAg00AAAA",
+          "mode": "list",
+          "cachedResultName": "Calendar"
+        },
+        "subject": "={{ $fromAI(\"Title\") }}",
+        "startDateTime": "={{ $fromAI(\"Start\") }}",
+        "endDateTime": "={{ $fromAI(\"End\") }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.microsoftOutlookTool",
+      "typeVersion": 2,
+      "position": [
+        -60,
+        640
+      ],
+      "id": "0368493a-dd5c-48be-b41d-2f7b2f4236c9",
+      "name": "Create event",
+      "webhookId": "e37a7526-f064-4e73-a939-527b40e8618d",
+      "credentials": {
+        "microsoftOutlookOAuth2Api": {
+          "id": "jZXuetupvaDStBip",
+          "name": "Microsoft Outlook account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "event",
+        "operation": "delete",
+        "calendarId": {
+          "__rl": true,
+          "value": "AQMkADAwATM0MDAAMS1jOTNkLTNmNmQtMDACLTAwCgBGAAADb3tmypOxD0K5v6SLDVlUIwcAiPDQO3XtREW9skyKMzIlvAAAAgEGAAAAiPDQO3XtREW9skyKMzIlvAAAAg00AAAA",
+          "mode": "list",
+          "cachedResultName": "Calendar"
+        },
+        "eventId": {
+          "__rl": true,
+          "value": "={{ $fromAI(\"id\",\"the id that matches the events id\") }}",
+          "mode": "id"
+        }
+      },
+      "type": "n8n-nodes-base.microsoftOutlookTool",
+      "typeVersion": 2,
+      "position": [
+        60,
+        740
+      ],
+      "id": "593c86b8-ef77-400c-83ea-87ce7672af79",
+      "name": "Delete event",
+      "webhookId": "e37a7526-f064-4e73-a939-527b40e8618d",
+      "credentials": {
+        "microsoftOutlookOAuth2Api": {
+          "id": "jZXuetupvaDStBip",
+          "name": "Microsoft Outlook account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "event",
+        "filters": {}
+      },
+      "type": "n8n-nodes-base.microsoftOutlookTool",
+      "typeVersion": 2,
+      "position": [
+        180,
+        840
+      ],
+      "id": "253a5353-e4f2-487e-bfe2-4b598497cb78",
+      "name": "Get events",
+      "webhookId": "e37a7526-f064-4e73-a939-527b40e8618d",
+      "credentials": {
+        "microsoftOutlookOAuth2Api": {
+          "id": "jZXuetupvaDStBip",
+          "name": "Microsoft Outlook account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "event",
+        "operation": "update",
+        "calendarId": {
+          "__rl": true,
+          "value": "AQMkADAwATM3ZmYBLTkxN2EtNTgwYi0wMAItMDAKAEYAAANnbTMlS-NXQqFiwVej6pMHBwAACM8EluBhwEmVdcqxUPWRIwAAAgEGAAAACM8EluBhwEmVdcqxUPWRIwAAAg02AAAA",
+          "mode": "list",
+          "cachedResultName": "Calendar"
+        },
+        "eventId": {
+          "__rl": true,
+          "value": "={{ decodeURIComponent($fromAI(\"id\")) }}",
+          "mode": "id"
+        },
+        "additionalFields": {
+          "end": "={{ $fromAI(\"End\") }}",
+          "start": "={{ $fromAI(\"Start\") }}",
+          "subject": "={{ $fromAI(\"title\") }}"
+        }
+      },
+      "type": "n8n-nodes-base.microsoftOutlookTool",
+      "typeVersion": 2,
+      "position": [
+        300,
+        920
+      ],
+      "id": "f58a7a62-0f47-44ea-80b0-2a296ae1d52c",
+      "name": "Update events",
+      "webhookId": "e37a7526-f064-4e73-a939-527b40e8618d",
+      "notesInFlow": false,
+      "credentials": {
+        "microsoftOutlookOAuth2Api": {
+          "id": "jZXuetupvaDStBip",
+          "name": "Microsoft Outlook account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "delete",
+        "messageId": {
+          "__rl": true,
+          "value": "={{ $fromAI(\"Message_ID\") }}",
+          "mode": "id"
+        }
+      },
+      "type": "n8n-nodes-base.microsoftOutlookTool",
+      "typeVersion": 2,
+      "position": [
+        780,
+        840
+      ],
+      "id": "217003ba-47b7-435c-928b-cc01e3364a00",
+      "name": "Delete emails",
+      "webhookId": "b04987cc-cd4a-4513-bd95-45c9ce041b42",
+      "credentials": {
+        "microsoftOutlookOAuth2Api": {
+          "id": "jZXuetupvaDStBip",
+          "name": "Microsoft Outlook account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "ead608af-7a53-4330-a679-6a5df4bd5ad8",
+              "name": "text",
+              "value": "={{ $json.message.text }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        60,
+        160
+      ],
+      "id": "d8843635-3039-45c2-b076-4f1a078e9bb2",
+      "name": "Edit Fields"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Telegram",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Window Buffer Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Transcribe": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Text or Audio": {
+      "main": [
+        [
+          {
+            "node": "Dowload file",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "Text or Audio",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Dowload file": {
+      "main": [
+        [
+          {
+            "node": "Transcribe",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Email": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Reply Email": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create draft": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Emails": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Folders": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Folder Emails": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Folder": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create event": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Delete event": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get events": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update events": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Delete emails": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "2f97c05e-562c-4136-bd1e-e385dd016c35",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "798c4ba9fcef200de753e6fbc3c6ec5b75943cfb642d8c2f7d8e347a6ec4c172"
+  },
+  "id": "4N680yrpdXfWccpp",
+  "tags": []
+}

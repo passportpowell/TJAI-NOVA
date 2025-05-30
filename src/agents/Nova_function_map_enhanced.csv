@@ -1,0 +1,11 @@
+Key,Function,Type,Name,Args,Kwargs,Args Datatype,Kwargs Datatype,Output,Description,Version
+copywriting and proofreading,assistants.lola.main,Assistant,lola,"{""input1"": ""Prompt"", ""input2"": ""-""}",,,,,"Communications expert. Capabilities: copywriting, proofreading, social media, Prompt sheet processing. Press releases, blogs, white papers etc.",v1.0
+Data analysis,assistants.emil.main,Assistant,emil,"{""input1"": ""Prompt"", ""input2"": ""-""}",,,,,"Engineering. Model Builing (PLEXOS), Model Management, Model Running, Data Analysis, Chart Creation. ",v1.0
+Interact with calendar,utils.calendar_call.calendar_call,Agent,calendar_call,"{""input1"": ""Prompt"", ""input2"": ""-""}",,,,,"The gives access to my calendar. You can schedule appointments, check my schedule, schedule meeting, review emails and write emails.",v1.0
+Open a website,utils.open_website.open_website_function,Agent,open_website,"{""input1"": ""Prompt"", ""input2"": ""-""}",,,,,opens website where a response is able to give a url.,v1.0
+Uncategorized,utils.uncategorized_call.uncategorized_call,Agent,Nova,"{""input1"": ""Prompt"", ""input2"": ""-""}",,,,,If not other category is appropraite use this.,v1.0
+do_maths,utils.do_maths.do_maths,Agent,do_maths,"{""input1"": ""Prompt"", ""input2"": ""-""}",,,,,Do math problems,v1.0
+Written chat session,utils.open_ai_calls.ai_chat_session,Agent,Nova,,,,,,This is a general chatbot using an llm. The iteraction is through writing.,
+Spoken Chat Session,utils.open_ai_calls.ai_spoken_chat_session,Agent,Nova,,,,,,Talk/speak to the chatbot using speach. The iteraction is through speech. Let's talk,
+Create task list,utils.create_task_list.task_list,Agent,task_list,,,,,,"Full tasks that may require multiple assistants to task to achieve the function, call the function to itemise the tasks for execution",
+Energy Model,functions.assistants.emil.main,Assistant,emil,prompt,,,,,Use Emil to run energy modeling tasks including solar generation models,1.0

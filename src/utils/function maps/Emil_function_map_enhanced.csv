@@ -1,0 +1,15 @@
+Key,Function,Type,Name,Parameters,Description,Version
+build_plexos_model,build_plexos_model,Model Builder,Build PLEXOS Model,"kb, location=all, generation=all","Constructs a new PLEXOS model using the specified location and generation type.",1.0
+run_plexos_model,run_plexos_model,Model Execution,Run PLEXOS Model,"kb, scenario_name=default_scenario, **kwargs","Runs a previously built model with the specified scenario name.",1.0
+analyze_results,analyze_results,Analysis,Analyze Results,"kb, analysis_type=basic, **kwargs","Analyzes simulation results with the specified analysis type.",1.0
+process_emil_request,process_emil_request,Energy Modeling,Process Energy Model Request,"kb, prompt, location=None, generation=None, energy_carrier=None, **kwargs","Processes a complete energy modeling request, extracting parameters and building appropriate models.",1.0
+extract_model_parameters,extract_model_parameters,Utility,Extract Model Parameters,prompt,"Extracts energy modeling parameters from a user prompt using keyword matching.",1.0
+create_single_location_model,create_single_location_model,Model Builder,Create Single Location Model,"location, generation, energy_carrier=electricity","Creates an energy model for a specific location and generation type.",1.0
+create_simple_xml,create_simple_xml,Utility,Create Simple XML,"location_name, gen_type_name, carrier_name, output_xml","Creates a simple XML model file when PLEXOS is not available.",1.0
+create_multi_location_model,create_multi_location_model,Model Builder,Create Multi-Location Model,"locations, generation_type, energy_carrier=electricity","Creates a combined energy model for multiple locations with the same generation type.",1.0
+create_simple_multi_location_xml,create_simple_multi_location_xml,Utility,Create Simple Multi-Location XML,"location_names, gen_type_name, carrier_name, output_xml","Creates a simple XML model file for multiple locations when PLEXOS is not available.",1.0
+create_comprehensive_model,create_comprehensive_model,Model Builder,Create Comprehensive Model,"locations, generation_types, energy_carriers=[""electricity""]","Creates a comprehensive energy model covering multiple locations and generation types.",1.0
+create_simple_comprehensive_xml,create_simple_comprehensive_xml,Utility,Create Simple Comprehensive XML,"location_names, gen_type_names, carrier_names, output_xml","Creates a simple XML model file for a comprehensive model when PLEXOS is not available.",1.0
+Key,Function,Type,Name,Parameters,Description,Version
+Uncategorised,uncategorized_call.uncategorized_call,,Emil,{},If not other category is appropraite use this.,v1.0
+Energy Model,functions.assistants.emil.main,Assistant,emil,prompt,,,,,Create and run energy models using enhanced PLEXOS functionality with comprehensive model building,2.0

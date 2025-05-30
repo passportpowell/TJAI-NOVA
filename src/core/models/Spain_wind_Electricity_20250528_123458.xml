@@ -1,0 +1,3 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- NOT A PLEXOS DATABASE. -->
+<PLEXOSModel version="7.4" xmlns="https://custom-energy-model/non-plexos/v1"><!--This is a placeholder XML file and is not a PLEXOS database--><Metadata><Timestamp>2025-05-28T12:34:58.105834</Timestamp><ModelType>wind</ModelType><Location>Spain</Location><EnergyCarrier>Electricity</EnergyCarrier><Format>Custom XML (Not PLEXOS)</Format></Metadata><Entities><Regions><Region id="1" name="Spain" /></Regions><Nodes><Node id="1" name="Spain_wind_Electricity" type="wind" carrier="Electricity" region="Spain" /></Nodes></Entities></PLEXOSModel>

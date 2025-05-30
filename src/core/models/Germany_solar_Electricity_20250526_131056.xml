@@ -1,0 +1,3 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- NOT A PLEXOS DATABASE. -->
+<PLEXOSModel version="7.4" xmlns="https://custom-energy-model/non-plexos/v1"><!--This is a placeholder XML file and is not a PLEXOS database--><Metadata><Timestamp>2025-05-26T13:10:56.297860</Timestamp><ModelType>solar</ModelType><Location>Germany</Location><EnergyCarrier>Electricity</EnergyCarrier><Format>Custom XML (Not PLEXOS)</Format></Metadata><Entities><Regions><Region id="1" name="Germany" /></Regions><Nodes><Node id="1" name="Germany_solar_Electricity" type="solar" carrier="Electricity" region="Germany" /></Nodes></Entities></PLEXOSModel>

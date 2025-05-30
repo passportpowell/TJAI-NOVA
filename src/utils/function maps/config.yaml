@@ -1,0 +1,42 @@
+path_to_data: "S:/Favorites/SB 2024/Coding Support/Model Building/input"
+path_to_output: "S:/Favorites/SB 2024/Coding Support/Model Building/output"
+
+adequacy: False
+lole: 3 # hours
+ens_threshold: 100 # MWh
+categories_SoS: ['eMarket', 'Prosumer']
+
+scenario: "Distributed Energy"
+climate_years_expansion: [2009]
+climate_years_dispatch: [2009]
+target_years: [2030, 2035] # include all TYs here
+time_aggregation_method: True
+add_maintenance: True
+
+expand_res: True
+expand_batteries: True
+expand_elntc: True
+expand_ccgt: False
+
+add_ev_objects: True
+charging_types: ['Prosumer', 'Street']
+ev_types: ['Passenger']
+
+add_prosumers: True
+expand_prosumers: True
+
+add_h2zone1: True
+add_h2zone2: True
+add_synfuels: True
+expand_h2ntc: True
+expand_electrolyzers: True
+
+add_heat: True
+
+add_offshore: True
+expand_offshore: True
+med_nodes: ['BG00', 'RO00', 'GR00', 'GR03', 'MT00', 'ITCA', 'ITCN', 'ITCS', 'ITN1', 'ITS1', 'ITSA', 'ITSI']
+
+wacc: 5.
+wacc_method: "TR" # "SPH"
+lifetime: 25

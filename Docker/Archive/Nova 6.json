@@ -1,0 +1,649 @@
+{
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "f778b430-1b99-49f9-9203-914b962e41d6",
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        -920,
+        360
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const prompt = $json.chatInput || $json.message || $json.prompt || \"No prompt\";\nconst history = $json.history || [];\n\nreturn [{\n  json: {\n    prompt,\n    history,\n    timestamp: new Date().toISOString(),\n    sessionId: Date.now().toString()\n  }\n}];\n"
+      },
+      "id": "ef5f0469-6225-4d3b-a959-2972c5f12970",
+      "name": "Prepare Internal Input",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -700,
+        260
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "passThrough"
+      },
+      "id": "3f442567-3686-4d1b-be10-40c11dd1d013",
+      "name": "Merge Inputs",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 1,
+      "position": [
+        -480,
+        360
+      ]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "nova",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "3214bf4f-c563-41af-8234-56d0edae4fb5",
+      "name": "Nova Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        -920,
+        560
+      ],
+      "webhookId": "041b5d78-f0c4-48ab-9ab9-166defe2c703"
+    },
+    {
+      "parameters": {
+        "functionCode": "// Extract prompt and history\nconst prompt = $json.body?.prompt || $json.prompt;\nconst history = $json.body?.history || $json.history || [];\n\nif (!prompt) {\n  return { error: 'Missing prompt' };\n}\n\nreturn {\n  json: {\n    prompt,\n    history,\n    timestamp: new Date().toISOString()\n  }\n};"
+      },
+      "id": "c775a138-8951-45df-802a-76dec1e887d5",
+      "name": "Extract Prompt",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        -700,
+        560
+      ]
+    },
+    {
+      "parameters": {
+        "dataType": "string",
+        "value1": "={{ $json.routeTo }}",
+        "rules": {
+          "rules": [
+            {
+              "value2": "Emil"
+            },
+            {
+              "value2": "Ivan",
+              "output": 1
+            },
+            {
+              "value2": "Lola",
+              "output": 2
+            },
+            {
+              "value2": "Nova",
+              "output": 3
+            }
+          ]
+        }
+      },
+      "id": "6bb0e885-2535-4828-b826-0b883f0e9676",
+      "name": "Route to Agent",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 1,
+      "position": [
+        180,
+        339
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "{\n  \"response\": \"={{ $json.response }}\"\n}\n",
+        "options": {}
+      },
+      "id": "d214f8a4-9a48-4db4-ad61-d178df26cd6b",
+      "name": "Return Agent Response",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [
+        1876,
+        360
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const prompt = $json.prompt?.toLowerCase() || '';\nconst timestamp = $json.timestamp || new Date().toISOString();\nconst sessionId = $json.sessionId || 'unknown';\n\nlet response = '🤖 Emil is ready, but no recognizable action was found.';\nlet country = 'a specified region';\n\n// Try to extract the country (very basic heuristic)\nconst words = prompt.split(/\\s+/);\nconst indexBuild = words.findIndex(w => w.includes(\"build\"));\nconst indexAnalyse = words.findIndex(w => w.includes(\"analyse\"));\n\nif (indexBuild !== -1 && words.length > indexBuild + 2) {\n  // Try to find the next capitalized word (likely a country)\n  country = words.slice(indexBuild + 1).find(w => /^[A-Z]/.test(w)) || 'a specified region';\n  response = `🏗️ Building model for ${country}`;\n} else if (indexAnalyse !== -1 && words.length > indexAnalyse + 2) {\n  country = words.slice(indexAnalyse + 1).find(w => /^[A-Z]/.test(w)) || 'a specified region';\n  response = `📊 Analysing data for ${country}`;\n}\n\nreturn [{\n  json: {\n    agent: 'Emil',\n    response,\n    prompt: $json.prompt || '',\n    timestamp,\n    sessionId\n  }\n}];\n"
+      },
+      "id": "3166997d-e6a6-4e84-884f-d9dd61fdd099",
+      "name": "Emil Result Handler",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1216,
+        60
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "\nconst result = $json.response || 'No response';\nconst prompt = $json.prompt || '';\nconst timestamp = $json.timestamp || new Date().toISOString();\nconst sessionId = $json.sessionId || 'unknown';\n\nreturn [{\n  json: {\n    agent: 'Ivan',\n    response: result,\n    prompt,\n    timestamp,\n    sessionId\n  }\n}];\n"
+      },
+      "id": "d19e342c-1fed-4c23-bb9b-774f6ae06e3e",
+      "name": "Ivan Result Handler",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1216,
+        260
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "\nconst result = $json.response || 'No response';\nconst prompt = $json.prompt || '';\nconst timestamp = $json.timestamp || new Date().toISOString();\nconst sessionId = $json.sessionId || 'unknown';\n\nreturn [{\n  json: {\n    agent: 'Lola',\n    response: result,\n    prompt,\n    timestamp,\n    sessionId\n  }\n}];\n"
+      },
+      "id": "7ab9e375-a6b8-47eb-8693-21917956eff1",
+      "name": "Lola Result Handler",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1216,
+        460
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "\nconst prompt = $json.prompt?.toLowerCase() || \"no prompt\";\n\nlet category = \"general\";\nif (prompt.includes(\"model\") || prompt.includes(\"energy\")) {\n  category = \"energy_model\";\n} else if (prompt.includes(\"report\") || prompt.includes(\"summary\") || prompt.includes(\"write\")) {\n  category = \"report\";\n} else if (prompt.includes(\"chart\") || prompt.includes(\"image\") || prompt.includes(\"visual\")) {\n  category = \"chart\";\n} else if (prompt.includes(\"script\") || prompt.includes(\"python\")) {\n  category = \"code\";\n} else if (/\\d+\\s*[+\\-*/]\\s*\\d+/.test(prompt)) {\n  category = \"math\";\n}\n\nlet agent = \"Nova\";\nif (category === \"energy_model\") agent = \"Emil\";\nelse if (category === \"report\") agent = \"Lola\";\nelse if (category === \"chart\" || category === \"code\") agent = \"Ivan\";\n\nreturn {\n  json: {\n    prompt: $json.prompt,\n    history: $json.history,\n    timestamp: $json.timestamp,\n    sessionId: $json.sessionId,\n    category,\n    routeTo: agent\n  }\n};\n\n\n\n"
+      },
+      "id": "161b8207-e953-470a-a650-074751be2638",
+      "name": "Categorize Prompt",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -40,
+        360
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const result = $json.response || 'No response';\nconst prompt = $json.prompt || '';\nconst timestamp = $json.timestamp || new Date().toISOString();\nconst sessionId = $json.sessionId || 'unknown';\n\nreturn [{\n  json: {\n    agent: 'Nova',\n    response: result,\n    prompt,\n    timestamp,\n    sessionId\n  }\n}];"
+      },
+      "id": "13292ea0-856d-4641-8f56-05843d2eec03",
+      "name": "Nova Result Handler",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1216,
+        660
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "wCP9jJ9Go2cUuDyM",
+          "mode": "list",
+          "cachedResultName": "Emil"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {
+          "waitForSubWorkflow": false
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        996,
+        60
+      ],
+      "id": "b3176b8b-85a7-4cf5-bb9a-8113fd38abd3",
+      "name": "Execute Emil"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "IqQJPBNlxLtN9o12",
+          "mode": "list",
+          "cachedResultName": "Ivan"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {
+          "waitForSubWorkflow": false
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        996,
+        260
+      ],
+      "id": "ff5df047-222e-4010-8ca6-749f48167863",
+      "name": "Execute Ivan"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "7KAw7rjPD9u8SNfj",
+          "mode": "list",
+          "cachedResultName": "Lola"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {
+          "waitForSubWorkflow": false
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        996,
+        460
+      ],
+      "id": "0667aefe-b1d4-4001-9007-9c9c0ab8c7d7",
+      "name": "Execute Lola"
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "const prompt = $json.prompt || \"No prompt received\";\nconst history = $json.history || [];\nconst sessionId = $json.sessionId || \"unknown-session\";\nconst timestamp = $json.timestamp || new Date().toISOString();\n\nreturn {\n  json: {\n    prompt,\n    history,\n    sessionId,\n    timestamp\n  }\n};\n"
+      },
+      "id": "8be3bf9c-27af-4fca-9797-c0f23c80d850",
+      "name": "Nova Prepare Input",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        400,
+        660
+      ]
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4.1-nano",
+          "mode": "list",
+          "cachedResultName": "GPT-4.1-NANO"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "You are Nova, a multi-agent coordination assistant. Your primary role is to understand user requests, identify intents, and coordinate the appropriate specialized agents to fulfill these requests.\n\n### Your Core Responsibilities:\n1. Understand the user's complete request\n2. Identify discrete intents if multiple tasks are mentioned\n3. For each intent, determine the most appropriate agent and function\n4. Maintain conversation context for follow-up questions\n5. Provide direct, accurate, and helpful responses\n\n### Agent System:\nYou coordinate with four specialized agents:\n\n- **Nova** (That's you):\n  - General reasoning and knowledge questions\n  - Mathematical calculations\n  - Web searches when needed\n  - Conversation management\n  - Opening websites\n\n- **Emil**:\n  - Energy modeling (PLEXOS, XMLs, capacity setups)\n  - Data analysis and technical processing\n  - Parameter extraction and scenario definition\n  - Data Analysis\n  - Results analysis\n\n- **Lola**:\n  - Report generation and formatting\n  - Copywriting and proofreading\n  - Summary creation\n  - Natural language processing and refinement\n\n- **Ivan**:\n  - Image generation and visualization\n  - Python script development\n  - Technical code implementation\n\n### Response Guidelines:\n- Be clear, concise, and accurate\n- Maintain contextual awareness across interactions\n- For multi-intent queries, address all parts in a structured manner\n- Show your work for calculations and technical questions\n- If knowledge is insufficient, acknowledge limitations and offer to search\n- Always prioritize the most helpful and accurate response\n\n### Examples:\n\nExample 1: General Knowledge\nUser: \"What is the capital of France?\"\nYou: [Provide direct answer about Paris with key facts]\n\nExample 2: Multi-Intent Request\nUser: \"Build an energy model for solar in Spain and write a report on the results\"\nProcessing:\n- Intent 1: \"Build an energy model for solar in Spain\" → Emil (energy modeling)\n- Intent 2: \"Write a report on the results\" → Lola (report generation)\n\nExample 3: Follow-up Question\nUser: \"What was discussed in session 3?\"\nYou: [Retrieve and summarize the conversation from session 3]\n\nExample 4: Technical Query\nUser: \"What's 237 × 45?\"\nYou: [Calculate and show the working: 237 × 45 = 10,665]\n\nExample 5: Energy Modeling\nUser: \"Run a model for solar and wind generation in Germany\"\nYou: [Determine this requires Emil for energy modeling, identify parameters needed (location: Germany, generation: solar,wind)]\n\nFor structured task assignment, use the following JSON format:\n```json\n{\n  \"intents\": [\n    {\n      \"intent\": \"Specific user sub-task or instruction\",\n      \"agent\": \"AgentName\",\n      \"function\": \"exact_function_name\"\n    }\n  ]\n}",
+              "role": "system"
+            },
+            {
+              "content": "={{ $json.prompt }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "aef98ea7-5819-44d4-989d-3138a2826cd5",
+      "name": "Nova OpenAI Answer",
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        620,
+        660
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "s2LqJsvl4DbHnCTw",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "\nconst aiResponse = $json.message?.content || 'No response';\nconst prompt = $json.prompt || '';\nconst sessionId = $json.sessionId || 'unknown';\nconst timestamp = $json.timestamp || new Date().toISOString();\n\nreturn [{\n  json: {\n    agent: 'Nova',\n    response: aiResponse,\n    prompt,\n    timestamp,\n    sessionId\n  }\n}];\n"
+      },
+      "id": "b0eeff2d-82ae-4c72-aeb1-5f393ca41add",
+      "name": "Nova Format Output",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        996,
+        660
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const prompt = $json.prompt || \"\";\nconst sessionId = $json.sessionId || `session-${Date.now()}`;\nconst timestamp = $json.timestamp || new Date().toISOString();\nconst history = $json.history || [];\n\n// Better clause-based splitting (conjunctions, questions, sentence ends)\nconst segments = prompt\n  .split(/(?:\\band\\b|\\balso\\b|[,.?!;])+/i)\n  .map(s => s.trim())\n  .filter(s => s.length > 3); // Filter out noise\n\nreturn segments.map((p, idx) => ({\n  json: {\n    prompt: p,\n    promptIndex: idx,\n    sessionId,\n    timestamp,\n    history\n  }\n}));\n"
+      },
+      "id": "f2979459-5ca5-47e1-8cb8-f55991903f52",
+      "name": "Split Multi-Intent Prompts",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -260,
+        360
+      ]
+    },
+    {
+      "parameters": {
+        "public": true,
+        "initialMessages": "Hi there,\n\nMy name is NOVA and I will be your coordinator today. How can I help?",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -920,
+        160
+      ],
+      "id": "c4c09ebd-eb31-4f07-992f-b31c44f25e6e",
+      "name": "When chat message received",
+      "webhookId": "e47d6724-c354-4791-aef6-877d7b992b07"
+    },
+    {
+      "parameters": {
+        "numberInputs": 4
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.1,
+      "position": [
+        1436,
+        339
+      ],
+      "id": "055fad7c-2d2e-470e-aa31-095c4e2930bf",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "jsCode": "const texts = items.map(item => {\n  const agent = item.json.agent || '';\n  const response = item.json.response || '';\n\n  // Optional: Add an agent label for clarity\n  return agent ? `🧠 ${agent}:\\n${response}` : response;\n}).filter(Boolean);\n\nreturn [{\n  json: {\n    response: texts.join('\\n\\n')  // Separate agent responses with spacing\n  }\n}];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1656,
+        360
+      ],
+      "id": "949570ac-e9ac-4df2-a5e8-f34880629123",
+      "name": "Combined Resposne"
+    }
+  ],
+  "connections": {
+    "Start": {
+      "main": [
+        [
+          {
+            "node": "Prepare Internal Input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Internal Input": {
+      "main": [
+        [
+          {
+            "node": "Merge Inputs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge Inputs": {
+      "main": [
+        [
+          {
+            "node": "Split Multi-Intent Prompts",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Nova Webhook": {
+      "main": [
+        [
+          {
+            "node": "Extract Prompt",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Prompt": {
+      "main": [
+        [
+          {
+            "node": "Merge Inputs",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Route to Agent": {
+      "main": [
+        [
+          {
+            "node": "Execute Emil",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Execute Ivan",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Execute Lola",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Nova Prepare Input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Emil Result Handler": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ivan Result Handler": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Lola Result Handler": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 2
+          }
+        ]
+      ]
+    },
+    "Categorize Prompt": {
+      "main": [
+        [
+          {
+            "node": "Route to Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Nova Result Handler": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 3
+          }
+        ]
+      ]
+    },
+    "Execute Emil": {
+      "main": [
+        [
+          {
+            "node": "Emil Result Handler",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute Ivan": {
+      "main": [
+        [
+          {
+            "node": "Ivan Result Handler",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute Lola": {
+      "main": [
+        [
+          {
+            "node": "Lola Result Handler",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Nova Prepare Input": {
+      "main": [
+        [
+          {
+            "node": "Nova OpenAI Answer",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Nova OpenAI Answer": {
+      "main": [
+        [
+          {
+            "node": "Nova Format Output",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Nova Format Output": {
+      "main": [
+        [
+          {
+            "node": "Nova Result Handler",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Multi-Intent Prompts": {
+      "main": [
+        [
+          {
+            "node": "Categorize Prompt",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "Prepare Internal Input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Combined Resposne",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Combined Resposne": {
+      "main": [
+        [
+          {
+            "node": "Return Agent Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "42b14e125a07b4268f5179226a03439d17b657e140781a38da9546beb98e0073"
+  }
+}

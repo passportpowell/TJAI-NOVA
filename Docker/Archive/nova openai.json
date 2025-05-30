@@ -1,0 +1,156 @@
+{
+  "nodes": [
+    {
+      "id": "start",
+      "name": "Start",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [200, 300]
+    },
+    {
+      "id": "userPrompt",
+      "name": "User Prompt",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [400, 300],
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "prompt",
+              "value": "What is the future of AI in the energy sector?"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "openaiCall",
+      "name": "OpenAI GPT-4o Mini",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [600, 300],
+      "parameters": {
+        "requestMethod": "POST",
+        "url": "https://api.openai.com/v1/chat/completions",
+        "jsonParameters": true,
+        "options": {},
+        "bodyParametersJson": "={\n  \"model\": \"gpt-4o\",\n  \"messages\": [\n    {\n      \"role\": \"user\",\n      \"content\": $json[\"prompt\"]\n    }\n  ],\n  \"temperature\": 0.7,\n  \"max_tokens\": 400\n}",
+        "headers": [
+          {
+            "name": "Authorization",
+            "value": "Bearer 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"
+          },
+          {
+            "name": "Content-Type",
+            "value": "application/json"
+          }
+        ]
+      }
+    },
+    {
+      "id": "checkResponse",
+      "name": "Check for Errors",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [800, 300],
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$json[\"choices\"][0][\"message\"][\"content\"] || \"\"}}",
+              "operation": "isNotEmpty"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "storeResult",
+      "name": "Store to KB (Mock)",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [1000, 250],
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "kb.general_answer",
+              "value": "={{$json[\"choices\"][0][\"message\"][\"content\"]}}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "errorHandler",
+      "name": "Error Handler",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [1000, 350],
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "kb.general_answer",
+              "value": "OpenAI response failed or returned empty. Please try again."
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Start": {
+      "main": [
+        [
+          {
+            "node": "User Prompt",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "User Prompt": {
+      "main": [
+        [
+          {
+            "node": "OpenAI GPT-4o Mini",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI GPT-4o Mini": {
+      "main": [
+        [
+          {
+            "node": "Check for Errors",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check for Errors": {
+      "main": [
+        [
+          {
+            "node": "Store to KB (Mock)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Error Handler",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  }
+}

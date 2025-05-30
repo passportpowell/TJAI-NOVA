@@ -1,0 +1,3 @@
+﻿ Key                        , Function                    , Type      , Name          , Parameters                                  , Description                                        , Version 
+ copywriting and proofreading , Lola.main                  , Assistant , Lola          ," {""prompt"": ""string""}                        "," Expert in communications, handles various documents", v1.0    
+ Data analysis               , Emil.main                  , Assistant , Emil          ," {""prompt"": ""string"", ""format"": ""xlsx", Handles data analysis from multiple sources        , v1.0    

@@ -1,0 +1,117 @@
+{
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "33d49bb7-0dd1-46a3-b5ec-432fefad449a",
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        -180,
+        180
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "\n// Prepare raw input and ensure required fields\nconst { prompt, history, sessionId, timestamp } = $json;\n\nreturn [{\n  json: {\n    prompt: prompt || \"No prompt received\",\n    history: history || [],\n    sessionId: sessionId || \"unknown-session\",\n    timestamp: timestamp || new Date().toISOString()\n  }\n}];\n"
+      },
+      "id": "9a5319dc-1865-467d-a930-b7a21196c732",
+      "name": "Prepare Input",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        40,
+        180
+      ]
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4.1-nano",
+          "mode": "list",
+          "cachedResultName": "GPT-4.1-NANO"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "You are Nova. Answer the user's question clearly and helpfully.",
+              "role": "system"
+            },
+            {
+              "content": "={{ $json.prompt }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "fdb17b44-578f-4f04-a9b6-2d0fad9201e4",
+      "name": "OpenAI Answer",
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        260,
+        180
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "s2LqJsvl4DbHnCTw",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "\nconst aiResponse = $json.message?.content || 'No response';\nconst prompt = $json.prompt || '';\nconst sessionId = $json.sessionId || 'unknown';\nconst timestamp = $json.timestamp || new Date().toISOString();\n\nreturn [{\n  json: {\n    agent: 'Nova',\n    response: aiResponse,\n    prompt,\n    timestamp,\n    sessionId\n  }\n}];\n"
+      },
+      "id": "1d074033-bfc8-468d-b118-8a9cac9ad20b",
+      "name": "Format Output",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        636,
+        180
+      ]
+    }
+  ],
+  "connections": {
+    "Start": {
+      "main": [
+        [
+          {
+            "node": "Prepare Input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Input": {
+      "main": [
+        [
+          {
+            "node": "OpenAI Answer",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Answer": {
+      "main": [
+        [
+          {
+            "node": "Format Output",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "42b14e125a07b4268f5179226a03439d17b657e140781a38da9546beb98e0073"
+  }
+}

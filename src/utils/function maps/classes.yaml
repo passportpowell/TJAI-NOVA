@@ -1,0 +1,237 @@
+
+class_groups:
+  Electricity: Classes used for electricity production
+  Transmission: Classes used for electricity system structure (Regions, Zones, Nodes), Demand, and Transmission
+  Heat: Classes related to heating Nodes, production and storage
+  Gas: Classes related to gas production, transportation, storage, Demand, Conversions (synthetic fuels, methanation, refineries)
+  Transport: Classes related to Electric Vehicles demand, charging and fleets
+  Ownership: Classes related to ownership entities e.g. companies
+  Universal: General classes that can be created from nothing, where no relevant 
+  Generic: General modeling classes for constraints, objectives, and decision variables
+  Data: Classes related to data management and input
+  Execute: Classes related to execution models and projects
+  Simulation: Classes related to simulation and scheduling
+  Settings: Classes for configuring different aspects of the system
+
+
+
+input_groups:
+  Class: 
+    description: "An asset type such as generators, lines, storages, batteries, or settings like Datafiles, Diagnostics, LT Plan, PASA, Production."
+  Category: 
+    description: "A group of objects within a class. Examples include Gas Turbines, Solar PV, Electricity Grid, Hydrogen Grid, Steam Methane Reformers."
+  Object: 
+    description: "Individual items within a category. For instance, specific gas plants in Germany."
+  Property: 
+    description: "Technical parameters associated with an object or category, like Max Capacity, Max Ramp Rate, Max Flow."
+  Attribute: 
+    description: "Nuances or metadata related to properties, such as Date From, Memo, Scenario, Attribute."
+
+Primary_classes:
+  - Generator
+  - Fuel
+  - Emission
+  - Storage
+  - Waterway
+  - Purchaser
+  - Battery
+  - Power2X
+  - Region
+  - Node
+  - Load
+  - Line
+  - HeatPlant
+  - HeatNode
+  - GasField
+  - GasPlant
+  - GasPipeline
+  - GasNode
+  - GasStorage
+  - GasDemand
+  - GasTransport
+  - Vehicle
+  - ChargingStation
+  - Constraint
+  - DataFile
+  - Variable
+  - Timeslice
+  - Scenario
+
+Primary_classes_joule_solution_extract:
+  SystemGenerators: Contains electricity generators. Renewables, Nuclear, Fossil, Hydro etc.
+  SystemBatteries: Contains batteries used in the electricity system
+  SystemPower2X: Contains all electrolysers used for converting electricity to hydrogen
+  SystemRegions: Contains Electricity Regions
+  SystemNodes: Contains electricity nodes, including residential, tertiary, industry, transport and AI.
+  SystemLines: Contains electricity lines including market connecting to sectors
+  SystemHeatPlants: Contains hybrid heating plants for dwellings with methane boilers and electricity heat pumps
+  SystemHeatNodes: Contains heating nodes from space and water heating
+  SystemGasFields: Contains gas fields for H2 Imports, White Hydrogen, Biogenic CO2, Biomethane, Natural Gas
+  SystemGasPlants: Contains gas plants for converting energy includes. DAC, SMR, ekerosene (h2 and CO2 parts), methonol (h2 and CO2 parts)
+  SystemGasPipelines: Contains pipelines for Hydrogen including imports, methane, CO2, ekerosene and methonol
+  SystemGasNodes: contains gas nodes for hydrogen, methane, CO2, ekerosene and methonol
+  SystemGasStorages: contains gas storages for hydrogen, methane, CO2, ekerosene and methonol
+  SystemGasDemands: contains gas demands for hydrogen, methane, CO2, ekerosene and methonol
+  SystemVehicles: contains vehicles for hydrogen, methane, CO2, ekerosene and methonol
+  SystemChargingStations: contains charging stations for hydrogen, methane, CO2, ekerosene and methonol
+
+Primary_classes_dhem_solution_extract:
+  SystemGenerators: Contains electricity generators. Renewables, Nuclear, Fossil, Hydro etc.
+  SystemBatteries: Contains batteries used in the electricity system
+  SystemPower2X: Contains all electrolysers used for converting electricity to hydrogen
+  SystemRegions: Contains Electricity Regions
+  SystemGasFields: Contains gas fields for H2 Imports, White Hydrogen, Biogenic CO2, Biomethane, Natural Gas
+  SystemGasPipelines: Contains pipelines for Hydrogen including imports, methane, CO2, ekerosene and methonol
+  SystemGasNodes: contains gas nodes for hydrogen, methane, CO2, ekerosene and methonol
+  SystemGasStorages: contains gas storages for hydrogen, methane, CO2, ekerosene and methonol
+  SystemGasDemands: contains gas demands for hydrogen, methane, CO2, ekerosene and methonol
+
+Settings:
+  - Model
+  - Horizon
+  - Report
+  - LT Plan
+  - PASA
+  - MT Schedule
+  - ST Schedule
+  - Stochastic
+  - Transmission
+  - Production
+  - Competition
+  - Performance
+  - Diagnostic
+
+Electricity:
+  - Generator
+  - Fuel
+  - Fuel Contract
+  - Emission
+  - Abatement
+  - Storage
+  - Waterway
+  - Physical Contract
+  - Purchaser
+  - Reserve
+  - Battery
+  - Power2X
+  - Reliability
+  - Financial Contract
+  - Cournot
+  - RSI
+
+Transmission:
+  - Region
+  - Pool
+  - Zone
+  - Node
+  - Load
+  - Line
+  - MLF
+  - Transformer
+  - Flow Control
+  - Interface
+  - Contingency
+  - Hub
+  - Transmission Right
+
+Heat:
+  - Heat Plant
+  - Heat Node
+  - Heat Storage
+
+Gas:
+  - Gas Field
+  - Gas Plant
+  - Gas Pipeline
+  - Gas Node
+  - Gas Storage
+  - Gas Demand
+  - Gas DSM Program
+  - Gas Basin
+  - Gas Zone
+  - Gas Contract
+  - Gas Transport
+  - Gas Capacity Release Offer
+
+Water:
+  - Water Plant
+  - Water Pipeline
+  - Water Node
+  - Water Storage
+  - Water Demand
+  - Water Zone
+  - Water Pump Station
+  - Water Pump
+
+Transport:
+  - Vehicle
+  - Charging Station
+  - Fleet
+
+Ownership:
+  - Company
+
+Universal:
+  - Commodity
+  - Process
+  - Facility
+  - Maintenance
+  - Flow Network
+  - Flow Node
+  - Flow Path
+  - Flow Storage
+  - Entity
+  - Market
+
+Generic:
+  - Constraint
+  - Objective
+  - Decision Variable
+  - Nonlinear Constraint
+
+Data:
+  - Data File
+  - Variable
+  - Timeslice
+  - Global
+  - Scenario
+  - Weather Station
+
+Execute:
+  - Model
+  - Project
+
+Simulation:
+  - Horizon
+  - Report
+  - LT Plan
+  - PASA
+  - MT Schedule
+  - ST Schedule
+
+Settings:
+  - Stochastic
+  - Transmission
+  - Production
+  - Competition
+  - Performance
+  - Diagnostic
+
+Attributes:
+  - Expression: Hold the value to a mathetical operation e.g. operation is double. The expression name could be double and the value would be 2
+  - Timeslice: Exyta
+  - Memo:
+  - Scenario
+  - Units
+  - Value
+
+Attributes:
+  Timeslice: 
+    description: "Allows the property to operation within specific periods spanning from years to seconds"
+  Memo: 
+    description: "Add a note to a property for additional information or explanation"
+  Scenario: 
+    description: "Adds a tag to the property which can be enabled or disabled when running the model"
+  Value: 
+    description: "Value of the property. Could be numerical of a text value"
+

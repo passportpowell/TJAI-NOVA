@@ -1,0 +1,378 @@
+{
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "5a430a04-9724-4f91-8128-51e355d1405a",
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        12100,
+        4580
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "\nconst prompt = $json.prompt || \"No prompt\";\nconst history = $json.history || [];\n\nreturn [{\n  json: {\n    prompt,\n    history,\n    timestamp: new Date().toISOString(),\n    sessionId: Date.now().toString()\n  }\n}];\n"
+      },
+      "id": "447c2dce-595c-4a3d-bdf3-a69d2ca0f134",
+      "name": "Prepare Internal Input",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        12320,
+        4580
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "passThrough"
+      },
+      "id": "0011cfd5-2663-4486-9b1f-3e435178ca9d",
+      "name": "Merge Inputs",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 1,
+      "position": [
+        12540,
+        4580
+      ]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "nova",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "e4b175f4-b9c2-4d17-94a4-5d7677122cfa",
+      "name": "Nova Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        12320,
+        4780
+      ],
+      "webhookId": "58c96d5f-9ff6-4812-86d1-3d4a45bc2038"
+    },
+    {
+      "parameters": {
+        "functionCode": "// Extract prompt and history\nconst prompt = $json.body?.prompt || $json.prompt;\nconst history = $json.body?.history || $json.history || [];\n\nif (!prompt) {\n  return { error: 'Missing prompt' };\n}\n\nreturn {\n  json: {\n    prompt,\n    history,\n    timestamp: new Date().toISOString()\n  }\n};"
+      },
+      "id": "5e13fa5f-f559-4453-8e05-b6602d0e81d8",
+      "name": "Extract Prompt",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        12540,
+        4780
+      ]
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4.1-nano",
+          "mode": "list",
+          "cachedResultName": "GPT-4.1-NANO"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "Based on the user prompt, return ONLY the name of the best agent to handle it: Emil (energy), Ivan (chart), or Lola (report).",
+              "role": "system"
+            },
+            {
+              "content": "={{ $json.prompt }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "18bb59ec-cfde-4a2b-8ec3-6492e8ee2498",
+      "name": "Classify Agent",
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        12760,
+        4680
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "s2LqJsvl4DbHnCTw",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "id": "18725020-d0c1-4df3-ae8f-a3812bfb1182",
+      "name": "Route to Agent",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 1,
+      "position": [
+        13136,
+        4659
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": "emil-stub",
+        "options": {}
+      },
+      "id": "bf31f9f5-fbfa-4f76-8fbe-3204767895f6",
+      "name": "Execute Emil",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1,
+      "position": [
+        13356,
+        4480
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": "ivan-stub",
+        "options": {}
+      },
+      "id": "d0c970ab-35fb-4afe-a173-b63d6396a098",
+      "name": "Execute Ivan",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1,
+      "position": [
+        13356,
+        4680
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": "lola-stub",
+        "options": {}
+      },
+      "id": "cb2c6ebf-f41c-47eb-8e59-920e824a1bae",
+      "name": "Execute Lola",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1,
+      "position": [
+        13356,
+        4880
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "options": {}
+      },
+      "id": "6b2c4d25-6498-44b0-a31a-b4738a2953ce",
+      "name": "Return Agent Response",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [
+        13796,
+        4680
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "\nconst result = $json.response || 'No response';\nconst prompt = $json.prompt || '';\nconst timestamp = $json.timestamp || new Date().toISOString();\nconst sessionId = $json.sessionId || 'unknown';\n\nreturn [{\n  json: {\n    agent: 'Emil',\n    response: result,\n    prompt,\n    timestamp,\n    sessionId\n  }\n}];\n"
+      },
+      "id": "1979159b-371e-4df0-a474-ce1f938d9ddd",
+      "name": "Emil Result Handler",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        13576,
+        4480
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "\nconst result = $json.response || 'No response';\nconst prompt = $json.prompt || '';\nconst timestamp = $json.timestamp || new Date().toISOString();\nconst sessionId = $json.sessionId || 'unknown';\n\nreturn [{\n  json: {\n    agent: 'Ivan',\n    response: result,\n    prompt,\n    timestamp,\n    sessionId\n  }\n}];\n"
+      },
+      "id": "d8ea0588-5513-4a91-83d9-cdb31ff439fb",
+      "name": "Ivan Result Handler",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        13576,
+        4680
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "\nconst result = $json.response || 'No response';\nconst prompt = $json.prompt || '';\nconst timestamp = $json.timestamp || new Date().toISOString();\nconst sessionId = $json.sessionId || 'unknown';\n\nreturn [{\n  json: {\n    agent: 'Lola',\n    response: result,\n    prompt,\n    timestamp,\n    sessionId\n  }\n}];\n"
+      },
+      "id": "352afa2e-22bd-49e3-bb44-218c6517056e",
+      "name": "Lola Result Handler",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        13576,
+        4880
+      ]
+    }
+  ],
+  "connections": {
+    "Start": {
+      "main": [
+        [
+          {
+            "node": "Prepare Internal Input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Internal Input": {
+      "main": [
+        [
+          {
+            "node": "Merge Inputs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge Inputs": {
+      "main": [
+        [
+          {
+            "node": "Classify Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Nova Webhook": {
+      "main": [
+        [
+          {
+            "node": "Extract Prompt",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Prompt": {
+      "main": [
+        [
+          {
+            "node": "Classify Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Classify Agent": {
+      "main": [
+        [
+          {
+            "node": "Route to Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Route to Agent": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Execute Emil",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Execute Ivan",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Execute Lola",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute Emil": {
+      "main": [
+        [
+          {
+            "node": "Emil Result Handler",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute Ivan": {
+      "main": [
+        [
+          {
+            "node": "Ivan Result Handler",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute Lola": {
+      "main": [
+        [
+          {
+            "node": "Lola Result Handler",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Emil Result Handler": {
+      "main": [
+        [
+          {
+            "node": "Return Agent Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ivan Result Handler": {
+      "main": [
+        [
+          {
+            "node": "Return Agent Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Lola Result Handler": {
+      "main": [
+        [
+          {
+            "node": "Return Agent Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "42b14e125a07b4268f5179226a03439d17b657e140781a38da9546beb98e0073"
+  }
+}

@@ -1,0 +1,3 @@
+Key,Function,Type,Name,Parameters,Description,Version
+Uncategorised,uncategorized_call.uncategorized_call,,Emil,{},If not other category is appropraite use this.,v1.0
+Energy Model,functions.assistants.emil.main,Assistant,emil,prompt,,,,,Create and run energy models including solar generation forecasts,1.0

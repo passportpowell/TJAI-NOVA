@@ -1,0 +1,572 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 2300">
+  <!-- Styles -->
+  <defs>
+    <style>
+      /* Assistant/Agent boxes */
+      .assistant-box {
+        fill: #ffece6;
+        stroke: #ff7d4d;
+        stroke-width: 2;
+        rx: 5;
+        ry: 5;
+      }
+      .assistant-text {
+        font-family: Arial, sans-serif;
+        font-size: 14px;
+        text-anchor: middle;
+        dominant-baseline: middle;
+        fill: #cc3300;
+      }
+      
+      /* Function boxes */
+      .function-box {
+        fill: #e6f7ff;
+        stroke: #1890ff;
+        stroke-width: 2;
+        rx: 5;
+        ry: 5;
+      }
+      .function-text {
+        font-family: Arial, sans-serif;
+        font-size: 14px;
+        text-anchor: middle;
+        dominant-baseline: middle;
+        fill: #0050b3;
+      }
+      
+      /* Data Processing boxes */
+      .data-box {
+        fill: #f0fff0;
+        stroke: #52c41a;
+        stroke-width: 2;
+        rx: 5;
+        ry: 5;
+      }
+      .data-text {
+        font-family: Arial, sans-serif;
+        font-size: 14px;
+        text-anchor: middle;
+        dominant-baseline: middle;
+        fill: #237804;
+      }
+      
+      /* Decision/Control Flow boxes */
+      .decision-box {
+        fill: #f9f0ff;
+        stroke: #722ed1;
+        stroke-width: 2;
+        rx: 5;
+        ry: 5;
+      }
+      .decision-text {
+        font-family: Arial, sans-serif;
+        font-size: 14px;
+        text-anchor: middle;
+        dominant-baseline: middle;
+        fill: #531dab;
+      }
+      
+      /* Input/Output boxes */
+      .io-box {
+        fill: #fff7e6;
+        stroke: #faad14;
+        stroke-width: 2;
+        rx: 5;
+        ry: 5;
+      }
+      .io-text {
+        font-family: Arial, sans-serif;
+        font-size: 14px;
+        text-anchor: middle;
+        dominant-baseline: middle;
+        fill: #ad6800;
+      }
+      
+      /* Enhanced/New Component boxes */
+      .enhanced-box {
+        fill: #fff1f0;
+        stroke: #f5222d;
+        stroke-width: 2;
+        rx: 5;
+        ry: 5;
+        stroke-dasharray: 5,3;
+      }
+      .enhanced-text {
+        font-family: Arial, sans-serif;
+        font-size: 14px;
+        text-anchor: middle;
+        dominant-baseline: middle;
+        fill: #a8071a;
+        font-weight: bold;
+      }
+      
+      /* Error Handling Component boxes */
+      .error-box {
+        fill: #ffeae6;
+        stroke: #ff4d4f;
+        stroke-width: 2;
+        rx: 5;
+        ry: 5;
+      }
+      .error-text {
+        font-family: Arial, sans-serif;
+        font-size: 14px;
+        text-anchor: middle;
+        dominant-baseline: middle;
+        fill: #cf1322;
+      }
+      
+      /* Legend */
+      .legend-title {
+        font-family: Arial, sans-serif;
+        font-size: 16px;
+        font-weight: bold;
+        text-anchor: middle;
+      }
+      .legend-text {
+        font-family: Arial, sans-serif;
+        font-size: 12px;
+        text-anchor: start;
+        dominant-baseline: middle;
+      }
+      
+      /* Standard styling */
+      .arrow {
+        stroke: #333;
+        stroke-width: 2;
+        marker-end: url(#arrowhead);
+      }
+      .enhanced-arrow {
+        stroke: #f5222d;
+        stroke-width: 2;
+        stroke-dasharray: 5,3;
+        marker-end: url(#redarrowhead);
+      }
+      .error-arrow {
+        stroke: #ff4d4f;
+        stroke-width: 2;
+        marker-end: url(#errorarrowhead);
+      }
+      .yes-no-text {
+        font-family: Arial, sans-serif;
+        font-size: 12px;
+        fill: #333;
+      }
+      .note-box {
+        fill: #fffbe6;
+        stroke: #faad14;
+        stroke-width: 1;
+        rx: 5;
+        ry: 5;
+      }
+      .note-text {
+        font-family: Arial, sans-serif;
+        font-size: 10px;
+        text-anchor: middle;
+        dominant-baseline: middle;
+        fill: #ad6800;
+      }
+    </style>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#333" />
+    </marker>
+    <marker id="redarrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#f5222d" />
+    </marker>
+    <marker id="errorarrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#ff4d4f" />
+    </marker>
+  </defs>
+  
+  <!-- Legend -->
+  <rect x="100" y="2200" width="1000" height="90" fill="white" stroke="#333" stroke-width="1" rx="5" ry="5" />
+  <text x="600" y="2220" class="legend-title">LEGEND</text>
+  
+  <!-- Legend Items -->
+  <!-- Assistant/Agent -->
+  <rect x="130" y="2235" width="30" height="20" class="assistant-box" />
+  <text x="170" y="2245" class="legend-text" fill="#cc3300">Assistant/Agent Interaction</text>
+  
+  <!-- Function -->
+  <rect x="350" y="2235" width="30" height="20" class="function-box" />
+  <text x="390" y="2245" class="legend-text" fill="#0050b3">Function Execution</text>
+  
+  <!-- Data -->
+  <rect x="570" y="2235" width="30" height="20" class="data-box" />
+  <text x="610" y="2245" class="legend-text" fill="#237804">Data Processing</text>
+  
+  <!-- Decision -->
+  <rect x="770" y="2235" width="30" height="20" class="decision-box" />
+  <text x="810" y="2245" class="legend-text" fill="#531dab">Decision/Control Flow</text>
+  
+  <!-- IO -->
+  <rect x="130" y="2265" width="30" height="20" class="io-box" />
+  <text x="170" y="2275" class="legend-text" fill="#ad6800">Input/Output</text>
+  
+  <!-- Enhanced -->
+  <rect x="350" y="2265" width="30" height="20" class="enhanced-box" />
+  <text x="390" y="2275" class="legend-text" fill="#a8071a">Enhanced/New Component</text>
+  
+  <!-- Error -->
+  <rect x="570" y="2265" width="30" height="20" class="error-box" />
+  <text x="610" y="2275" class="legend-text" fill="#cf1322">Error Handling Component</text>
+  
+  <!-- Main Boxes -->
+  <!-- User Prompt - IO -->
+  <rect x="500" y="20" width="200" height="40" class="io-box" />
+  <text x="600" y="40" class="io-text">User Prompt</text>
+  
+  <!-- Coordination Agent - Assistant -->
+  <rect x="480" y="80" width="240" height="40" class="assistant-box" />
+  <text x="600" y="100" class="assistant-text">Coordination Agent (Nova)</text>
+  
+  <!-- Extract Metadata - Data -->
+  <rect x="480" y="140" width="240" height="40" class="data-box" />
+  <text x="600" y="160" class="data-text">Extract Metadata from Prompt</text>
+  
+  <!-- ENHANCED: Centralized Task List Creator - Function -->
+  <rect x="480" y="200" width="240" height="40" class="enhanced-box" />
+  <text x="600" y="220" class="enhanced-text">Centralized Task List Creator</text>
+  
+  <!-- Note for Centralized Task List Creator -->
+  <rect x="730" y="180" width="220" height="80" class="note-box" />
+  <text x="840" y="195" class="note-text">Creates complete hierarchy:</text>
+  <text x="840" y="215" class="note-text">1. High-level goal tasks</text>
+  <text x="840" y="235" class="note-text">2. Mid-level functional tasks</text>
+  <text x="840" y="255" class="note-text">3. Atomic function-level tasks</text>
+  
+  <!-- Recursive Task Breakdown - Enhanced -->
+  <rect x="730" y="280" width="220" height="40" class="enhanced-box" />
+  <text x="840" y="300" class="enhanced-text">Recursive Task Breakdown</text>
+  
+  <!-- Dependency Graph Creation - Enhanced -->
+  <rect x="480" y="280" width="240" height="40" class="enhanced-box" />
+  <text x="600" y="300" class="enhanced-text">Dependency Graph Creation</text>
+  
+  <!-- Parameter Analysis - Enhanced -->
+  <rect x="480" y="340" width="240" height="40" class="enhanced-box" />
+  <text x="600" y="360" class="enhanced-text">Complete Parameter Analysis</text>
+  
+  <!-- Missing Arguments Check - Data -->
+  <rect x="480" y="400" width="240" height="40" class="data-box" />
+  <text x="600" y="420" class="data-text">Check for Missing Arguments</text>
+  
+  <!-- Front-loaded User Interaction - Enhanced -->
+  <rect x="750" y="400" width="200" height="40" class="enhanced-box" />
+  <text x="850" y="420" class="enhanced-text">Front-loaded User Interaction</text>
+  
+  <!-- Note for Front-loaded User Interaction -->
+  <rect x="750" y="450" width="200" height="60" class="note-box" />
+  <text x="850" y="465" class="note-text">All required inputs identified</text>
+  <text x="850" y="480" class="note-text">at once, preventing multiple</text>
+  <text x="850" y="495" class="note-text">interruptions during execution</text>
+  
+  <!-- Global Optimization - Enhanced -->
+  <rect x="480" y="460" width="240" height="40" class="enhanced-box" />
+  <text x="600" y="480" class="enhanced-text">Global Execution Optimization</text>
+  
+  <!-- Dynamic Task Priority Queue - Enhanced -->
+  <rect x="480" y="520" width="240" height="40" class="enhanced-box" />
+  <text x="600" y="540" class="enhanced-text">Dynamic Task Priority Queue</text>
+  
+  <!-- Execute All Tasks? - Decision -->
+  <rect x="500" y="580" width="200" height="40" class="decision-box" />
+  <text x="600" y="600" class="decision-text">Execute All Tasks?</text>
+  
+  <!-- Execution Strategy Selection - Enhanced -->
+  <rect x="480" y="640" width="240" height="40" class="enhanced-box" />
+  <text x="600" y="660" class="enhanced-text">Execution Strategy Selection</text>
+  
+  <!-- Parallel or Sequential? - Decision -->
+  <rect x="500" y="700" width="200" height="40" class="decision-box" />
+  <text x="600" y="720" class="decision-text">Parallel or Sequential?</text>
+  
+  <!-- Parallel Task Group Distribution - Function -->
+  <rect x="200" y="760" width="240" height="40" class="function-box" />
+  <text x="320" y="780" class="function-text">Parallel Task Group Distribution</text>
+  
+  <!-- Sequential Task Distribution - Function -->
+  <rect x="760" y="760" width="240" height="40" class="function-box" />
+  <text x="880" y="780" class="function-text">Sequential Task Distribution</text>
+  
+  <!-- Assign Task to Assistant A - Assistant -->
+  <rect x="100" y="820" width="180" height="40" class="assistant-box" />
+  <text x="190" y="840" class="assistant-text">Assign Task to Assistant A</text>
+  
+  <!-- Assign Task to Assistant B - Assistant -->
+  <rect x="360" y="820" width="180" height="40" class="assistant-box" />
+  <text x="450" y="840" class="assistant-text">Assign Task to Assistant B</text>
+  
+  <!-- Execute Function - Function -->
+  <rect x="760" y="820" width="240" height="40" class="function-box" />
+  <text x="880" y="840" class="function-text">Execute Function</text>
+  
+  <!-- Function Result Prediction - Enhanced -->
+  <rect x="180" y="880" width="280" height="40" class="enhanced-box" />
+  <text x="320" y="900" class="enhanced-text">Function Result Prediction</text>
+  
+  <!-- Is Function Found? - Decision -->
+  <rect x="220" y="940" width="200" height="40" class="decision-box" />
+  <text x="320" y="960" class="decision-text">Is Function Found?</text>
+  
+  <!-- Handoff to Ivan (original) - Assistant - MOVED LEFT -->
+  <rect x="-40" y="1000" width="160" height="40" class="assistant-box" />
+  <text x="40" y="1020" class="assistant-text">Handoff to Ivan</text>
+  
+  <!-- Execute Function - Function -->
+  <rect x="300" y="1000" width="160" height="40" class="function-box" />
+  <text x="380" y="1020" class="function-text">Execute Function</text>
+  
+  <!-- Function Execution Monitor - NEW ERROR HANDLING -->
+  <rect x="300" y="1060" width="160" height="40" class="error-box" />
+  <text x="380" y="1080" class="error-text">Function Execution Monitor</text>
+  
+  <!-- Function Successful? - Decision -->
+  <rect x="300" y="1120" width="160" height="40" class="decision-box" />
+  <text x="380" y="1140" class="decision-text">Function Successful?</text>
+  
+  <!-- IVAN for Error Analysis - CHANGED FROM ERROR ENGINE -->
+  <rect x="540" y="1120" width="200" height="40" class="assistant-box" />
+  <text x="640" y="1140" class="assistant-text">IVAN</text>
+  
+  <!-- Error Classification - NEW ERROR HANDLING -->
+  <rect x="540" y="1180" width="200" height="40" class="error-box" />
+  <text x="640" y="1200" class="error-text">Error Classification</text>
+  
+  <!-- Error Resolution - Decision -->
+  <rect x="540" y="1240" width="200" height="40" class="decision-box" />
+  <text x="640" y="1260" class="decision-text">Error Resolution?</text>
+  
+  <!-- Branch Function - NEW ERROR HANDLING -->
+  <rect x="300" y="1320" width="160" height="40" class="error-box" />
+  <text x="380" y="1340" class="error-text">Branch Function</text>
+  
+  <!-- Call Alternative Function - NEW ERROR HANDLING -->
+  <rect x="540" y="1320" width="200" height="40" class="error-box" />
+  <text x="640" y="1340" class="error-text">Call Alternative Function</text>
+  
+  <!-- Handoff to Ivan (new) - Assistant -->
+  <rect x="800" y="1320" width="160" height="40" class="assistant-box" />
+  <text x="880" y="1340" class="assistant-text">Handoff to Ivan</text>
+  
+  <!-- Automated Function Testing - Function -->
+  <rect x="-40" y="1060" width="240" height="40" class="function-box" />
+  <text x="80" y="1080" class="function-text">Automated Function Testing</text>
+  
+  <!-- Add Outputs to Session Log - Data -->
+  <rect x="265" y="1400" width="230" height="40" class="data-box" />
+  <text x="380" y="1420" class="data-text">Add Outputs to Session Log</text>
+  
+  <!-- Add New Function to Function Map - Function -->
+  <rect x="-40" y="1120" width="240" height="40" class="function-box" />
+  <text x="80" y="1140" class="function-text">Add New Function to Function Map</text>
+  
+  <!-- Return Outputs to Assistant - Assistant -->
+  <rect x="265" y="1480" width="230" height="40" class="assistant-box" />
+  <text x="380" y="1500" class="assistant-text">Return Outputs to Assistant</text>
+  
+  <!-- Execute Function - Function -->
+  <rect x="-40" y="1180" width="240" height="40" class="function-box" />
+  <text x="80" y="1200" class="function-text">Execute Function</text>
+  
+  <!-- Add Outputs to Session Log - Data -->
+  <rect x="760" y="1400" width="230" height="40" class="data-box" />
+  <text x="875" y="1420" class="data-text">Add Outputs to Session Log</text>
+  
+  <!-- Return Results - Data -->
+  <rect x="760" y="1480" width="230" height="40" class="data-box" />
+  <text x="875" y="1500" class="data-text">Return Results</text>
+  
+  <!-- Task Results Aggregation - Data -->
+  <rect x="450" y="1580" width="240" height="40" class="data-box" />
+  <text x="570" y="1600" class="data-text">Task Results Aggregation</text>
+  
+  <!-- Quality Control Analysis - NOVA EXTENDED ROLE -->
+  <rect x="450" y="1660" width="240" height="40" class="enhanced-box" />
+  <text x="570" y="1680" class="enhanced-text">Quality Control Analysis</text>
+  
+  <!-- Results Satisfactory? - Decision -->
+  <rect x="470" y="1740" width="200" height="40" class="decision-box" />
+  <text x="570" y="1760" class="decision-text">Results Satisfactory?</text>
+  
+  <!-- Prompt Fulfilled! End - IO -->
+  <rect x="450" y="1960" width="240" height="40" class="io-box" />
+  <text x="570" y="1980" class="io-text">Prompt Fulfilled! End</text>
+  
+  <!-- Correction Plan - NOVA EXTENDED ROLE -->
+  <rect x="750" y="1740" width="200" height="40" class="enhanced-box" />
+  <text x="850" y="1760" class="enhanced-text">Correction Plan</text>
+  
+  <!-- Submit Additional Tasks - NOVA EXTENDED ROLE -->
+  <rect x="750" y="1820" width="200" height="40" class="enhanced-box" />
+  <text x="850" y="1840" class="enhanced-text">Submit Additional Tasks</text>
+  
+  <!-- Arrows -->
+  <!-- User Prompt to Coordination Agent -->
+  <line x1="600" y1="60" x2="600" y2="80" class="arrow" />
+  
+  <!-- Coordination Agent to Extract Metadata - DIRECT CONNECTION -->
+  <line x1="600" y1="120" x2="600" y2="140" class="arrow" />
+  
+  <!-- Extract Metadata to Centralized Task List Creator -->
+  <line x1="600" y1="180" x2="600" y2="200" class="arrow" />
+  
+  <!-- Centralized Task List Creator to Recursive Task Breakdown -->
+  <path d="M 720 220 L 840 220 L 840 280" class="enhanced-arrow" fill="none" />
+  
+  <!-- Recursive Task Breakdown back to Centralized Task List Creator -->
+  <path d="M 780 280 L 700 250 L 600 220" class="enhanced-arrow" fill="none" />
+  
+  <!-- Centralized Task List Creator to Dependency Graph Creation -->
+  <line x1="600" y1="240" x2="600" y2="280" class="enhanced-arrow" />
+  
+  <!-- Dependency Graph Creation to Parameter Analysis -->
+  <line x1="600" y1="320" x2="600" y2="340" class="enhanced-arrow" />
+  
+  <!-- Parameter Analysis to Missing Arguments Check -->
+  <line x1="600" y1="380" x2="600" y2="400" class="arrow" />
+  
+  <!-- Missing Arguments Check to Front-loaded User Interaction -->
+  <line x1="720" y1="420" x2="750" y2="420" class="enhanced-arrow" />
+  
+  <!-- Front-loaded User Interaction back to Missing Arguments Check -->
+  <path d="M 850 400 L 850 380 L 600 380 L 600 400" class="enhanced-arrow" fill="none" />
+  
+  <!-- Missing Arguments Check to Global Execution Optimization -->
+  <line x1="600" y1="440" x2="600" y2="460" class="enhanced-arrow" />
+  
+  <!-- Global Execution Optimization to Dynamic Task Priority Queue -->
+  <line x1="600" y1="500" x2="600" y2="520" class="enhanced-arrow" />
+  
+  <!-- Dynamic Task Priority Queue to Execute All Tasks? -->
+  <line x1="600" y1="560" x2="600" y2="580" class="arrow" />
+  
+  <!-- Execute All Tasks? to Execution Strategy Selection -->
+  <line x1="600" y1="620" x2="600" y2="640" class="arrow" />
+  <text x="580" y="635" class="yes-no-text">No</text>
+  
+  <!-- Execute All Tasks? to Quality Control Analysis (Bypassing tasks) -->
+  <path d="M 700 600 L 1050 600 L 1050 1680 L 690 1680" class="arrow" fill="none" />
+  <text x="740" y="580" class="yes-no-text">Yes</text>
+  
+  <!-- Execution Strategy Selection to Parallel or Sequential? -->
+  <line x1="600" y1="680" x2="600" y2="700" class="arrow" />
+  
+  <!-- Parallel or Sequential? to Parallel Task Group Distribution -->
+  <path d="M 500 720 L 320 720 L 320 760" class="arrow" fill="none" />
+  <text x="400" y="700" class="yes-no-text">Parallel</text>
+  
+  <!-- Parallel or Sequential? to Sequential Task Distribution -->
+  <path d="M 700 720 L 880 720 L 880 760" class="arrow" fill="none" />
+  <text x="780" y="700" class="yes-no-text">Sequential</text>
+  
+  <!-- Sequential Task Distribution to Execute Function -->
+  <line x1="880" y1="800" x2="880" y2="820" class="arrow" />
+  
+  <!-- Parallel Task Group Distribution to Assign Task to Assistant A -->
+  <path d="M 320 800 L 320 820 L 190 820" class="arrow" fill="none" />
+  
+  <!-- Parallel Task Group Distribution to Assign Task to Assistant B -->
+  <path d="M 320 800 L 320 820 L 450 820" class="arrow" fill="none" />
+  
+  <!-- Assign Task to Assistant A to Function Result Prediction -->
+  <path d="M 190 860 L 190 880 L 320 880" class="arrow" fill="none" />
+  
+  <!-- Assign Task to Assistant B to Function Result Prediction -->
+  <path d="M 450 860 L 450 880 L 320 880" class="arrow" fill="none" />
+  
+  <!-- Function Result Prediction to Is Function Found? -->
+  <line x1="320" y1="920" x2="320" y2="940" class="enhanced-arrow" />
+  
+  <!-- Is Function Found? to Execute Function - REPOSITIONED -->
+  <path d="M 370 980 L 380 980 L 380 1000" class="arrow" fill="none" />
+  <text x="380" y="990" class="yes-no-text">Yes</text>
+  
+  <!-- Is Function Found? to Handoff to Ivan - REPOSITIONED -->
+  <path d="M 220 980 L 40 980 L 40 1000" class="arrow" fill="none" />
+  <text x="140" y="960" class="yes-no-text">No</text>
+  
+  <!-- Execute Function to Function Execution Monitor -->
+  <line x1="380" y1="1040" x2="380" y2="1060" class="error-arrow" />
+  
+  <!-- Function Execution Monitor to Function Successful? -->
+  <line x1="380" y1="1100" x2="380" y2="1120" class="error-arrow" />
+  
+  <!-- Function Successful? to Add Outputs to Session Log -->
+  <path d="M 380 1160 L 380 1400" class="arrow" fill="none" />
+  <text x="350" y="1200" class="yes-no-text">Yes</text>
+  
+  <!-- Function Successful? to IVAN -->
+  <path d="M 460 1140 L 540 1140" class="error-arrow" fill="none" />
+  <text x="500" y="1120" class="yes-no-text">No</text>
+  
+  <!-- IVAN to Error Classification -->
+  <line x1="640" y1="1160" x2="640" y2="1180" class="error-arrow" />
+  
+  <!-- Error Classification to Error Resolution -->
+  <line x1="640" y1="1220" x2="640" y2="1240" class="error-arrow" />
+  
+  <!-- Error Resolution to Branch Function -->
+  <path d="M 590 1280 L 380 1280 L 380 1320" class="error-arrow" fill="none" />
+  <text x="500" y="1260" class="yes-no-text">Branch</text>
+  
+  <!-- Error Resolution to Call Alternative Function -->
+  <line x1="640" y1="1280" x2="640" y2="1320" class="error-arrow" />
+  <text x="660" y="1300" class="yes-no-text">Alternative</text>
+  
+  <!-- Error Resolution to Handoff to Ivan (new) -->
+  <path d="M 690 1280 L 880 1280 L 880 1320" class="error-arrow" fill="none" />
+  <text x="780" y="1260" class="yes-no-text">New Function</text>
+  
+  <!-- Branch Function to Add Outputs to Session Log -->
+  <path d="M 380 1360 L 380 1400" class="arrow" fill="none" />
+  
+  <!-- Call Alternative Function to Add Outputs to Session Log -->
+  <path d="M 640 1360 L 640 1400 L 495 1400" class="arrow" fill="none" />
+  
+  <!-- Handoff to Ivan (new) to Add Outputs to Session Log (right) -->
+  <path d="M 880 1360 L 880 1400 L 875 1400" class="arrow" fill="none" />
+  
+  <!-- Handoff to Ivan (original) to Automated Function Testing -->
+  <line x1="40" y1="1040" x2="80" y2="1060" class="arrow" />
+  
+  <!-- Automated Function Testing to Add New Function to Function Map -->
+  <line x1="80" y1="1100" x2="80" y2="1120" class="arrow" />
+  
+  <!-- Add New Function to Function Map to Execute Function -->
+  <line x1="80" y1="1160" x2="80" y2="1180" class="arrow" />
+  
+  <!-- Execute Function (Sequential) to Add Outputs to Session Log -->
+  <path d="M 880 860 L 880 1400 L 875 1400" class="arrow" fill="none" />
+  
+  <!-- Add Outputs to Session Log to Return Outputs to Assistant/Results -->
+  <line x1="380" y1="1440" x2="380" y2="1480" class="arrow" />
+  <line x1="875" y1="1440" x2="875" y2="1480" class="arrow" />
+  
+  <!-- Execute Function (left) to Add Outputs to Session Log -->
+  <path d="M 80 1220 L 80 1410 L 265 1410" class="arrow" fill="none" />
+  
+  <!-- Return Outputs/Results to Task Results Aggregation -->
+  <path d="M 380 1520 L 380 1600 L 450 1600" class="arrow" fill="none" />
+  <path d="M 875 1520 L 875 1600 L 690 1600" class="arrow" fill="none" />
+  
+  <!-- Task Results Aggregation to Quality Control Analysis -->
+  <line x1="570" y1="1620" x2="570" y2="1660" class="enhanced-arrow" />
+  
+  <!-- Quality Control Analysis to Results Satisfactory? -->
+  <line x1="570" y1="1700" x2="570" y2="1740" class="enhanced-arrow" />
+  
+  <!-- Results Satisfactory? to Prompt Fulfilled! End -->
+  <line x1="570" y1="1780" x2="570" y2="1960" class="arrow" />
+  <text x="550" y="1860" class="yes-no-text">Yes</text>
+  
+  <!-- Results Satisfactory? to Correction Plan -->
+  <path d="M 670 1760 L 750 1760" class="enhanced-arrow" fill="none" />
+  <text x="700" y="1740" class="yes-no-text">No</text>
+  
+  <!-- Correction Plan to Submit Additional Tasks -->
+  <line x1="850" y1="1780" x2="850" y2="1820" class="enhanced-arrow" />
+  
+  <!-- Submit Additional Tasks to Dynamic Task Priority Queue (loop back) -->
+  <path d="M 750 1840 L 30 1840 L 30 540 L 480 540" class="enhanced-arrow" fill="none" />
+</svg>

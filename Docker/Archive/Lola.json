@@ -1,0 +1,213 @@
+{
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "lola_agent",
+        "options": {
+          "responseMode": "lastNode"
+        },
+        "authentication": "none"
+      },
+      "name": "Lola Agent Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [200, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Global configuration for Lola agent\nreturn {\n  json: {\n    config: {\n      llmApiUrl: 'https://api.openai.com/v1/chat/completions',\n      reportingModel: 'gpt-4',\n      knowledgeBasePath: './knowledge_db'\n    }\n  }\n};"
+      },
+      "name": "Lola Configuration",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 1,
+      "position": [200, 150]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Process incoming task for Lola\nconst data = $input.json;\nconst task = data.body.task;\nconst sessionId = data.body.sessionId;\n\nif (!task || !sessionId) {\n  throw new Error('Missing required parameters: task and sessionId');\n}\n\n// Determine report type\nlet reportType = 'standard';\nconst taskDesc = task.description.toLowerCase();\n\nif (taskDesc.includes('executive') || taskDesc.includes('summary')) {\n  reportType = 'executive_summary';\n} else if (taskDesc.includes('technical') || taskDesc.includes('detailed')) {\n  reportType = 'technical_report';\n} else if (taskDesc.includes('presentation') || taskDesc.includes('slides')) {\n  reportType = 'presentation';\n}\n\n// Check if we need to retrieve previous model data\nconst needsModelData = taskDesc.includes('model') || taskDesc.includes('analysis');\n\nreturn {\n  json: {\n    task,\n    sessionId,\n    reportType,\n    needsModelData\n  }\n};"
+      },
+      "name": "Process Lola Task",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 1,
+      "position": [400, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{$json.needsModelData}}",
+              "value2": true
+            }
+          ]
+        }
+      },
+      "name": "Needs Model Data?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [600, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Simulate retrieving model data from knowledge base\n// In a real implementation, this would query a database\nconst { sessionId } = $input.json;\n\nconst mockModelData = {\n  id: `energy_model_${Date.now() - 1000}`,\n  location: 'UK',\n  generation: 'solar',\n  content: \"Detailed solar energy model for UK with efficiency calculations, cost projections, and environmental impact assessment.\",\n  analysisResults: {\n    efficiency: \"22.5% average efficiency\",\n    costPerKwh: \"£0.14 per kWh\",\n    carbonOffset: \"Reduces carbon emissions by 85% compared to fossil fuels\"\n  }\n};\n\nreturn {\n  json: {\n    ...$input.json,\n    modelData: mockModelData\n  }\n};"
+      },
+      "name": "Retrieve Model Data",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 1,
+      "position": [800, 200]
+    },
+    {
+      "parameters": {
+        "url": "={{$node[\"Lola Configuration\"].json.config.llmApiUrl}}",
+        "method": "POST",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "Authorization",
+              "value": "Bearer sk-proj"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "model",
+              "value": "={{$node[\"Lola Configuration\"].json.config.reportingModel}}"
+            },
+            {
+              "name": "messages",
+              "value": "=[{\"role\":\"system\",\"content\":\"You are a professional report writer specialized in creating {{$json.reportType}} reports. Use clear, concise language and proper formatting. Include all relevant data in a well-structured format. Model data: {{$json.modelData ? JSON.stringify($json.modelData) : 'No model data available'}}\"},{\"role\":\"user\",\"content\":$json.task.description}]"
+            },
+            {
+              "name": "temperature",
+              "value": "0.3"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Generate Report",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [1000, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Process report generation results\nconst llmResponse = $input.json;\nconst reportContent = llmResponse.choices[0].message.content;\n\n// Determine report sections (a basic implementation)\nconst sections = [];\nlet currentSection = '';\nlet currentContent = '';\n\nreportContent.split('\\n').forEach(line => {\n  if (line.startsWith('# ')) {\n    if (currentSection) {\n      sections.push({ title: currentSection, content: currentContent.trim() });\n    }\n    currentSection = line.replace('# ', '');\n    currentContent = '';\n  } else {\n    currentContent += line + '\\n';\n  }\n});\n\nif (currentSection) {\n  sections.push({ title: currentSection, content: currentContent.trim() });\n}\n\n// Update task status\nconst task = $json.task;\nconst updatedTask = { ...task };\nupdatedTask.status = 'completed';\nupdatedTask.result = {\n  type: 'report',\n  reportType: $json.reportType,\n  content: reportContent,\n  sections: sections.length > 0 ? sections : null,\n  generatedAt: new Date().toISOString(),\n  basedOnModel: $json.modelData ? $json.modelData.id : null\n};\n\nreturn {\n  json: {\n    success: true,\n    message: \"Report generated successfully\",\n    task: updatedTask,\n    sessionId: $json.sessionId\n  }\n};"
+      },
+      "name": "Process Report",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 1,
+      "position": [1200, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Store report in knowledge base\nconst { task, sessionId } = $input.json;\n\n// Simulate storing to knowledge base\nconsole.log(`Storing report for task ${task.id} to knowledge base for session ${sessionId}`);\n\n// In a real implementation, this would save to a database\nreturn {\n  json: {\n    success: true,\n    message: \"Report stored in knowledge base\",\n    task\n  }\n};"
+      },
+      "name": "Store in Knowledge Base",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 1,
+      "position": [1400, 300]
+    },
+    {
+      "parameters": {},
+      "name": "Return Lola Result",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [1600, 300]
+    }
+  ],
+  "connections": {
+    "Lola Agent Webhook": {
+      "main": [
+        [
+          {
+            "node": "Process Lola Task",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Process Lola Task": {
+      "main": [
+        [
+          {
+            "node": "Needs Model Data?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Needs Model Data?": {
+      "main": [
+        [
+          {
+            "node": "Retrieve Model Data",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Generate Report",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Retrieve Model Data": {
+      "main": [
+        [
+          {
+            "node": "Generate Report",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Report": {
+      "main": [
+        [
+          {
+            "node": "Process Report",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Process Report": {
+      "main": [
+        [
+          {
+            "node": "Store in Knowledge Base",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Store in Knowledge Base": {
+      "main": [
+        [
+          {
+            "node": "Return Lola Result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  }
+}

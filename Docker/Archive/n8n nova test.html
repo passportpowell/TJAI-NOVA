@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Nova AI Chat</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
+        #chat-container { border: 1px solid #ccc; height: 400px; overflow-y: scroll; padding: 10px; margin-bottom: 10px; }
+        #user-input { width: 80%; padding: 8px; }
+        button { padding: 8px 15px; background: #4CAF50; color: white; border: none; cursor: pointer; }
+        .user-message { background: #e1f5fe; padding: 8px; border-radius: 5px; margin-bottom: 10px; }
+        .system-message { background: #f5f5f5; padding: 8px; border-radius: 5px; margin-bottom: 10px; }
+    </style>
+</head>
+<body>
+    <h2>Nova AI Assistant</h2>
+    <div id="chat-container"></div>
+    <div>
+        <input type="text" id="user-input" placeholder="Ask Nova something...">
+        <button onclick="sendMessage()">Send</button>
+    </div>
+
+    <script>
+        const webhookUrl = 'http://localhost:5678/webhook-test/nova';
+        const chatContainer = document.getElementById('chat-container');
+        const userInput = document.getElementById('user-input');
+        
+        function addMessage(text, isUser) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = isUser ? 'user-message' : 'system-message';
+            messageDiv.textContent = text;
+            chatContainer.appendChild(messageDiv);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+        
+        function sendMessage() {
+            const message = userInput.value.trim();
+            if (!message) return;
+            
+            // Add user message to chat
+            addMessage('You: ' + message, true);
+            userInput.value = '';
+            
+            // Add "thinking" message
+            const thinkingDiv = document.createElement('div');
+            thinkingDiv.className = 'system-message';
+            thinkingDiv.textContent = 'Nova is thinking...';
+            chatContainer.appendChild(thinkingDiv);
+            
+            // Send to webhook
+            fetch(webhookUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    prompt: message,
+                    sessionId: 'session_' + Date.now()
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Remove thinking message
+                chatContainer.removeChild(thinkingDiv);
+                // Add response
+                addMessage('Nova: ' + (data.summary || JSON.stringify(data)), false);
+            })
+            .catch(error => {
+                // Remove thinking message
+                chatContainer.removeChild(thinkingDiv);
+                // Add error message
+                addMessage('Error: Could not reach Nova. ' + error.message, false);
+            });
+        }
+        
+        // Allow Enter key to send message
+        userInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+    </script>
+</body>
+</html>

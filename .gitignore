@@ -1,0 +1,47 @@
+# ---------- Secrets / credentials ----------
+Docker/n8n-rag/credentials.txt
+Docker/ngrok_recovery_codes.txt
+
+# API key placeholder folders
+src/utils/openai/
+src/utils/claude/
+src/utils/gemini/
+src/utils/groq/
+src/utils/deepseek/
+src/utils/perplexity/
+
+# Environment files
+.env
+*.env
+.streamlit/secrets.toml
+
+# ---------- Python ----------
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+
+# ---------- IDE ----------
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# ---------- OS ----------
+.DS_Store
+Thumbs.db
+Icon?
+
+# ---------- Logs ----------
+*.log
+logs/
+
+# ---------- Database / state ----------
+*.db
+*.sqlite
+sessions/
+knowledge_db/

@@ -1,0 +1,76 @@
+Calculate 10+10*10, what is the capital of UK,
+Build an electricity energy model for solar power in UK, then analyze the model results with detailed metrics, and finally write a technical report summarizing the findings.
+
+
+Calculate 10+10*10, what is the capital of Germany, generate an image of solar in germany, build an electricity energy model for solar for all locations and write a report, 
+
+then
+
+what was the last math question I asked?
+
+
+What is the capital of Spain?
+who is the king or president of that country?
+What is its population?
+What was discussed in session 2
+done
+
+What is the currency there?
+Tell me about the previous answer
+What language is spoken in this country?
+what 5 * 7?
+
+
+Calculate 10+10*10  
+done
+
+Calculate 10+10*10, what is the capital of Germany, generate an image of solar in germany  
+done
+
+Build an electricity energy model for solar for all locations  
+done
+
+Build an electricity energy model for solar for all locations and write a report  
+done
+
+Build an electricity energy model for solar for all locations, then analyze the results and write a report  
+done
+
+Build an energy model  
+done
+
+Generate an image of solar in Germany  
+done
+
+What was the last math question I asked?  
+done
+
+What is the capital of North Korea? Who is the king or president of that country? What is its population?  
+done
+
+What is the currency in North Korea?  
+done
+
+Tell me about the previous answer  
+done
+
+
+What is 2 * 10
+build a model for bosnia
+write a report
+done
+
+
+Build a model for Spain and write a report
+done
+
+
+
+What is the capital of Denmark?
+What is the currency used there?
+What is its population?
+build a model 
+write a report
+done
+
+

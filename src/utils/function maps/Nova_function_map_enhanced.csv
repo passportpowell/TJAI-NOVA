@@ -1,0 +1,20 @@
+Key,Function,Type,Name,Args,Kwargs,Args Datatype,Kwargs Datatype,Output,Description,Version
+copywriting and proofreading,assistants.lola.main,Assistant,lola,"{""input1"": ""Prompt"", ""input2"": ""-""}",,,,,"Communications expert. Capabilities: copywriting, proofreading, social media, Prompt sheet processing. Press releases, blogs, white papers etc.",v1.0
+Data analysis,assistants.emil.main,Assistant,emil,"{""input1"": ""Prompt"", ""input2"": ""-""}",,,,,"Engineering. Model Builing (PLEXOS), Model Management, Model Running, Data Analysis, Chart Creation. ",v1.0
+Interact with calendar,utils.calendar_call.calendar_call,Agent,calendar_call,"{""input1"": ""Prompt"", ""input2"": ""-""}",,,,,"The gives access to my calendar. You can schedule appointments, check my schedule, schedule meeting, review emails and write emails.",v1.0
+Open a website,utils.open_website.open_website_function,Agent,open_website,"{""input1"": ""Prompt"", ""input2"": ""-""}",,,,,opens website where a response is able to give a url.,v1.0
+Uncategorized,utils.uncategorized_call.uncategorized_call,Agent,Nova,"{""input1"": ""Prompt"", ""input2"": ""-""}",,,,,If not other category is appropraite use this.,v1.0
+do_maths,utils.open_ai_utils.run_open_ai_ns,Agent,Nova,"{""input1"": ""Prompt"", ""input2"": ""You are solving a math problem. Calculate the answer step by step.""}",,,,,Do math problems,v1.0
+Written chat session,utils.open_ai_utils.ai_chat_session,Agent,Nova,"{""input1"": ""Prompt"", ""input2"": ""-""}",,,,,This is a general chatbot using an llm. The iteraction is through writing.,v1.0
+Spoken Chat Session,utils.open_ai_utils.ai_spoken_chat_session,Agent,Nova,"{""input1"": ""Prompt"", ""input2"": ""-""}",,,,,Talk/speak to the chatbot using speach. The iteraction is through speech. Let's talk,v1.0
+Create task list,utils.create_task_list.task_list,Agent,task_list,"{""input1"": ""Prompt"", ""input2"": ""-""}",,,,,"Full tasks that may require multiple assistants to task to achieve the function, call the function to itemise the tasks for execution",v1.0
+Energy Model,functions.assistants.emil.main,Assistant,emil,"{""input1"": ""prompt"", ""input2"": ""-""}",,,,,Use Emil to run energy modeling tasks including solar generation models,1.0
+create_task_list,utils.task_utils.create_task_list_from_prompt,Agent,Nova,"{""input1"": ""prompt"", ""input2"": ""-""}",,,,,Creates a structured task list from a natural language prompt using LLM for parameter extraction.,1.0
+delegate_task,utils.task_utils.delegate_task,Agent,Nova,"{""input1"": ""task"", ""input2"": ""agent""}",,,,,Delegates a task to the appropriate specialized agent based on task requirements.,1.0
+validate_args,utils.task_utils.validate_task_args,Agent,Nova,"{""input1"": ""task"", ""input2"": ""function_map""}",,,,,Validates that a task has all required arguments according to the function map.,1.0
+extract_params,utils.task_utils.extract_parameters,Agent,Nova,"{""input1"": ""prompt"", ""input2"": ""param_types""}",,,,,Extracts specific parameter types from a natural language prompt.,1.0
+parse_prompt,utils.task_utils.parse_user_prompt,Agent,Nova,"{""input1"": ""prompt"", ""input2"": ""-""}",,,,,Analyzes a user prompt to determine high-level intent and required processing flow.,1.0
+get_clarification,utils.task_utils.get_user_clarification,Agent,Nova,"{""input1"": ""missing_params"", ""input2"": ""context""}",,,,,Prompts the user for missing parameters with appropriate context.,1.0
+update_task_list,utils.task_utils.update_task_list,Agent,Nova,"{""input1"": ""current_tasks"", ""input2"": ""new_request""}",,,,,Updates an existing task list based on a new user request.,1.0
+answer_general_question,utils.general_knowledge.answer_general_question,Agent,Nova,"{""input1"": ""Prompt"", ""input2"": ""-""}",,,,,Answers general knowledge questions about any topic,v1.0
+general_question,utils.general_knowledge.answer_general_question,Agent,answer_general_question,"{""input1"": ""Prompt"", ""input2"": ""-""}",,,,,General knowledge questions and factual queries,v1.0

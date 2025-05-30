@@ -1,0 +1,181 @@
+{
+  "name": "Nova Sharepoint",
+  "nodes": [
+    {
+      "parameters": {
+        "requestMethod": "POST",
+        "url": "=https://login.microsoftonline.com/{{ $json.tenant_id }}/oauth2/token",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "grant_type",
+              "value": "client_credentials"
+            },
+            {
+              "name": "client_id",
+              "value": "83cfe3b2-e72d-4a27-b656-9dae163fa8dc"
+            },
+            {
+              "name": "client_secret",
+              "value": "ZJW8Q~X5Gr04vP0JEZ6KsDR0JQOlew8WnJnO6cuH"
+            },
+            {
+              "name": "resource",
+              "value": "https://terajoule.sharepoint.com"
+            }
+          ]
+        },
+        "headerParametersUi": {
+          "parameter": [
+            {
+              "name": "Content-Type",
+              "value": "application/x-www-form-urlencoded"
+            }
+          ]
+        }
+      },
+      "id": "09339dc7-5fec-488f-af3c-d052500cac74",
+      "name": "Generate OAuth Token",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        -140,
+        200
+      ],
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "url": "https://terajoule.sharepoint.com/sites/Terajoule/_api/web/GetFolderByServerRelativeUrl('/sites/Terajoule/Terajoule/Meetings')/Files",
+        "options": {},
+        "headerParametersUi": {
+          "parameter": [
+            {
+              "name": "Accept",
+              "value": "application/json;odata=verbose"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json;odata=verbose"
+            },
+            {
+              "name": "Authorization",
+              "value": "\tBearer {{$node[\"Generate OAuth Token\"].json[\"access_token\"]}}"
+            }
+          ]
+        }
+      },
+      "id": "099f732e-4537-479f-897b-d38a3313c339",
+      "name": "Fetch SharePoint List",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        80,
+        200
+      ],
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {}
+          ]
+        }
+      },
+      "id": "ad32b14a-bb30-402e-80ae-e0f06b3b092c",
+      "name": "Schedule Trigger",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "position": [
+        -580,
+        200
+      ],
+      "typeVersion": 1.2
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "399d42f3-41e0-4043-9a57-85771bf5cd07",
+              "name": "tenant_id",
+              "type": "string",
+              "value": "592aeffa-b1a5-4fa3-9109-fdda2f7221ad"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "35463dc2-38df-413e-81d8-828651d5ca2b",
+      "name": "setTenant",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        -360,
+        200
+      ],
+      "typeVersion": 3.4
+    },
+    {
+      "parameters": {
+        "content": "## Never expose or hard code below values \n**tenant_id,client_id,client_secret** \n\nAlways save these either in secure vault like hashicorp or GCP Secret Manager.",
+        "height": 404,
+        "width": 458,
+        "color": 7
+      },
+      "id": "6fc071d9-8c13-4399-b93d-cdc4d7e1732f",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -429,
+        -44
+      ],
+      "typeVersion": 1
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "setTenant": {
+      "main": [
+        [
+          {
+            "node": "Generate OAuth Token",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "setTenant",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate OAuth Token": {
+      "main": [
+        [
+          {
+            "node": "Fetch SharePoint List",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "1802a2ae-4f74-4023-8c9b-0cf2d4b5f009",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "f0f8ea4ad560dfe9a5de3d078451135cd3607abdfd64a9bcbc97935727dc4a23"
+  },
+  "id": "ctDToLGbpmQ1NsZx",
+  "tags": []
+}

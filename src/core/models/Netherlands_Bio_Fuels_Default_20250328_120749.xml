@@ -1,0 +1,3 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- NOT A PLEXOS DATABASE. -->
+<PLEXOSModel version="7.4" xmlns="https://custom-energy-model/non-plexos/v1"><!--This is a placeholder XML file and is not a PLEXOS database--><Metadata><Timestamp>2025-03-28T12:07:49.051612</Timestamp><ModelType>Bio Fuels</ModelType><Location>Netherlands</Location><EnergyCarrier>Default</EnergyCarrier><Format>Custom XML (Not PLEXOS)</Format></Metadata><Entities><Regions><Region id="1" name="Netherlands" /></Regions><Nodes><Node id="1" name="Netherlands_Bio Fuels_Default" type="Bio Fuels" carrier="Default" region="Netherlands" /></Nodes></Entities></PLEXOSModel>

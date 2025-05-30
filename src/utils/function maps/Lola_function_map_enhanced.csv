@@ -1,0 +1,9 @@
+Key,Function,Type,Name,Parameters,Description,Version
+create_linked_in_post,Create_social_post.linkedIn,Agent,create_linked_in_post,{},Creates posts for linkedin,v1.0
+create_twitter_post,Create_social_post.Twitter,Agent,create_twitter_post,{},Creates posts for twitter,v1.0
+create_facebook_post,Create_social_post.facebook,Agent,create_facebook_post,{},Creates posts for facebook,v1.0
+Proofreader,proof_reading_agent.main,Agent,Proofreader,{},Expert in proofreading document considering state of the art approaches,v1.0
+copywriter,copywriting_agent_dev.main,Agent,copywriter,{},"Expert in writing copy for many purposes. E.g. website, articles, blogs, reports, social posts etc",v1.0
+Prompt Sheet,Prompt_sheet.main,Workflow,Prompt Sheet,{},Creates a workflow using data as input and drafts report based on the data ,v1.0
+Uncategorised,uncategorized_call.uncategorized_call,Agent,Uncategorised,{},If not other category is appropraite use this.,v1.0
+write_report,write_report,Reporting,Write Report,"kb, style=executive_summary, **kwargs","Generates a final report based on the analysis with the specified style.",1.0

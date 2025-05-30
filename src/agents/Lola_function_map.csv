@@ -1,0 +1,10 @@
+﻿Key,Function,Type,Name,Description,Stage 
+create_linked_in_post,Create_social_post.linkedIn,Agent,create_linked_in_post,Creates posts for linkedin,Not Ready
+create_twitter_post,Create_social_post.Twitter,Agent,create_twitter_post,Creates posts for twitter,Not Ready
+create_facebook_post,Create_social_post.facebook,Agent,create_facebook_post,Creates posts for facebook,Not Ready
+Proofreader,proof_reading_agent.main,Agent,Proofreader,Expert in proofreading document considering state of the art approaches,Ready
+copywriter,copywriting_agent_dev.main,Agent,copywriter,"Expert in writing copy for many purposes. E.g. website, articles, blogs, reports, social posts etc",Ready
+Prompt Sheet,Prompt_sheet.main,Workflow,Prompt Sheet,Creates a workflow using data as input and drafts report based on the data ,Ready
+Uncategorised,uncategorized_call.uncategorized_call,Agent,Uncategorised,If not other category is appropraite use this.,Ready
+data_analyzer,data_analysis_agent.main,Agent,Data Analyzer,Expert in analyzing data sets identifying trends extracting insights and creating visualizations to support conclusions,Not Ready
+report_writer,report_generation_agent.main,Agent,Report Writer,Expert in creating comprehensive structured reports from analysis results and content with customizable templates for different industries and purposes,Not Ready

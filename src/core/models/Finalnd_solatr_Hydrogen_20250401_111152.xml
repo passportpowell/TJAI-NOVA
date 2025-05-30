@@ -1,0 +1,3 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- NOT A PLEXOS DATABASE. -->
+<PLEXOSModel version="7.4" xmlns="https://custom-energy-model/non-plexos/v1"><!--This is a placeholder XML file and is not a PLEXOS database--><Metadata><Timestamp>2025-04-01T11:11:52.600598</Timestamp><ModelType>solatr</ModelType><Location>Finalnd</Location><EnergyCarrier>Hydrogen</EnergyCarrier><Format>Custom XML (Not PLEXOS)</Format></Metadata><Entities><Regions><Region id="1" name="Finalnd" /></Regions><Nodes><Node id="1" name="Finalnd_solatr_Hydrogen" type="solatr" carrier="Hydrogen" region="Finalnd" /></Nodes></Entities></PLEXOSModel>

@@ -1,0 +1,145 @@
+=== NOVA AI COORDINATOR KNOWLEDGE BASE DUMP ===
+Generated: 2025-05-22 21:26:12
+
+=== SUMMARY STATISTICS ===
+Total sessions: 6
+Total math questions: 4
+Total general questions: 0
+Total energy models: 1
+Total reports: 3
+
+Current session: session_1747945572
+
+=== MATH QUESTIONS ===
+1. Session 1: 'what is 2 + 2'
+   Result: The result of 2.0 + 2.0 is 4.0
+
+2. Session 2: 'what is 2 + 2 and build a model for spain'
+   Result: 
+
+----------------------------------------The result of 2.0 + 2.0 is 4.0
+
+{'status': 'success', 'message': 'Created solar Electricity model for Spain', 'file': 'd:\\Tera-joule\\Terajoule - Terajoule\\Projects\\AI Architecture\\AI Assistants\\Nova - AI Coordinator v2\\src\\core\\models\\Spain_solar_Electricity_20250522_160609.xml', 'location': 'Spain', 'generation_type': 'solar', 'energy_carrier': 'Electricity'}
+
+----------------------------------------
+
+3. Session 4: 'What is 2 + 2, build a model for Spain'
+   Result: 
+
+----------------------------------------The result of 2.0 + 2.0 is 4.0
+
+{'status': 'success', 'message': 'Created solar Electricity model for Spain', 'file': 'd:\\Tera-joule\\Terajoule - Terajoule\\Projects\\AI Architecture\\AI Assistants\\Nova - AI Coordinator v2\\src\\core\\models\\Spain_solar_Electricity_20250522_210031.xml', 'location': 'Spain', 'generation_type': 'solar', 'energy_carrier': 'Electricity'}
+
+----------------------------------------
+
+4. Session 5: 'what is 5 * 5, build a model for Italy and write a report'
+   Result: 
+
+----------------------------------------{'status': 'success', 'message': 'Created solar Electricity model for Italy', 'file': 'd:\\Tera-joule\\Terajoule - Terajoule\\Projects\\AI Architecture\\AI Assistants\\Nova - AI Coordinator v2\\src\\core\\models\\Italy_solar_Electricity_20250522_210133.xml', 'location': 'Italy', 'generation_type': 'solar', 'energy_carrier': 'Electricity'}
+
+
+# Executive Summary: Solar Energy Model for Italy
+
+## Overview
+This report summarizes the energy model created for Italy, focusing on solar generation with Electricity as the primary energy carrier.
+
+## Key Findings
+- Model was created successfully for Italy
+
+## Recommendations
+- Consider running a detailed analysis on this model
+- Validate with historical data
+
+## Summary
+A solar model was created for Italy.
+
+Report generated based on user request: "write a report"
+
+
+----------------------------------------
+
+=== ENERGY MODELS ===
+1. Session 3: 'whatbuild a model for croatia and spain then write a report ' for Spain
+   Result: 
+
+----------------------------------------{'status': 'success', 'message': 'Created solar Electricity model for Spain,croatia', 'file': 'd:\\Tera-joule\\Terajoule - Terajoule\\Projects\\AI Architecture\\AI Assistants\\Nova - AI Coordinator v2\\src\\core\\models\\Spain_croatia_solar_Electricity_20250522_160713.xml', 'location': 'Spain,croatia', 'generation_type': 'solar', 'energy_carrier': 'Electricity'}
+
+
+# Executive Summary: Solar Energy Model for Spain,croatia
+
+## Overview
+This report summarizes the energy model created for Spain,croatia, focusing on solar generation with Electricity as the primary energy carrier.
+
+## Key Findings
+- Model was created successfully for Spain,croatia
+
+## Recommendations
+- Consider running a detailed analysis on this model
+- Validate with historical data
+
+## Summary
+A solar model was created for Spain,croatia.
+
+Report generated based on user request: "write a report"
+
+
+----------------------------------------
+
+=== REPORTS ===
+1. Session session_1747926335: 'write a report' (solar for Spain,croatia)
+   Report preview: 
+# Executive Summary: Solar Energy Model for Spain,croatia
+
+## Overview
+This report summarizes the energy model created for Spain,croatia, focusing on solar generation with Electricity as the primary energy carrier.
+
+## Key Findings
+- Model was created successfully for Spain,croatia
+
+## Recommendations
+- Consider running a detailed analysis on this model
+- Validate with historical data
+
+## Summary
+A solar model was created for Spain,croatia.
+
+Report generated based on user request: "write a repo...[truncated]
+
+2. Session session_1747944007: 'write a report' (solar for Italy)
+   Report: 
+# Executive Summary: Solar Energy Model for Italy
+
+## Overview
+This report summarizes the energy model created for Italy, focusing on solar generation with Electricity as the primary energy carrier.
+
+## Key Findings
+- Model was created successfully for Italy
+
+## Recommendations
+- Consider running a detailed analysis on this model
+- Validate with historical data
+
+## Summary
+A solar model was created for Italy.
+
+Report generated based on user request: "write a report"
+
+
+3. Session 6: 'build a mode for spain and write a report' (solar for Spain)
+   Report: # Executive Summary: Solar Energy Model for Spain
+
+## Overview
+This report summarizes the energy model created for Spain, focusing on solar generation with Electricity as the primary energy carrier.
+
+## Key Findings
+- Model was created successfully for Spain
+
+## Recommendations
+- Consider running a detailed analysis on this model
+- Validate with historical data
+
+## Summary
+A solar model was created for Spain.
+
+Report generated based on user request: "write a report"
+

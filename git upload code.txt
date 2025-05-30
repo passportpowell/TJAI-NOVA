@@ -1,0 +1,7 @@
+# Increase the chunk Git keeps in memory and disable the 5-second low-speed abort
+git config --global http.postBuffer      157286400   # 150 MB
+git config --global http.lowSpeedLimit   0
+git config --global http.lowSpeedTime    999999
+
+# Now push again
+git push -f origin main

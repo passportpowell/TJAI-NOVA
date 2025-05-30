@@ -1,0 +1,246 @@
+{
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "80d33cd8-a382-4626-a5f3-78f9d393da30",
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        10060,
+        2440
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Internal call handler for Execute Workflow\nconst prompt = $json.prompt || \"No prompt\";\nconst history = $json.history || [];\n\nreturn [{\n  json: {\n    userPrompt: prompt,\n    history,\n    sessionId: Date.now().toString(),\n    timestamp: new Date().toISOString()\n  }\n}];"
+      },
+      "id": "c412fbb6-ff10-4010-8dfa-d8227aee9d64",
+      "name": "Prepare Internal Input",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        10260,
+        2440
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "// Extract user query from the webhook payload\nconst userPrompt = $input.item.json.body?.prompt || $input.item.json.prompt;\nif (!userPrompt) {\n  return {\n    error: 'No prompt provided in the request',\n    statusCode: 400\n  };\n}\nconst conversationHistory = $input.item.json.body?.history || $input.item.json.history || [];\nconst sessionId = $input.item.json.body?.sessionId || $input.item.json.sessionId || Date.now().toString();\nreturn {\n  userPrompt,\n  sessionId,\n  timestamp: new Date().toISOString()\n};"
+      },
+      "id": "c9227bff-8ac0-48bd-8eb9-adfc31b9699c",
+      "name": "Process Request",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        10460,
+        2800
+      ]
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4.1-nano",
+          "mode": "list",
+          "cachedResultName": "GPT-4.1-NANO"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "You are Nova, the central coordinator in a multi-agent AI orchestration system. You intelligently process user requests by analyzing the intent and providing helpful responses.",
+              "role": "system"
+            },
+            {
+              "content": "={{ $json.userPrompt }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "d45916f0-0d5e-4fb2-811a-cf8bc6a802e8",
+      "name": "OpenAI",
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        10680,
+        2700
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "s2LqJsvl4DbHnCTw",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Parse the AI response from OpenAI\nconst aiResponse = $json.message?.content || $json.response || 'No response';\n\n// Pull directly from current execution data\nconst sessionId = $json.sessionId || 'unknown-session';\nconst userPrompt = $json.userPrompt || 'unknown-prompt';\nconst timestamp = $json.timestamp || new Date().toISOString();\n\n// Structure interaction log\nconst interaction = {\n  sessionId,\n  timestamp,\n  prompt: userPrompt,\n  response: aiResponse,\n  model: 'gpt-4o-mini'\n};\n\n// Return full response payload\nreturn [{\n  json: {\n    sessionId,\n    response: aiResponse,\n    interaction,\n    timestamp\n  }\n}];\n"
+      },
+      "id": "9cf56252-9aa7-47f2-8d5b-7dad325f2c7d",
+      "name": "Process Response",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        11060,
+        2700
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "options": {}
+      },
+      "id": "a7694b22-9c49-4d18-a7c0-581265d7c0c2",
+      "name": "Respond To Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [
+        11280,
+        2700
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "options": {
+          "responseCode": "={{ $json.statusCode || 500 }}"
+        }
+      },
+      "id": "9f868d77-4611-4297-8239-b989b13d1ad0",
+      "name": "Error Response",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [
+        11060,
+        2900
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{ $json.error !== undefined }}",
+              "value2": true
+            }
+          ]
+        }
+      },
+      "id": "6e1cd062-71e8-443c-ad61-b97f1a155795",
+      "name": "IF (Error Exists)",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        10760,
+        2900
+      ]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "nova",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "fee691d4-e35f-4857-a4c5-8734659ba44b",
+      "name": "Nova Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        10240,
+        2800
+      ],
+      "webhookId": "nova-coordinator"
+    }
+  ],
+  "connections": {
+    "Start": {
+      "main": [
+        [
+          {
+            "node": "Prepare Internal Input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Internal Input": {
+      "main": [
+        [
+          {
+            "node": "OpenAI",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Process Request": {
+      "main": [
+        [
+          {
+            "node": "OpenAI",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "IF (Error Exists)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI": {
+      "main": [
+        [
+          {
+            "node": "Process Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Process Response": {
+      "main": [
+        [
+          {
+            "node": "Respond To Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF (Error Exists)": {
+      "main": [
+        [
+          {
+            "node": "Error Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Nova Webhook": {
+      "main": [
+        [
+          {
+            "node": "Process Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "42b14e125a07b4268f5179226a03439d17b657e140781a38da9546beb98e0073"
+  }
+}

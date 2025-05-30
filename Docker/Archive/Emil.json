@@ -1,0 +1,194 @@
+{
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [200, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Sample test data\nreturn {\n  json: {\n    body: {\n      task: {\n        id: 'task_test_123',\n        description: 'Create an energy model for solar power in the UK',\n        agent: 'emil',\n        status: 'pending'\n      },\n      sessionId: 'session_test_456'\n    }\n  }\n};"
+      },
+      "name": "Test Data",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 1,
+      "position": [400, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Global configuration\nreturn {\n  json: {\n    config: {\n      llmApiUrl: 'https://api.openai.com/v1/chat/completions',\n      energyModelingModel: 'gpt-4',\n      knowledgeBasePath: './knowledge_db'\n    }\n  }\n};"
+      },
+      "name": "Emil Configuration",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 1,
+      "position": [200, 150]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Process incoming task for Emil\nconst data = $input.json;\nconst task = data.body.task;\nconst sessionId = data.body.sessionId;\n\nif (!task || !sessionId) {\n  throw new Error('Missing required parameters: task and sessionId');\n}\n\n// Extract energy modeling parameters from task description\nlet parameters = {\n  location: 'unknown',\n  generation: 'unknown'\n};\n\n// Parse task description to extract parameters\nconst taskDesc = task.description.toLowerCase();\n\n// Location detection\nif (taskDesc.includes('uk') || taskDesc.includes('united kingdom')) {\n  parameters.location = 'UK';\n} else if (taskDesc.includes('us') || taskDesc.includes('united states')) {\n  parameters.location = 'US';\n} else if (taskDesc.includes('germany')) {\n  parameters.location = 'Germany';\n}\n\n// Generation type detection\nif (taskDesc.includes('solar')) {\n  parameters.generation = 'solar';\n} else if (taskDesc.includes('wind')) {\n  parameters.generation = 'wind';\n} else if (taskDesc.includes('nuclear')) {\n  parameters.generation = 'nuclear';\n}\n\nreturn {\n  json: {\n    task,\n    sessionId,\n    parameters\n  }\n};"
+      },
+      "name": "Process Emil Task",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 1,
+      "position": [600, 300]
+    },
+    {
+      "parameters": {
+        "url": "={{$node[\"Emil Configuration\"].json.config.llmApiUrl}}",
+        "method": "POST",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "Authorization",
+              "value": "Bearer YOUR_API_KEY"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "model",
+              "value": "={{$node[\"Emil Configuration\"].json.config.energyModelingModel}}"
+            },
+            {
+              "name": "messages",
+              "value": "=[{\"role\":\"system\",\"content\":\"You are an energy modeling specialist. Create energy models for the parameters provided. Be detailed and accurate. For location: {{$node[\"Process Emil Task\"].json.parameters.location}} and generation type: {{$node[\"Process Emil Task\"].json.parameters.generation}}\"},{\"role\":\"user\",\"content\":$node[\"Process Emil Task\"].json.task.description}]"
+            },
+            {
+              "name": "temperature",
+              "value": "0.3"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Generate Energy Model",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [800, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Process model results and format response\nconst llmResponse = $input.json;\nconst modelResponse = llmResponse.choices[0].message.content;\n\n// Create standardized model structure\nconst model = {\n  id: `energy_model_${Date.now()}`,\n  location: $node[\"Process Emil Task\"].json.parameters.location,\n  generation: $node[\"Process Emil Task\"].json.parameters.generation,\n  createdAt: new Date().toISOString(),\n  content: modelResponse,\n  metadata: {\n    taskId: $node[\"Process Emil Task\"].json.task.id,\n    sessionId: $node[\"Process Emil Task\"].json.sessionId\n  }\n};\n\n// Prepare results to store in knowledge base\nconst modelDetails = {\n  model,\n  analysisStatus: 'complete',\n  task: $node[\"Process Emil Task\"].json.task\n};\n\nreturn {\n  json: {\n    success: true,\n    message: \"Energy model created successfully\",\n    model,\n    task: $node[\"Process Emil Task\"].json.task,\n    sessionId: $node[\"Process Emil Task\"].json.sessionId\n  }\n};"
+      },
+      "name": "Process Model Results",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 1,
+      "position": [1000, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Store result in mock knowledge base (would be a database in production)\nconst { model, sessionId, task } = $input.json;\n\n// Simulate storing to knowledge base\nconsole.log(`Storing model ${model.id} to knowledge base for session ${sessionId}`);\n\n// Update task status\nconst updatedTask = { ...task };\nupdatedTask.status = 'completed';\nupdatedTask.result = {\n  modelId: model.id,\n  summary: `Created energy model for ${model.generation} power in ${model.location}`,\n  completedAt: new Date().toISOString()\n};\n\nreturn {\n  json: {\n    success: true,\n    message: \"Model stored in knowledge base\",\n    updatedTask\n  }\n};"
+      },
+      "name": "Store in Knowledge Base",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 1,
+      "position": [1200, 300]
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "string": [
+            {
+              "name": "result",
+              "value": "={{ $json }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Final Output",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 2,
+      "position": [1400, 300]
+    }
+  ],
+  "connections": {
+    "Start": {
+      "main": [
+        [
+          {
+            "node": "Test Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Test Data": {
+      "main": [
+        [
+          {
+            "node": "Process Emil Task",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Process Emil Task": {
+      "main": [
+        [
+          {
+            "node": "Generate Energy Model",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Energy Model": {
+      "main": [
+        [
+          {
+            "node": "Process Model Results",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Process Model Results": {
+      "main": [
+        [
+          {
+            "node": "Store in Knowledge Base",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Store in Knowledge Base": {
+      "main": [
+        [
+          {
+            "node": "Final Output",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "saveManualExecutions": true,
+    "callerPolicy": "workflowsFromSameOwner",
+    "errorWorkflow": ""
+  },
+  "staticData": null,
+  "pinData": {},
+  "versionId": "",
+  "triggerCount": 0,
+  "tags": []
+}

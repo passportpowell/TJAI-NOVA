@@ -1,0 +1,37 @@
+PLEXOS® 10.000 R08 (Built on 16-01-2025)
+
+Started Model "TJ Dispatch_Future_Nuclear+" at 27-05-2025 12:00:56 PM -->
+Unexpected Error: One or more errors occurred. (One or more errors occurred. (Value was either too large or too small for an Int32.) (Value was either too large or too small for an Int32.))
+
+EXCEPTION INFORMATION:
+
+Application: PLEXOS
+Version: 10.000.008
+
+Message: One or more errors occurred. (One or more errors occurred. (Value was either too large or too small for an Int32.) (Value was either too large or too small for an Int32.))
+Source: System.Private.CoreLib
+
+Stack Trace: 
+   at System.Threading.Tasks.Task.WaitAllCore(Task[] tasks, Int32 millisecondsTimeout, CancellationToken cancellationToken)
+   at System.Threading.Tasks.Task.WaitAll(Task[] tasks)
+   at EECOMPILER.Validator.#=z$mykmrM=(Boolean #=zR1mmY7Bgdupi)
+   at EECOMPILER.Validator.Validate(TEMPDataSet oCompiledDataSet, String strSourcePath, String strInputDatafile, FileValidation oValidation, Boolean bLoggingEnabled)
+   at EECOMPILER.CompiledFile.CompileI(String strOutputPath, Boolean bAutoUpgrade, String strProjectName, String strModelName, String& strDescription, String& strSystemName, Boolean bIsLastModel, FileValidation oValidation, Boolean bInterleaveMode, Int32 nCallingProcessId)
+   at EnergyExemplar.PLEXOS.Energy.EnergyModel.Execute(String strInputFilename, String strLastSolutionFilename, ExecutionParameters oExecutionParameters)
+   at .(ExecutionParameters )
+Inner Exception Info:
+Message: One or more errors occurred. (Value was either too large or too small for an Int32.) (Value was either too large or too small for an Int32.)
+Source: System.Threading.Tasks.Parallel
+Stack Trace: 
+   at System.Threading.Tasks.TaskReplicator.Run[TState](ReplicatableUserAction`1 action, ParallelOptions options, Boolean stopOnFirstFailure)
+   at System.Threading.Tasks.Parallel.ForWorker[TLocal,TInt](TInt fromInclusive, TInt toExclusive, ParallelOptions parallelOptions, Action`1 body, Action`2 bodyWithState, Func`4 bodyWithLocal, Func`1 localInit, Action`1 localFinally)
+--- End of stack trace from previous location ---
+   at System.Threading.Tasks.Parallel.ForWorker[TLocal,TInt](TInt fromInclusive, TInt toExclusive, ParallelOptions parallelOptions, Action`1 body, Action`2 bodyWithState, Func`4 bodyWithLocal, Func`1 localInit, Action`1 localFinally)
+   at System.Threading.Tasks.Parallel.ForEachWorker[TSource,TLocal](IEnumerable`1 source, ParallelOptions parallelOptions, Action`1 body, Action`2 bodyWithState, Action`3 bodyWithStateAndIndex, Func`4 bodyWithStateAndLocal, Func`5 bodyWithEverything, Func`1 localInit, Action`1 localFinally)
+   at System.Threading.Tasks.Parallel.ForEach[TSource](IEnumerable`1 source, Action`1 body)
+   at EECOMPILER.Validator.#=zBntNdYBpkm_Nu3$ZjHoYRDE=.#=z_3zpH1oqL_5sH14qIg==()
+   at System.Threading.ExecutionContext.RunFromThreadPoolDispatchLoop(Thread threadPoolThread, ExecutionContext executionContext, ContextCallback callback, Object state)
+--- End of stack trace from previous location ---
+   at System.Threading.ExecutionContext.RunFromThreadPoolDispatchLoop(Thread threadPoolThread, ExecutionContext executionContext, ContextCallback callback, Object state)
+   at System.Threading.Tasks.Task.ExecuteWithThreadLocal(Task& currentTaskSlot, Thread threadPoolThread)
+

@@ -1,0 +1,3 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- NOT A PLEXOS DATABASE. -->
+<PLEXOSModel version="7.4" xmlns="https://custom-energy-model/non-plexos/v1"><!--This is a placeholder XML file and is not a PLEXOS database--><Metadata><Timestamp>2025-03-14T12:26:19.759345</Timestamp><ModelType>All</ModelType><Location>All</Location><EnergyCarrier>Hydrogen</EnergyCarrier><Format>Custom XML (Not PLEXOS)</Format></Metadata><Entities><Regions><Region id="1" name="All" /></Regions><Nodes><Node id="1" name="All_All_Hydrogen" type="All" carrier="Hydrogen" region="All" /></Nodes></Entities></PLEXOSModel>

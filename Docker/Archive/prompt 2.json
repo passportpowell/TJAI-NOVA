@@ -1,0 +1,139 @@
+{
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "e633844b-d150-439f-b24e-47cd25498819",
+      "name": "Manual Trigger",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        100,
+        -80
+      ]
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "prompt",
+              "value": "Who wrote the harry potter book and what is 2 + 2?"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "b5510173-f6e6-40a9-97dc-e71317b4a3a1",
+      "name": "Set Prompt",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 2,
+      "position": [
+        320,
+        -80
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Retrieve incoming history or start new\nconst previousHistory = $json.history || [];\n\n// Append user message\nconst updatedHistory = [\n  ...previousHistory,\n  { role: \"user\", content: $json.prompt || \"No prompt\" }\n];\n\n// Return new JSON for downstream\nreturn [\n  {\n    json: {\n      prompt: $json.prompt,\n      history: updatedHistory\n    }\n  }\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        540,
+        -80
+      ],
+      "id": "23200e57-2d80-4e9e-b272-34825a2dc76b",
+      "name": "Code"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "3rrKHf1eQ7BFWtj9",
+          "mode": "list",
+          "cachedResultName": "Nova"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        740,
+        -80
+      ],
+      "id": "a7b45939-9dae-4968-ba74-f2b911fecd59",
+      "name": "Execute Workflow"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Safely get previous history or start fresh\nconst chatHistory = Array.isArray($json.history) ? [...$json.history] : [];\n\n// Get Nova's response\nconst response = $json.response || $json.result || 'No response received';\n\n// Append assistant message\nchatHistory.push({ role: \"assistant\", content: response });\n\n// Return updated conversation\nreturn [{ json: { chatHistory } }];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        920,
+        -80
+      ],
+      "id": "9117d979-d8b2-45b2-8cc3-ac72aba5b042",
+      "name": "Add Assistant Reply"
+    }
+  ],
+  "connections": {
+    "Manual Trigger": {
+      "main": [
+        [
+          {
+            "node": "Set Prompt",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Prompt": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "Execute Workflow",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute Workflow": {
+      "main": [
+        [
+          {
+            "node": "Add Assistant Reply",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "meta": {
+    "instanceId": "42b14e125a07b4268f5179226a03439d17b657e140781a38da9546beb98e0073"
+  }
+}
