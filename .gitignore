@@ -21,3 +21,71 @@ config/*.json
 **/PLEXOS_functions/openai
 **/PLEXOS_functions/groq
 **/PLEXOS_functions/claude
+
+
+.env
+.secrets/
+*.toml
+
+
+###############################################################################
+# 1. Global secret & credential files
+###############################################################################
+
+# Dot-env and variant files
+.env
+.env.*                 # .env.local, .env.production, etc.
+
+# Generic secrets folders / files
+.secrets/              # whole directory
+**/secrets.toml
+*.secret
+*.secrets
+
+# Common credential patterns
+**/*_key*              # my_api_key.txt, app_key.json …
+**/*key*.txt
+**/*password*
+**/*passwd*
+**/credential*
+**/credentials.*
+
+###############################################################################
+# 2. API-specific helper folders (your project structure)
+###############################################################################
+
+# Model-specific helper dirs that store keys
+**/openai
+**/claude
+**/gemini
+**/groq
+**/deepseek
+**/perplexity
+# PLEXOS helper modules
+src/agents/PLEXOS_functions/openai/
+src/agents/PLEXOS_functions/groq/
+src/agents/PLEXOS_functions/claude/
+
+###############################################################################
+# 3. Config/metadata files that often hide secrets
+###############################################################################
+
+config/*.json
+**/*.config.js
+**/*.config.cjs
+**/*.config.json
+*.yml
+*.yaml
+
+###############################################################################
+# 4. Logs, dumps, backups (prevent accidental upload of sensitive data)
+###############################################################################
+
+*.log
+logs/
+backup*/
+*backup*.json
+*.bak
+*.tmp
+*.swp
+*.swo

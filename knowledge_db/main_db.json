@@ -935,17 +935,17 @@
   },
   "emil_result": {
     "status": "success",
-    "message": "Created solar electricity model for Spain",
-    "file": "d:\\Tera-joule\\Terajoule - AI Architecture\\AI Assistants\\Nova - AI Coordinator v2\\src\\agents\\PLEXOS_models\\Spain_solar_electricity_20250530_234536.xml",
-    "location": "Spain",
+    "message": "Created solar electricity model for grecce",
+    "file": "d:\\Tera-joule\\Terajoule - AI Architecture\\AI Assistants\\Nova - AI Coordinator v2\\src\\agents\\PLEXOS_models\\grecce_solar_electricity_20250530_234931.xml",
+    "location": "grecce",
     "generation_type": "solar",
     "energy_carrier": "electricity"
   },
   "latest_model_details": null,
   "latest_model_file": null,
-  "latest_model_location": "Spain",
-  "latest_model_generation_type": "solar",
-  "latest_model_energy_carrier": "electricity",
+  "latest_model_location": null,
+  "latest_model_generation_type": null,
+  "latest_model_energy_carrier": null,
   "latest_report": "Error: No model details available for report generation.",
   "session_session_1747944007": {
     "id": "session_1747944007",
@@ -7006,6 +7006,34 @@
       {
         "timestamp": "2025-05-30T23:45:35.419380",
         "prompt": "Handle Intent: build a model for spain for solar",
+        "response": "Starting execution",
+        "agent": "Emil",
+        "function": "process_emil_request"
+      },
+      {
+        "timestamp": "2025-05-30T23:49:26.709646",
+        "prompt": "build a solar model for grecce",
+        "response": "Creating task list",
+        "agent": "Nova",
+        "function": "create_task_list_from_prompt_async"
+      },
+      {
+        "timestamp": "2025-05-30T23:49:30.092211",
+        "prompt": "Handle Intent: build a solar model for grecce",
+        "response": "Starting execution",
+        "agent": "Emil",
+        "function": "process_emil_request"
+      },
+      {
+        "timestamp": "2025-05-31T00:31:51.929856",
+        "prompt": "build a solar model for greece and spain",
+        "response": "Creating task list",
+        "agent": "Nova",
+        "function": "create_task_list_from_prompt_async"
+      },
+      {
+        "timestamp": "2025-05-31T00:31:56.509552",
+        "prompt": "Handle Intent: build a solar model for greece and spain",
         "response": "Starting execution",
         "agent": "Emil",
         "function": "process_emil_request"
