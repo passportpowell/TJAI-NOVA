@@ -1,47 +1,23 @@
-# ---------- Secrets / credentials ----------
-Docker/n8n-rag/credentials.txt
-Docker/ngrok_recovery_codes.txt
+# Sensitive files
+.secrets/
+**/secrets.toml
+**/*_key*
+**/*password*
+**/credential*
 
-# API key placeholder folders
-src/utils/openai/
-src/utils/claude/
-src/utils/gemini/
-src/utils/groq/
-src/utils/deepseek/
-src/utils/perplexity/
+# Additional API keys that might be missed
+**/openai
+**/claude
+**/gemini
+**/groq
+**/deepseek
+**/perplexity
 
-# Environment files
-.env
-*.env
-.streamlit/secrets.toml
+# Config files that might contain secrets
+config/*.json
+**/*.config.js
 
-# ---------- Python ----------
-__pycache__/
-*.py[cod]
-*$py.class
-*.so
-.Python
-env/
-venv/
-ENV/
-
-# ---------- IDE ----------
-.vscode/
-.idea/
-*.swp
-*.swo
-
-# ---------- OS ----------
-.DS_Store
-Thumbs.db
-Icon?
-
-# ---------- Logs ----------
-*.log
-logs/
-
-# ---------- Database / state ----------
-*.db
-*.sqlite
-sessions/
-knowledge_db/
+# PLEXOS specific credentials
+**/PLEXOS_functions/openai
+**/PLEXOS_functions/groq
+**/PLEXOS_functions/claude

@@ -1,0 +1,15 @@
+{
+  "date": "2025-05-28",
+  "sessions_count": 1,
+  "sessions": [
+    {
+      "id": "session_2025_05_28_T11_06_18_f2531b",
+      "timestamp": "2025-05-28T11:06:18.493955",
+      "prompt_summary": "No prompts",
+      "agents_used": [],
+      "tasks_completed": 0,
+      "duration_seconds": 0,
+      "file": "session_2025_05_28_T11_06_18_f2531b.json"
+    }
+  ]
+}

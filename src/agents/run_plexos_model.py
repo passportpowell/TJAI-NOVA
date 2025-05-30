@@ -8,12 +8,14 @@ import os
 import subprocess as sp
 
 def run_model(filename, modelname, version = 'PLEXOS 10.0'):
-    # Hard-coded credentials directly in the script.
-    username = "dantepowell"
-    password = "Drp6541142016+"
+    # Get credentials from environment
+    username = os.environ.get("PLEXOS_USERNAME", "")
+    password = os.environ.get("PLEXOS_PASSWORD", "")
+    
     if not username or not password:
-        print("Username or password not set.")
+        print("Username or password not set in environment variables.")
         return
+    
     foldername = '.'
     plexospath = fr'C:\Program Files\Energy Exemplar\{version}'
     print('Running %s Model' % modelname)
