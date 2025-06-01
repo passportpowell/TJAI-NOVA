@@ -127,7 +127,10 @@
       "answer_general_question_result_2095477400320",
       "answer_general_question_result_1807870149808",
       "answer_general_question_result_3178264476752",
-      "answer_general_question_result_1940670020768"
+      "answer_general_question_result_1940670020768",
+      "answer_general_question_result_2980697525536",
+      "answer_general_question_result_2595030299536",
+      "answer_general_question_result_3228095768176"
     ],
     "domaths": [
       "do_maths_result_1951421572000",
@@ -821,7 +824,7 @@
   "quality_threshold": 0.7,
   "math_result": "The result of 2.0 + 2.0 is 4.0",
   "math_answer": "The result of 2.0 + 2.0 is 4.0",
-  "final_report": "The capital of Spain is Madrid.",
+  "final_report": "The capital of Greece is Athens.",
   "current_session_count": 9,
   "session_session_1747926335": {
     "id": "session_1747926335",
@@ -935,11 +938,12 @@
   },
   "emil_result": {
     "status": "success",
-    "message": "Created solar electricity model for grecce",
-    "file": "d:\\Tera-joule\\Terajoule - AI Architecture\\AI Assistants\\Nova - AI Coordinator v2\\src\\agents\\PLEXOS_models\\grecce_solar_electricity_20250530_234931.xml",
-    "location": "grecce",
-    "generation_type": "solar",
-    "energy_carrier": "electricity"
+    "message": "Created wind electricity model for Bosnia",
+    "file": "D:\\Tera-joule\\Terajoule - AI Architecture\\AI Assistants\\Nova - AI Coordinator v2\\src\\agents\\PLEXOS_models\\Bosnia_wind_electricity_20250531_171208.xml",
+    "location": "Bosnia",
+    "generation_type": "wind",
+    "energy_carrier": "electricity",
+    "model_type": "comprehensive_plexos"
   },
   "latest_model_details": null,
   "latest_model_file": null,
@@ -1173,7 +1177,10 @@
       "what is the capital of france",
       "what is the capital of france",
       "What is the capital of france",
-      "what is the capital of spain"
+      "what is the capital of spain",
+      "what is the capital of greece",
+      "What is the capital of france",
+      "what is the capital of greece"
     ],
     "answers": [
       "\n\n----------------------------------------{'status': 'success', 'message': 'Created hydro Electricity model for Spain', 'file': 'd:\\\\Tera-joule\\\\Terajoule - Terajoule\\\\Projects\\\\AI Architecture\\\\AI Assistants\\\\Nova - AI Coordinator v2\\\\src\\\\core\\\\models\\\\Spain_hydro_Electricity_20250522_213143.xml', 'location': 'Spain', 'generation_type': 'hydro', 'energy_carrier': 'Electricity'}\n\n\n# Executive Summary: Hydro Energy Model for Spain\n\n## Overview\nThis report summarizes the energy model created for Spain, focusing on hydro generation with Electricity as the primary energy carrier.\n\n## Key Findings\n- Model was created successfully for Spain\n\n## Recommendations\n- Consider running a detailed analysis on this model\n- Validate with historical data\n\n## Summary\nA hydro model was created for Spain.\n\nReport generated based on user request: \"write a report\"\n\n\n----------------------------------------",
@@ -1252,11 +1259,14 @@
       "The capital of France is Paris.",
       "The capital of France is Paris.",
       "The capital of France is Paris.",
-      "The capital of Spain is Madrid."
+      "The capital of Spain is Madrid.",
+      "The capital of Greece is Athens.",
+      "The capital of France is Paris.",
+      "The capital of Greece is Athens."
     ],
     "entities": {
-      "country": "Spain",
-      "city": "Madrid"
+      "country": "Greece",
+      "city": "Paris"
     },
     "current_country": "Sweden",
     "current_city": "Madrid",
@@ -1578,10 +1588,14 @@
       {
         "type": "country",
         "value": "Croatia"
+      },
+      {
+        "type": "country",
+        "value": "Greece"
       }
     ]
   },
-  "general_answer": "The capital of Spain is Madrid.",
+  "general_answer": "The capital of Greece is Athens.",
   "last_evaluation_result": {
     "score": 0.4,
     "strengths": [
@@ -7037,6 +7051,146 @@
         "response": "Starting execution",
         "agent": "Emil",
         "function": "process_emil_request"
+      },
+      {
+        "timestamp": "2025-05-31T16:42:38.245273",
+        "prompt": "what is the capital of greece, build a model for spain",
+        "response": "Creating task list",
+        "agent": "Nova",
+        "function": "create_task_list_from_prompt_async"
+      },
+      {
+        "timestamp": "2025-05-31T16:42:42.138241",
+        "prompt": "Task: Handle Intent: what is the capital of greece",
+        "response": "Starting execution",
+        "agent": "Nova",
+        "function": "answer_general_question"
+      },
+      {
+        "timestamp": "2025-05-31T16:42:45.440595",
+        "prompt": "Task: Handle Intent: what is the capital of greece",
+        "response": "Completed successfully",
+        "agent": "Nova",
+        "function": "answer_general_question"
+      },
+      {
+        "timestamp": "2025-05-31T16:42:45.479280",
+        "prompt": "Handle Intent: build a model for spain",
+        "response": "Starting execution",
+        "agent": "Emil",
+        "function": "process_emil_request"
+      },
+      {
+        "timestamp": "2025-05-31T16:53:11.022719",
+        "prompt": "What is the capital of france and build a solar model for greece and spain",
+        "response": "Creating task list",
+        "agent": "Nova",
+        "function": "create_task_list_from_prompt_async"
+      },
+      {
+        "timestamp": "2025-05-31T16:53:16.712897",
+        "prompt": "Task: Handle Intent: What is the capital of france",
+        "response": "Starting execution",
+        "agent": "Nova",
+        "function": "answer_general_question"
+      },
+      {
+        "timestamp": "2025-05-31T16:53:19.922084",
+        "prompt": "Task: Handle Intent: What is the capital of france",
+        "response": "Completed successfully",
+        "agent": "Nova",
+        "function": "answer_general_question"
+      },
+      {
+        "timestamp": "2025-05-31T16:53:19.982220",
+        "prompt": "Handle Intent: build a solar model for greece and spain",
+        "response": "Starting execution",
+        "agent": "Emil",
+        "function": "process_emil_request"
+      },
+      {
+        "timestamp": "2025-05-31T17:12:00.211518",
+        "prompt": "what is the capital of greece, build a wind model for bosnia",
+        "response": "Creating task list",
+        "agent": "Nova",
+        "function": "create_task_list_from_prompt_async"
+      },
+      {
+        "timestamp": "2025-05-31T17:12:04.585498",
+        "prompt": "Task: Handle Intent: what is the capital of greece",
+        "response": "Starting execution",
+        "agent": "Nova",
+        "function": "answer_general_question"
+      },
+      {
+        "timestamp": "2025-05-31T17:12:07.003115",
+        "prompt": "Task: Handle Intent: what is the capital of greece",
+        "response": "Completed successfully",
+        "agent": "Nova",
+        "function": "answer_general_question"
+      },
+      {
+        "timestamp": "2025-05-31T17:12:07.089948",
+        "prompt": "Handle Intent: build a wind model for bosnia",
+        "response": "Starting execution",
+        "agent": "Emil",
+        "function": "process_emil_request"
+      },
+      {
+        "timestamp": "2025-05-31T17:18:35.628225",
+        "prompt": "What is 25% of 100, build a wind model for France and montengro",
+        "response": "Creating task list",
+        "agent": "Nova",
+        "function": "create_task_list_from_prompt_async"
+      },
+      {
+        "timestamp": "2025-05-31T17:18:38.666987",
+        "prompt": "Task: Handle Intent: What is 25% of 100",
+        "response": "Starting execution",
+        "agent": "Nova",
+        "function": null
+      },
+      {
+        "timestamp": "2025-05-31T17:18:38.710226",
+        "prompt": "Task: Handle Intent: What is 25% of 100",
+        "response": "Function not found",
+        "agent": "Nova",
+        "function": null
+      },
+      {
+        "timestamp": "2025-05-31T17:23:33.384876",
+        "prompt": "What is 25% of 100, build a wind model for France and montengro",
+        "response": "Creating task list",
+        "agent": "Nova",
+        "function": "create_task_list_from_prompt_async"
+      },
+      {
+        "timestamp": "2025-05-31T17:23:37.577695",
+        "prompt": "Task: Handle Intent: What is 25% of 100",
+        "response": "Starting execution",
+        "agent": "Nova",
+        "function": null
+      },
+      {
+        "timestamp": "2025-05-31T17:23:37.620461",
+        "prompt": "Task: Handle Intent: What is 25% of 100",
+        "response": "Function not found",
+        "agent": "Nova",
+        "function": null
+      },
+      {
+        "timestamp": "2025-06-01T08:53:26.024772",
+        "prompt": "build a wind model for spain and write a report",
+        "response": "Creating task list",
+        "agent": "Nova",
+        "function": "create_task_list_from_prompt_async"
+      },
+      {
+        "timestamp": "2025-06-01T08:53:42.048304",
+        "prompt": "Handle Intent: build a wind model for spain and write a report",
+        "response": "Starting execution",
+        "agent": "Emil",
+        "function": "process_emil_request"
       }
     ]
   },
@@ -7085,5 +7239,8 @@
   "answer_general_question_result_2095477400320": "The capital of France is Paris.",
   "answer_general_question_result_1807870149808": "The capital of France is Paris.",
   "answer_general_question_result_3178264476752": "The capital of France is Paris.",
-  "answer_general_question_result_1940670020768": "The capital of Spain is Madrid."
+  "answer_general_question_result_1940670020768": "The capital of Spain is Madrid.",
+  "answer_general_question_result_2980697525536": "The capital of Greece is Athens.",
+  "answer_general_question_result_2595030299536": "The capital of France is Paris.",
+  "answer_general_question_result_3228095768176": "The capital of Greece is Athens."
 }

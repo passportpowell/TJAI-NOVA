@@ -33,13 +33,28 @@ lms_client = OpenAI(base_url="http://localhost:1234/v1", api_key="lm-studio")
 # Set the API_KEY variable at the module level
 from get_api_keys import get_api_key
 
+# Load all API keys using the get_api_key function
 API_KEY = get_api_key('openai')
-if API_KEY: os.environ['OPENAI_API_KEY'] = API_KEY
-else: print("Failed to load API key.")
+if API_KEY: 
+    os.environ['OPENAI_API_KEY'] = API_KEY
+else: 
+    print("Failed to load OpenAI API key.")
 
 GROQ_API_KEY = get_api_key('groq')
-os.environ['GROQ_API_KEY'] = GROQ_API_KEY
-perplexity_key = "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"
+if GROQ_API_KEY:
+    os.environ['GROQ_API_KEY'] = GROQ_API_KEY
+else:
+    print("Failed to load Groq API key.")
+
+# Load Perplexity API key
+PERPLEXITY_API_KEY = get_api_key('perplexity')
+if not PERPLEXITY_API_KEY:
+    print("Failed to load Perplexity API key.")
+
+# Load Deepseek API key
+DEEPSEEK_API_KEY = get_api_key('deepseek')
+if not DEEPSEEK_API_KEY:
+    print("Failed to load Deepseek API key.")
 
 #Taken from run_open_ai
 def play_sound_on_off(sound_path, duration_on=1, duration_off=1, repeat=5,  play_flag=0):
@@ -143,7 +158,11 @@ def run_open_ai_ns(message, context, temperature = 0.7, top_p = 1.0, model = "gp
             print(chunk.choices[0].delta.content or "", end="")
     
     if 'deepseek' in model:
-        client = OpenAI(api_key="sk-bba69b9e3f4c40529602d89878f7b6fa", base_url="https://api.deepseek.com")
+        # Use the API key from environment variable
+        if not DEEPSEEK_API_KEY:
+            return "Error: Deepseek API key not available"
+        
+        client = OpenAI(api_key=DEEPSEEK_API_KEY, base_url="https://api.deepseek.com")
         response = client.chat.completions.create(
             model= model,
             messages=[
@@ -156,7 +175,11 @@ def run_open_ai_ns(message, context, temperature = 0.7, top_p = 1.0, model = "gp
         return response.choices[0].message.content
 
     if 'sonar' in model:
-        perplexity_client = OpenAI(api_key=perplexity_key, base_url="https://api.perplexity.ai")
+        # Use the API key from environment variable
+        if not PERPLEXITY_API_KEY:
+            return "Error: Perplexity API key not available"
+        
+        perplexity_client = OpenAI(api_key=PERPLEXITY_API_KEY, base_url="https://api.perplexity.ai")
         messages = [
             {
                 "role": "system",
@@ -493,4 +516,3 @@ if __name__ == '__main__':
     # response = openai_cot(prompt, context)
     # print(response.final_answer)
     print(run_open_ai_ns(prompt, context, temperature = 0.7, top_p = 1.0, model = "sonar", max_tokens = 500))
-        

@@ -1,0 +1,103 @@
+CLI Back end working example
+
+***************
+Asyncronous Mode
+****************
+Loaded 159 items from persistent storage
+Continuing existing session: session_2025_05_28_T11_06_18_f2531b
+
+Enter prompts (type 'done' to process, 'exit' to quit, 'close' to end session):
+> what is the capital of spain, build a model for craotia and write a report
+> done
+✅ OpenAI categorization: general_question
+⚠️ Pre-check identified energy modeling request: 'build a model for craotia'
+✅ OpenAI categorization: copywriting and proofreading
+
+------------------------
+Processing prompt 1/1: what is the capital of spain, build a model for craotia and write a report
+Answering general knowledge question: what is the capital of spain
+DETECTED: Country mention: Spain
+EXTRACTED: Country from answer: Spain
+EXTRACTED: City from answer: Madrid
+
+📋 Context handover: Nova → Emil
+   Task: build a model for craotia...
+
+Emil needs additional information for Handle Intent: build a model for craotia...
+Using CLI for parameter collection
+
+===== Nova needs input for process_emil_request =====
+
+Nova: I need the 'generation' for this task.
+Description: The generation type (e.g., solar, wind, hydro, thermal, bio)
+Examples: solar, wind, hydro, etc.
+Please enter generation: wind
+
+===== Parameters collected successfully =====
+Processing Emil request with prompt: build a model for craotia
+Extracting model parameters from prompt...
+Extracted parameters: {'locations': ['Unknown'], 'generation_types': [], 'energy_carriers': ['electricity'], 'model_type': 'single'}
+Original Parameters: generation_types=[], energy_carriers=['electricity']
+User Added Parameters: generation=wind, energy_carrier=Not provided
+Parameters from Nova to Emil: location=Croatia, generation=wind, energy_carrier=electricity
+
+Creating model for wind Electricity in Croatia
+PLEXOS not available or basefile not found, creating simple XML...
+✅ Created simple XML: d:\Tera-joule\Terajoule - AI Architecture\AI Assistants\Nova - AI Coordinator v2\src\core\models\Croatia_wind_Electricity_20250528_125842.xml
+------------------------------
+
+📋 Context handover: Nova → Lola
+   Task: write a report...
+   Location: Croatia
+   Generation type: wind
+   Energy carrier: Electricity
+   Model file: Croatia_wind_Electricity_20250528_125842.xml
+
+Writing report in executive_summary style
+Report stored in session session_2025_05_28_T11_06_18_f2531b and session history
+Session now has 20 reports
+History now has 39 reports
+
+🗂️  Session updated and remains open: D:\Tera-joule\Terajoule - AI Architecture\AI Assistaants\Nova - AI Coordinator v2\sessions\2025\05\28\session_2025_05_28_T11_06_18_f2531b.json 
+Ready for next set of prompts...
+
+
+********
+Results
+********
+ ------------------------
+-------------------
+
+Task: what is the capital of spain...
+Agent: Nova
+  Result: The capital of Spain is Madrid.
+
+-------------------
+
+Task: build a model for craotia...
+Agent: Emil
+  ✅ Created wind Electricity model for Croatia
+  Parameters: Location: Croatia, Type: wind, Carrier: Electricity
+  File: Croatia_wind_Electricity_20250528_125842.xml
+
+-------------------
+
+Task: write a report...
+Agent: Lola
+  Result:
+# Executive Summary: Wind Energy Model for Croatia
+
+## Overview
+This report summarizes the energy model created for Croatia, focusing on wind generation with Electricity as the primary energy carrier.
+
+## Key Findings
+- Model was created successfully for Croatia
+
+## Recommendations
+- Consider running a detailed analysis on this model
+- Validate with historical data
+
+## Summary
+A wind model was created for Croatia.
+
+Report generated based on user request: "write a report"
