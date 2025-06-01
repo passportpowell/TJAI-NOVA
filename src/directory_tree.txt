@@ -1,18 +1,14 @@
 basefile.xml
-Directory Treee.py
+directory_tree.json
+directory_tree.txt
 main.py
 test questions.txt
 __init__.py
 agents/
-    Back end working example.txt
-    base_agent old.py
     base_agent.py
     cli_parameter_collection.py
-    emil chatgpt.py
-    emil old.py
     emil.py
     Emil_function_map_enhanced.csv
-    ivan - Copy.py
     ivan.py
     Ivan_function_map.csv
     lola.py
@@ -21,12 +17,18 @@ agents/
     Nova_function_map_enhanced.csv
     parameter_collection.py
     plexos_base_model_final.py
-    prompt example.txt
     query_enums.txt
     run_plexos_model.py
-    simplified_parameter_collection.py
-    streamlit_parameter_collection.py
     __init__.py
+    Archive/
+        Back end working example.txt
+        base_agent old.py
+        emil chatgpt.py
+        emil old.py
+        ivan - Copy.py
+        prompt example.txt
+        simplified_parameter_collection.py
+        streamlit_parameter_collection.py
     PLEXOS 10.0 API/
         adodb.dll
         EECommon.dll
@@ -112,9 +114,7 @@ agents/
     PLEXOS_functions/
         enums_as_df.py
         get_api_keys.py
-        groq
         loading_bar.py
-        openai
         open_ai_calls.py
         plexos_build_functions_final.py
         plexos_database_core_methods.py
@@ -133,10 +133,18 @@ agents/
         blank 10_07.xml
         blank 9_1.xml
         blank.xml
+        Bosnia_wind_electricity_20250531_171208.xml
         croatia_solar_2024.xml
+        croatia_solar_energy_2024.xml
+        croatia_solar_energy_model.xml
+        croatia_solar_energy_simulation.xml
         croatia_solar_model.xml
         croatia_solar_power_2024.xml
         france_germany_electricity_model.xml
+        France_hydro_electricity_20250601_091307.xml
+        France_hydro_electricity_20250601_095008.xml
+        France_hydro_electricity_20250601_101300.xml
+        France_hydro_electricity_20250601_102138.xml
         France_None_electricity_20250529_130201.xml
         France_solar_electricity_20250529_130442.xml
         France_solar_electricity_20250529_131712.xml
@@ -144,14 +152,23 @@ agents/
         France_solar_electricity_20250529_134228.xml
         France_solar_electricity_20250529_134512.xml
         France_wind_electricity_20250529_132902.xml
+        grecce_solar_electricity_20250530_234931.xml
+        Greece, Spain_solar_electricity_20250531_003158.xml
+        Greece, Spain_solar_electricity_20250531_165321.xml
+        Greece, Spain_solar_electricity_20250601_151051.xml
         Greece_hydro_electricity_20250529_001254.xml
         Greece_None_electricity_20250529_000913.xml
         Greece_solar_electricity_20250530_101911.xml
         Greece_solar_electricity_20250530_104902.xml
+        Greece_solar_electricity_20250531_170634.xml
+        Greece_solar_electricity_20250601_161628.xml
         iberia_france_energy_model.xml
         italy, bosnia_hydro_electricity_20250530_112525.xml
         Italy, Greece, UK, France_wind_electricity_20250530_112845.xml
         italy_hungary_netherlands_electricity_model.xml
+        Italy_hydro_electricity_20250531_170913.xml
+        Italy_solar_electricity_20250601_162239.xml
+        Italy_solar_electricity_20250601_163530.xml
         Italy_Solar_Energy_2024.xml
         Italy_Solar_Expansion_2024.xml
         italy_solar_model.xml
@@ -159,6 +176,17 @@ agents/
         new_blank_file.xml
         Norway_hydro_electricity_20250529_133503.xml
         Norway_hydro_electricity_20250529_134818.xml
+        Norway_hydro_electricity_20250601_153111.xml
+        Norway_hydro_electricity_20250601_153337.xml
+        Norway_hydro_electricity_20250601_153743.xml
+        Norway_hydro_electricity_20250601_154902.xml
+        Norway_hydro_electricity_20250601_155712.xml
+        Norway_hydro_electricity_20250601_155852.xml
+        Norway_hydro_electricity_20250601_183114.xml
+        Norway_hydro_electricity_20250601_183250.xml
+        Norway_hydro_electricity_20250601_183905.xml
+        Norway_hydro_electricity_20250601_192435.xml
+        Norway_hydro_electricity_20250601_194523.xml
         Scotland, France, Montenegro_wind_electricity_20250530_113716.xml
         Scotland, France, Montenegro_wind_electricity_20250530_113815.xml
         Scotland, france, montenegro_wind_electricity_20250530_114554.xml
@@ -167,13 +195,19 @@ agents/
         Spain, Greece, Denmark_wind_electricity_20250530_111430.xml
         Spain, Greece, Denmark_wind_electricity_20250530_111800.xml
         Spain, Greece, Denmark_wind_electricity_20250530_112420.xml
+        Spain, Greece_solar_electricity_20250601_200752.xml
+        Spain_hydro_electricity_20250531_164306.xml
         Spain_solar_electricity_20250530_104438.xml
         Spain_solar_electricity_20250530_105420.xml
         Spain_solar_electricity_20250530_105549.xml
+        Spain_solar_electricity_20250530_234536.xml
+        Spain_solar_electricity_20250601_131545.xml
+        Spain_solar_electricity_20250601_200525.xml
         Spain_wind_electricity_20250529_141845.xml
         Spain_wind_electricity_20250529_143649.xml
         Spain_wind_electricity_20250529_144008.xml
         Spain_wind_electricity_20250530_105850.xml
+        Spain_wind_electricity_20250601_085343.xml
         TJ_2050_Debug_V16.xml
         TJ_2050_Debug_V20_agents.xml
         ~Model ( TJ Dispatch_Future_Nuclear+ ) Log.txt
@@ -427,6 +461,7 @@ utils/
     internet_search.py
     open_ai_utils.py
     search_engine_id
+    streamlit_progress.py
     __init__.py
     function maps/
         classes.yaml

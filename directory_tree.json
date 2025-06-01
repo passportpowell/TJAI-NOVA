@@ -1,0 +1,1909 @@
+{
+    "#": null,
+    "-e": null,
+    ".env": null,
+    ".env.template": null,
+    ".gitignore": null,
+    "AI Agent Coordinator Architecture Documentation.pdf": null,
+    "app - Copy.py": null,
+    "app.py": null,
+    "Directory Treee.py": null,
+    "directory_tree.json": null,
+    "directory_tree.txt": null,
+    "generate_directory_tree.py": null,
+    "git": null,
+    "git upload code.txt": null,
+    "Nova Coordinator flow chart.jpeg": null,
+    "Nova Coordinator flow chart.xml": null,
+    "Nova Coordinator.vsdx": null,
+    "parameter_request.pickle": null,
+    "README.md": null,
+    "repo_cleaner.py": null,
+    "requirements.txt": null,
+    "rg": null,
+    "winget": null,
+    ".git": {
+        "COMMIT_EDITMSG": null,
+        "config": null,
+        "description": null,
+        "FETCH_HEAD": null,
+        "HEAD": null,
+        "index": null,
+        "ORIG_HEAD": null,
+        "hooks": {
+            "applypatch-msg.sample": null,
+            "commit-msg.sample": null,
+            "fsmonitor-watchman.sample": null,
+            "post-update.sample": null,
+            "pre-applypatch.sample": null,
+            "pre-commit.sample": null,
+            "pre-merge-commit.sample": null,
+            "pre-push.sample": null,
+            "pre-rebase.sample": null,
+            "pre-receive.sample": null,
+            "prepare-commit-msg.sample": null,
+            "push-to-checkout.sample": null,
+            "sendemail-validate.sample": null,
+            "update.sample": null
+        },
+        "info": {
+            "exclude": null
+        },
+        "logs": {
+            "HEAD": null,
+            "refs": {
+                "heads": {
+                    "main": null
+                },
+                "remotes": {
+                    "origin": {
+                        "main": null
+                    }
+                }
+            }
+        },
+        "objects": {
+            "01": {
+                "7015d669c38e3eb27c2d8ec87182cfeabda9dd": null,
+                "8e5bc051caf62eca41b6726a32e222d8208ded": null,
+                "df5f52a8aca4ffa6a6d56b6971fd4d0777df5a": null
+            },
+            "02": {
+                "0e7744cba29a0080cf903b37f33f7dfd06045c": null,
+                "3566b6558707bc284973e56f71e06ee53034c1": null,
+                "494864e16229d5c5a70175904eca35b892f780": null,
+                "642b5dcd4709f5d7244bdbc39e32892ac47498": null
+            },
+            "03": {
+                "6212c4ee70daf06cc3a934faa7b83c196243dd": null,
+                "c861dc400c85c2f05c46c29f058d700c38eae2": null,
+                "d514e6d54267ef80cec19e06efeacf3b6b7254": null
+            },
+            "04": {
+                "71d16e800b590c6f3c43bfd0785192391586d9": null,
+                "954b91151fd62409c0e1f27252b9a432609a3f": null,
+                "c0ca53be6930941697ed2be3f5b376081f1bb8": null,
+                "c623ee61a52387a40ec735aaf87c5dd98cc074": null
+            },
+            "05": {
+                "5ed6aa411f21e1e05e95a65e2354ca6fb3a9cf": null,
+                "68818806495c580ffd2c6c26dcfba3a372c538": null,
+                "7a31294ef203a33f8c424d4a65fc903e66c859": null,
+                "83fb78b5a2b7b20d51ab15e4ac2027701b2a7e": null,
+                "a41e2657cca0fe079b22df0b64e525dc757db0": null,
+                "aa8e8277d140e1164f8582f5120616a4d4c7e1": null,
+                "ca4191b2780d91e653a4b2404dd5e738f2fcea": null,
+                "e1fd8f3369dfb92c777633c1e350865d895963": null
+            },
+            "06": {
+                "3ebed399fbddf9fd6e8f4a3ca0a39f562d9d40": null,
+                "574cf63a1bcad465cdf17251e6ecc13aa7b188": null,
+                "a97c9f3d4a6966dfce55a4f2211c36c7163396": null
+            },
+            "08": {
+                "294bd5c04bc48965bdebb9869157ccdeb09d0e": null,
+                "5be2b8f0a5de513710ebea30b7e479d87aeafc": null,
+                "659724d4f8534ee97a543e93dd6d3c702fcd15": null,
+                "e25621f92cc9748ca77860834abce4ed448a00": null,
+                "f0430126ef8b51f6915bf5cd78326b87259ee5": null
+            },
+            "0a": {
+                "9cc3c1d2853086c8171ea681b105d8a518a68e": null,
+                "b2ef7517c68821bb00195f084102411b81e238": null,
+                "f65f65ecacf3eb1b8fcce39c485014ca82d74d": null
+            },
+            "0c": {
+                "d63c3353ff22fecfa873b15b552172f47533d0": null
+            },
+            "0d": {
+                "9cf85941b984bb9d447274f175495f1d807ae8": null,
+                "bb746290786ba3d61e74e7e6310e5ecbc595fa": null,
+                "c7c9059bc5c738ca803309edab0c7a16a679ae": null,
+                "dc168afb009c047326b378ffbfa4778e5fe0f4": null,
+                "e5f489e64566c67c2b4d9778227cc7d8107d21": null
+            },
+            "0e": {
+                "1eaa2c30e5e2bb7bfc1498fb5aff4b60d17cb1": null,
+                "e54d14ed212811c8347131bb26146dec96aa49": null
+            },
+            "0f": {
+                "099cb87fcccc297df6b324313de26a06dc1be9": null,
+                "0e8fb632d526533bdde5b2a01a2a5d062c322e": null,
+                "5bc5810e679a23a561e5dbec0aed464d26c71e": null,
+                "c8f7bf9881db83be9affe8a53ef05d3de620ba": null
+            },
+            "10": {
+                "06537be706bbab9b78b4c0820b6767e369a23e": null,
+                "0d6298dfb21579e4df79838eeb06853153e2a9": null,
+                "1ac941a58de589dc4c3de431bd65e8a88d10a5": null,
+                "534e9b1397d4774a1085efce0be565817032b1": null,
+                "ed8f8bc2a922d5c5544903344930705d12ff5f": null
+            },
+            "11": {
+                "0c79f84a974cb90eebc3c53b59db4e501d983c": null,
+                "fbc6ffa4841854b90a575917c026414231415d": null
+            },
+            "12": {
+                "3e4dd8c4c92f02db2a49e5a568021971db5e0f": null,
+                "7ed52ae2960866320b21f893ed889f27efe160": null,
+                "a8e4cf137843326f929d8a0167bbcaa70cd647": null
+            },
+            "13": {
+                "108ef57bcfbc6d707bcc74d681adf34bfd22fe": null,
+                "b7c4304e0da03a13df5ea3bcdeba14b7ca8cf6": null
+            },
+            "14": {
+                "59746f913dbd497f95efefb54bc8ea4ad72785": null,
+                "a626cf83f675a5756aa73a61bdbdaff3af721f": null
+            },
+            "15": {
+                "0458dc4ba16152cb9978d930d53bdac0d8a2da": null,
+                "19383ea4442de190055b9c56ccb8d2545be254": null
+            },
+            "16": {
+                "0bcaea111e07d4cb0f7348871823520ee1c4a5": null,
+                "8d1373b3d19e047beba37068f0f87983fb6d3d": null,
+                "ba1323c38fde8d270245188505269f19e3cd88": null,
+                "ca4ac03aff903b11cab5534a6b4ee578480816": null
+            },
+            "17": {
+                "8458f5433bb4777307db9fd7c25a8862fee5bc": null,
+                "cf12bf4184b52a34c091e8b16b0bdd151e9bc0": null,
+                "d543f4f11d224ce38ef364ff0d23a2acde7fcb": null
+            },
+            "18": {
+                "295a4b0e5a332e5b25c797511fc473a5e54581": null,
+                "64dc7b085fb2c16137ef10c5743cc8c5646fa9": null,
+                "d24d7327af71f23af594d705d64c12b10e53cc": null
+            },
+            "19": {
+                "11a60fc7ee8f2e71c3c92460273895710e8efc": null,
+                "9d5612faae1aeabf5446d4ea9d22b27b16aa11": null,
+                "e704c7c5591829c604a6defd2f7f4440556fa9": null
+            },
+            "1a": {
+                "dc89f5ee1420f29f44963720a20c5b528bee35": null
+            },
+            "1b": {
+                "a97d9f9abed1328ff481e4cb2e95fabab7d2f2": null
+            },
+            "1c": {
+                "82567cb89fa4120dff82e9ad8b58562e83a495": null,
+                "9b8e4f6d8fe03515e1bd75b63521306ca06f25": null
+            },
+            "1d": {
+                "63fc1cc1e91d8df93b2204385890eec7aa5132": null,
+                "644c859cd23fe506c9e2be82afd68c9eede421": null,
+                "8382cc66057612f0234a81e205a85614bc52e6": null,
+                "93d0bd82361f4cf0d0953eec7444e50cbf81bf": null,
+                "a1bc5be223d4f9f35ba82bee45be868ec86d4c": null
+            },
+            "1e": {
+                "38b5f8159a84992cf4646829cc1b2d8f5311d7": null,
+                "f4811f7cd0de911a24eadbd3df711cc60bcfbd": null
+            },
+            "1f": {
+                "1b4052f2bf89fba79bad72ca7905b8b7c25f7e": null,
+                "1f989ce39f8431b0ea58390e22ff29836949e5": null,
+                "6fede7962b5081b8145ce728ed564f52dc484b": null,
+                "d34ae63679cddfebd978f5420774f19a93ece5": null,
+                "e07634873cfee8a685ee6cb7f6555215092516": null
+            },
+            "20": {
+                "3b1275dac73dead3d6f87741c7b0c64a373847": null,
+                "90fcdd16a097b7dcd848202d7a253deed35856": null,
+                "9768b3e4048dd489cf6f416c94d0b553304f4b": null
+            },
+            "21": {
+                "32a81f6ac94d164ccb82970b98df6cdf4d29c1": null,
+                "51c5c4e3f9a45d8a93977adb9946a290044ca2": null,
+                "7821db4a404aa48c72795f399d81e14d6c25e5": null,
+                "ea9b3767121c68a40a816a92a8f78f43fb88f7": null,
+                "fe624f7a43c9d95cbab52076ef3a4962fa222a": null
+            },
+            "22": {
+                "403245edfa804dab6ae3d206549eb31d590c2a": null
+            },
+            "23": {
+                "db18c5db1d5612ae1a9849e3587a50d7858e33": null
+            },
+            "24": {
+                "1fd8a92d876b6f79a85af846289e1949f90f1a": null,
+                "60472f1dd26fe40b6a1b888f25a452404573c1": null
+            },
+            "25": {
+                "1c99c4114170a3cca40a37f4aa252556fb6f6b": null
+            },
+            "26": {
+                "386d61bd5afdfa772543397f003a0a7126a0e1": null,
+                "84dce4a4621884389fc9d9bdc962d9c20bdc27": null,
+                "e3dcc20fc00ec834cf2fe16703c01e9455c3b9": null
+            },
+            "27": {
+                "357f4a45d3eb209e51a86fb706f2647b829bed": null,
+                "53ac59c6b89b7167f623ddc40d5e8106e6f410": null,
+                "60172c26abbff4a0689002290d6a70eda20d99": null,
+                "cb8988c63968ad770631a6985969d4b0596506": null,
+                "e6f56b5b3912b5a0a261f21f09611cff8c2fa8": null,
+                "e73ef28f364e54c8a4597a645f2b18605f4487": null
+            },
+            "28": {
+                "84743961706e32e38be50eb57b695c8847b944": null,
+                "d91f8901c4d6e988ed9dbdddd441cf289a134c": null
+            },
+            "29": {
+                "14a5e44fc3c39c7f2f3949844eab46da7194c5": null,
+                "d578cc5b5df57cb9f273a9961ac9ef4881fa18": null,
+                "fa784cfbb7e12f6c3c8d6fee3646b63974ac9a": null
+            },
+            "2a": {
+                "8ec64fe462ba809c4fb89c8fedfa7eca54dfd7": null,
+                "f90ca276155c8431e95269c3b28bbb447f36b0": null
+            },
+            "2b": {
+                "342a10cb1eff17e6823729f7ab2364e67a4590": null,
+                "bcb9761e86b1f731192f38fd73d3cd24510ab3": null
+            },
+            "2c": {
+                "0ab554445f440341f454fb00ff23f6217e3f2e": null,
+                "6cec285507ab57182ae7f6049824ace17548b8": null,
+                "7257f5eed8544cae52440d58b25e509798b657": null,
+                "dbb42fd772642c13882e74cd25a0f7f1a3d4bc": null
+            },
+            "2d": {
+                "b7d09bfd337bd275c96894f4d4ff08477ff980": null,
+                "e02b77f3c5e8260741c556c045446429ff7cce": null
+            },
+            "2e": {
+                "0936dd9365b0da0e5db96b18b4a7e8fc232cf9": null,
+                "6e260363eb9a059bd35f8d8114c029b200149c": null,
+                "7e6dc0b81571bbcee6c80db107683002755dee": null,
+                "be306618cd23b148ffa062e8a39ce0341b5046": null
+            },
+            "2f": {
+                "f53eca8711a6504cc1036006c399aef600d1d6": null
+            },
+            "30": {
+                "62b7f188f3d01339d2521671f1f2a521bb3dce": null,
+                "b5a22615294a936f6dcc34cd24aadd4d6da68f": null,
+                "b87ed2a49e72448fd3da5df69e1a00785bce3c": null,
+                "d1eb8e5c83b874fc27b51c6733ca48712b23d2": null
+            },
+            "31": {
+                "23210250fdcc9e46478c0ae4f379628ba3d06d": null,
+                "3ea11158d9ed6e56851114d4d802251538fbfb": null,
+                "dba7e67702eac651f41356b027cccc180033d7": null
+            },
+            "32": {
+                "7ad450ee178f4610b0867f645e54a30584631e": null,
+                "88b2ab92265e7c03b52f362d54f77e9668b8ea": null,
+                "b67db9b1536ff4d6fafa70a17107f884996002": null
+            },
+            "33": {
+                "71b69e71aded12a3d1d8c4c6ed0dbe2190c135": null,
+                "f4e7c66f3bb1e6508d2e58e09d420bbb945913": null
+            },
+            "34": {
+                "1d08fc8b7ea5cda1f12b3d2756b539e1f94ed0": null,
+                "2bb9f34be7b81cabac8ed50f0f166ef4481943": null,
+                "7e8cb104d00edc124c391615f5a143b32d5486": null,
+                "94cf8499990a3f425a8ef6dfb5dee056036c55": null,
+                "e168e8c734923a864e17b0fa477920abeee920": null,
+                "e610cfc5d565398338085fcb3c11bced26451c": null,
+                "f60c785367db3cd3bb95fb9084f7684e865516": null
+            },
+            "35": {
+                "4b1e17dd7a29eb99e765cb6aa876e6b1e67170": null,
+                "c804825ee88c2659c86796c8715815a958baf7": null
+            },
+            "36": {
+                "46630d7d8b597dfe90582d2835f5eb3e4164ed": null,
+                "dcdc6bebbad5da8222ce525b770d2e0209108e": null
+            },
+            "37": {
+                "2776459beeaf4b3b3a8c602a17247249cdfa3b": null,
+                "8a082396f4603a0deaa3bb5a3baeea84254624": null,
+                "f99a74090c2946ed40109eeca1ef61344df092": null
+            },
+            "38": {
+                "4b6031cb06139c4cac01556151a42bbe2d36b4": null,
+                "543e22688797e3e27252af78e55f83eec6787f": null,
+                "75d6c1675e0d46ea5c6e747024dd777539ea3b": null,
+                "9b110266e2c9ad4b1d43bd2d84d5e330d49eed": null,
+                "b39b361bc13e5eefc45dcf520cf8c030490282": null,
+                "ba6f5c3597baf422f8428cc012883af2adcccb": null,
+                "bc6f7fde55f9e71241ba97e63220c54122ac1f": null,
+                "f3f2af8474764175009a1955641c38cf47686a": null
+            },
+            "39": {
+                "6ffd653d7a654c3a83461df591e6b38be5963d": null
+            },
+            "3a": {
+                "2782382d161aae2ba98a5d99dfc74d583a430a": null,
+                "6640d594e838c3dcb9b06bd06c08724493c429": null,
+                "6bc34798c23ff9312f48ddfe2608da7e5b1b13": null
+            },
+            "3b": {
+                "61c843b4038c35462db443098907eafc28d6c8": null
+            },
+            "3c": {
+                "e4afe7d88a6b24e7310999e27e6e6ba7611702": null
+            },
+            "3d": {
+                "16c7e9d86d760e037853648c40c16a1ac9860d": null,
+                "31e086caf7351bfc8327b08f29fc9369785dc8": null
+            },
+            "3e": {
+                "0d32b4b0cf722189ffa00ce501b4aef195e230": null,
+                "d70a237caec63633753636a0764464417a5918": null
+            },
+            "3f": {
+                "7b4f57381f5c2f6c16df83e03cf31f42d7e882": null,
+                "ef534a0862ebf42285cb325aab4214647005f5": null
+            },
+            "40": {
+                "4362059e26a6673971f15ec0513364ea7c1ef1": null,
+                "c135d0994d133a236f3fd48d288403be548b5a": null,
+                "c67ab37c684ffb9b779b812f21f17cb0e63da3": null,
+                "cf4c732596b70cacbc2bcd38ff1f696a6c9718": null
+            },
+            "41": {
+                "f9c487d3e924124f699f302200d9b715da4f17": null
+            },
+            "42": {
+                "c30fa4d4a3c73f7320b43ae66062807b3cfd34": null
+            },
+            "43": {
+                "3d3080c7926a5218cf699491253656e0c57f98": null,
+                "be2712e0abe8f921644926944d8877bba3e8dd": null
+            },
+            "44": {
+                "0384b95acc48f20a3e8eb8b1a8408acabdc3ca": null,
+                "47f1cb455da3541bcd2f1d15f2cc419901f65b": null
+            },
+            "45": {
+                "5db91aabe295ddba2fb1a7b6f1f431c4cf2962": null
+            },
+            "46": {
+                "171997966f26bda11e58586c51b2817bde5cca": null
+            },
+            "47": {
+                "5142abad30b33f001e10515db3d608b76037ff": null,
+                "93788759b414920f7af9ede8f8f76bbcf85b87": null
+            },
+            "48": {
+                "780c46449d9d8586bd8c580d56ef75a76fa226": null
+            },
+            "49": {
+                "0c95a5e709384167bbb34697fa2a6fdb4fbbc2": null,
+                "563c61dc457c9e67a2bcd54c64db2252c65533": null,
+                "d54308a008b184e5f0db8b648f6587fc7313db": null
+            },
+            "4a": {
+                "80d7bfe94bc92d57e90444a28edaa0b5a32956": null,
+                "8d90cd9f2d23db1e36d93479de01ba41a22d51": null
+            },
+            "4b": {
+                "2ead762963e3db93d4f05d256c477d65a0cddf": null,
+                "50c7dfb3ef8c8ae7f0cd2c753741e824d3a19b": null,
+                "57b348cf701f3613e2ba5a77c48f9b096109da": null,
+                "63f4ffededba0dd703efc39b0727c9eb3b87ec": null,
+                "a4fa3bf64536f2edf6be9f11613698b6da0813": null
+            },
+            "4c": {
+                "0ad8a59a1f42b387f0afcbee676ea4c683f3d3": null,
+                "29bd74fc950b1df37133eb8ff0a780ae4a13e6": null,
+                "e129ce7f4788990b225370760e3a4dae193644": null,
+                "e28fdeac6da139573ed0ff356c2df510692cee": null
+            },
+            "4d": {
+                "074e365c028f73352516e9baa43f18d9c96cc8": null,
+                "2cbdfaa6decf6af528475805d9c210fd60f6ed": null,
+                "8a1b70b82ce08837ed1a91fe7880088a726acc": null,
+                "c56d9f2f5d32e97f7438a4af214284250659f5": null,
+                "cda7ef2352f79b3937737c0e0f91b6390fc9dd": null
+            },
+            "4e": {
+                "38a7a8cbdde0a1baa852f3bbdce924ad91f91d": null,
+                "4d647a624bc16839bfd0315e7ecd44c3a485c3": null
+            },
+            "4f": {
+                "0925f1016344b78886df08a0055dc7f2c4ab91": null
+            },
+            "50": {
+                "2f1c67b03e5d679dd43ee486b0f6b3ed1e8bc7": null,
+                "56a4bd9cb140dd976714449b19628e255c93cc": null,
+                "6c3ba7ee6d4f602debe7b5a414680e2e454abf": null
+            },
+            "51": {
+                "139f94c225309875aa92da2e2d88a1b9b95ef0": null,
+                "9d1a77cf97d6a60df4ce6a2e53681db3b0d5fa": null
+            },
+            "52": {
+                "13829b08cf2777b94361e8e02dab1c8de9a723": null,
+                "32ad86fd0922f0cf329a396e7ffcdfae53beda": null
+            },
+            "53": {
+                "a23ca395cf3596103b7e60837c900cb6e313ca": null
+            },
+            "54": {
+                "224d93dc0e796ae47c86858b59ecbe5730c185": null,
+                "35b5cbbab6e05be8759221145da0554cb79e54": null,
+                "f7829bc3b3fa118827dff731fe461565b09045": null
+            },
+            "55": {
+                "c8531008052e284c2c32c3407687afda85f31b": null,
+                "de174bf714ec4413a9d61ecc1284ed2530f339": null
+            },
+            "56": {
+                "f0dd5111998c2f3652c1c0b17e6632b72308a0": null
+            },
+            "57": {
+                "1a145c57215c7f10c1689ca279e3053b69f20e": null,
+                "c9b73d7b9f47847bc4cc40a826e2093b5b79d3": null
+            },
+            "58": {
+                "04979bedcb2d158861245fabe25fcd0b0f2cad": null,
+                "21ed78f067b05972d9854c47ce54165d247a8c": null,
+                "7b6fd6559353bcac8b1799558c6f44277dc977": null,
+                "7db09df5477f0d41aed2463be537d0af29a632": null,
+                "8f452174cf46f7dc44e2b0f7f55dc6f16e7b25": null,
+                "f377d49b1fe92366df95baed6bbab98fb46d9e": null,
+                "f99a0f290b3fb2fe954c325e7caecc43ce95a5": null
+            },
+            "59": {
+                "0463e22b4f708c72192fa4c92e3dfcd652df84": null,
+                "c576186572e7b1bff45271dc3a67973b873688": null
+            },
+            "5b": {
+                "19efc22c3650a8b55860d12f91f8b337600970": null
+            },
+            "5c": {
+                "033e42e4fbabfbeb481824683900a4f50aefee": null,
+                "1d6cbd611e135ff8e33323ce81e75586ca89b9": null,
+                "4f25afad328e8a30081253760a824b9bba8154": null,
+                "5549c819cf6c6e3ff7a3110ed342b4b1cc1899": null,
+                "7a051cbbb4101a2ee2a3e66e9aeb40514ce440": null,
+                "9d558469c134f5e82e672a8718a3f4e0ff5037": null
+            },
+            "5d": {
+                "3070311b8258e20b2ff07c4b56ba98569207f6": null,
+                "4284a28ebd2d02c4195a125a0a4b37e4b7a6c7": null,
+                "523ca468c483f0b4405ba4237a0c6516feea05": null,
+                "8f4f6db2e3e17b08c4dbdb64763cc0da7e223c": null,
+                "902e0fe8692d1e816a07d535b2a4787d1e0d81": null
+            },
+            "5e": {
+                "44b99bc3342836df588f7fd2af0eac0c2840e9": null,
+                "48ba60dc9689ce8b5fa20729ff3378afffef7c": null
+            },
+            "60": {
+                "31ba1e94835abd1d276b9700394dbafeb2b46c": null,
+                "94ad724d56c24bcc82db8184fb317d08be8278": null
+            },
+            "62": {
+                "fbb6e0a2d7aa59b923a4140b86ce8ab653382b": null
+            },
+            "63": {
+                "41fec5c245d35a6c8b9a237fae955d3a4ceeeb": null,
+                "d57d823d5e2d8c29470e44568aedce3a75f15c": null
+            },
+            "64": {
+                "27923c8a1a5f57958b531e3ec3fd853546a0fe": null,
+                "669cb153321b57b13b8446c0c0dfcc64e29b06": null,
+                "ed11afad3feafc882d30e510fe32e87d6e8831": null
+            },
+            "65": {
+                "0ba041cab9d39c35dff7158a65b11a269b2328": null,
+                "7ca0b671231743de764e40865b67e9b93bdf1a": null,
+                "c85fb406a35783076e85075c5b4f589636bb61": null
+            },
+            "67": {
+                "0ef5acf86b237e0377e69f4fb0a9b601dcf016": null,
+                "692bdc6b9b5950588662e91bf473e050f12bd2": null,
+                "c2eb16b8600c927603b6ae698127f99e6b1aef": null
+            },
+            "68": {
+                "97e71964722f6706ff29ea0b915be99346936d": null,
+                "b587f80361a3790df0cd9436d579ae4cd93938": null,
+                "cacb177c06fe7e9dfc44f1741a9464e9471717": null
+            },
+            "69": {
+                "cb6af3501f0fc34aa3853969ecbe47d0bb8291": null,
+                "dd23a75451238bbe61697c2483ffe45ec22e1d": null
+            },
+            "6a": {
+                "3f113b9b3b49e584b6bbd756d2bf1006409db5": null,
+                "5e48bdab766d8594e856f3c39364c1480aa2f1": null,
+                "970fd2db4bd9f89b1aefe407fb3854adaf4647": null
+            },
+            "6b": {
+                "275f7838679e27361cb6aa4f8595cffd5cee95": null,
+                "4b795d99179d7b08005ad0fa8249bffb7d6f9b": null,
+                "7d5f8bd8f9fecc7295f4fe766ea497bb73dde3": null
+            },
+            "6c": {
+                "3273cff7c20e71f0c3862da5d9fd301646596f": null,
+                "787de34898b1b8951953e7be711e8763112e26": null,
+                "d5ba266fa58812e0aca68627356bcb82cdf5bd": null,
+                "e5a016366259b67851c72c9147979fcdb037b7": null,
+                "eac86c759a89a11cc7abff287c9473fd34816d": null
+            },
+            "6d": {
+                "223cc33387460df7c6e1ad6c0b6e0f00ef8d94": null,
+                "3860a7245ca435735b2e885d6bbb25b0d26ea8": null,
+                "f8cdf930673ed801bab3f44e988a3f0f7e29d2": null
+            },
+            "6e": {
+                "496208f9845663a4bd390257374c1ee5eb7b0b": null,
+                "8ba7c10c39d99808f71af01535f57d95f5dd4e": null,
+                "a0dc297baf1776643e77e0b31cc759aac52929": null,
+                "ad59529dd3adeb71aada3a89b2b372f9f59ec4": null
+            },
+            "6f": {
+                "0e026ca3823236460449bbb8d1a4e72c315e60": null,
+                "3d759f204a2135ff4cc5e52b1a7599b0ef77f2": null,
+                "4a461bd6f5bf6a7e11ffdb8247d58b400a4e9a": null
+            },
+            "70": {
+                "2eebd24db854b4a0c0c3f01fe29ea41e237b75": null
+            },
+            "71": {
+                "3f59e44134e0bd27a881c46abf890fa771f81a": null,
+                "895b9f717392606c58083505fdcb3894e23f10": null,
+                "8b7eccfdc0891c7ac987e761dccd35a4b9c8d0": null,
+                "9f1d2dec586870127ca2147bee8521a5c1b351": null
+            },
+            "72": {
+                "06b63256332ba9498a8d21d812c4f037cfec2c": null,
+                "295b6642df1cfc2e830602b9715868f0a99347": null,
+                "8cd10f8a38a4afc4bfd5f305f2b87a1969304b": null,
+                "a6ab8ee677fc4882f231615981d35c4fc34b43": null
+            },
+            "73": {
+                "a116044d80ecde877a18132fd5497bc558ebc6": null,
+                "a8ea7fe29f3191c889c80b78d44146ad7562b8": null,
+                "dca50fc5b0315640935f42f9b8f3cc49bc57a9": null,
+                "ffbebefba3db8207f611c2ca7392dcff819e63": null
+            },
+            "74": {
+                "64564a306596af0c3ed81f262c1aa50a389a3c": null,
+                "6bbdee23a515000b9a27fe99d1259bc7d17df5": null,
+                "981c4c83708aff94e8622bb8306a81bb8bab09": null,
+                "a9c9c15bc4b896cea028a7eca8100668e67233": null,
+                "c52ae3c40df4edd48a1fc63d3dccf7b076cead": null
+            },
+            "75": {
+                "701f140d711fa02690e90ba920ffa6eeabed77": null
+            },
+            "76": {
+                "e158a6f653b823faa80d68227e215a56724723": null
+            },
+            "77": {
+                "894966018ae2cbcffae49a02129c00bbfb178d": null
+            },
+            "78": {
+                "56d66f70f51ca3f48d0aa8b58daa5415954072": null,
+                "6a5a472099a7bbecd55699e422abb4ec635dae": null,
+                "ef116e6dfdabdebac8d26030e5e0616d07ac34": null,
+                "f771f515cd7269d5ed844ed094e61d38b3c49c": null
+            },
+            "79": {
+                "801e2184585c900a5a78248435d35f6228c8a4": null
+            },
+            "7a": {
+                "22aa95cf6e3fb7107c5c8c6af58aa286d02f6c": null,
+                "409852e9b15b6b515e2c3bc9444452e27a730c": null,
+                "4fdf38b2a690ace338b31e9803d3de28cdda85": null,
+                "8f238037d8dd8791342a782a7abbba020e501c": null,
+                "a964abee6081e426f93837734d833603e8dd8c": null,
+                "ac1244740565c22f24774c5ee1146d0e04243e": null,
+                "dd513adccc7238ae2ce3865ce657ac0cc9fffe": null,
+                "f2ba0366282da40ca5f707ed697123e59db02d": null,
+                "fc4f6200f6928c2542fdd7109969b7a454dfe7": null
+            },
+            "7b": {
+                "60e1e2d48129e828fafb6022ee7d137237d98b": null,
+                "f62c27f129a9fe0b30c1ee67066b04bb71da30": null
+            },
+            "7c": {
+                "1573424a57d30c933f65992e7551d88b34e7db": null,
+                "2cccb2a819a27d3a0a89f96e845d482ecc3d44": null,
+                "bd2e285cbd7a7b5eabde8d057059097b4adcb1": null
+            },
+            "7d": {
+                "0d19babbcb5a51b4397eab7bb2ee76858582c6": null,
+                "49a39920a5afe720c54b288bd354234da94a14": null,
+                "55f6f440de4b42eb88560da8e13c43dff0bc9e": null,
+                "6e6dd31cdf55f5720dfc506748ab893ff176dd": null,
+                "6edf747aeebe220a68499b4ac2d207cde28e69": null,
+                "96a17ad3171a501ca856b4c07269193e171535": null
+            },
+            "7e": {
+                "3367c0fd2dddcefd6bda59e2e09c9d898d572c": null,
+                "fa2ead17c6bba19ffde5b62f308a2dc10d00f5": null
+            },
+            "7f": {
+                "1f0d41f941a06821f6e6b49c22b3cd5887b9e4": null
+            },
+            "80": {
+                "1b79b3e584d9b6389e56e8a46849feb2f1547d": null,
+                "356dc7366a3b0cb37802bbc3fa183029aabdc7": null,
+                "83c721a8efe7618d88d78962228d9b7ac12c55": null,
+                "8b2cc9fb47604a76832572fd8b0510d9f5eeea": null
+            },
+            "81": {
+                "22a5d2c0a33c96a0a160094a32cf3ecbf50c5c": null,
+                "2340e7aae9bda51d79ac39575dd0fd2cb48e79": null,
+                "3c4a862da496c349272cb50838c0907f68c948": null
+            },
+            "82": {
+                "7cb14786bce9bb1ce7a53032061ab2f83cc4a4": null
+            },
+            "83": {
+                "5ca035d960abe5e445c041e4127d3561dc2505": null,
+                "9ab131eb7c5f06e69ef10f75c0a350276b026d": null
+            },
+            "84": {
+                "0bb6954f684ccb8164741513b14e2f79e9da74": null,
+                "134639087fc97901050758b215dcdca9d02666": null,
+                "26e221c7fde3b675407c56573a43a3cc8b0570": null,
+                "5c29ac13bb16e0ee55b01d8d0707afc402d30e": null
+            },
+            "85": {
+                "27f067526dd828ec9cf23a01b3d35fac57eef0": null,
+                "319c446171c8892f4de29230728ad74a4d5868": null,
+                "4cf77f9866888333246c6d75091e7f8925cd5c": null,
+                "b0e26923825b778f5ea68e95db830af3751c98": null,
+                "bd85b42dd80f5ac398ef2b446b33a56ef41158": null
+            },
+            "86": {
+                "37d91b9f9bbfd1ef317b172777223ba8bc8dd3": null,
+                "41e9d3788c40df6727754bdcdcbcaf8ad18414": null
+            },
+            "87": {
+                "249c7286830c16ff82868758072dfb2dfc86a1": null,
+                "938cd8a2b5ab6dccf3229f3aa3e59e09d4d487": null,
+                "d3fa4558a3d14a2915af622803155634e4643a": null
+            },
+            "88": {
+                "5c5e799c7e5697d595adee8482b43902118cd0": null,
+                "fc8719002a1765b6232ba31dbb64186b5d9979": null
+            },
+            "89": {
+                "1f03d21d8eca5e110869a924a413bf96f6a798": null,
+                "34f1e53d15cead81ea6c0f161eb969f11cf7e8": null,
+                "e0e01e3c71c1ba6a6f8bd5786824f282ac797b": null,
+                "f2b7af4c75a164b44b62f5131dc450be7522cf": null
+            },
+            "8a": {
+                "17f3f58bdc1981f76031c7b89ca5f56abd5612": null,
+                "43414ccda282631f1b4dc43a70f7c131d141db": null,
+                "844d4d9de1a4dacca2d5821e3a1b75cc4085dd": null,
+                "8ee23b5f2aa8c17704af3a16854fe090bbc4c4": null,
+                "a19c646fab78e60b0f066f241b7814ef43edeb": null,
+                "aab0372ead5647baee5c588268c3e23737bb4e": null,
+                "cb2ff271d79163c7c290a5ea63f3f5e827be1f": null,
+                "d55f8b59b61bf9c7048940ecacec42721820e8": null,
+                "d9c6d58a913e004eac35380f1fcf7e320a72df": null
+            },
+            "8b": {
+                "72f711349dcd7ced07786ab8f367e8faad7681": null,
+                "bb4a4b8e1555c39b45d171ba5d97f9351ab597": null
+            },
+            "8c": {
+                "0920707bb31674b373efdb631678a2cdd503fc": null,
+                "136189ff0ba91dae9510683b7dbdab39e9c084": null,
+                "2d0dd168a91c21e169bd051a2273dc8f838a19": null,
+                "9b20e236116cb4894a2d1d2e5bab2436b279f1": null,
+                "d3a15ccb917650537a9676048bfd45c8e1a79a": null
+            },
+            "8d": {
+                "19bd66c57c90cf5e62bd807f2c4f23b970ed8b": null,
+                "40ae09f709a6e5530123dea0db204efd963a41": null,
+                "b66a52e441e0c04660c788f30ad83fe929ea2b": null
+            },
+            "8e": {
+                "0c65e2e8a97b091348a1b7a98e5fd318aaa431": null,
+                "6b0fa6a3bf31d59fc0fabd135144a76ffbf828": null,
+                "a1e3a1b7e9c3c9bdb2b2bd4ad2d2a406d66f3c": null,
+                "dbdd28a356e74957cca16db7e6b1a6a0cb8230": null
+            },
+            "90": {
+                "07a15fa44ddc2263b0fa24a295a192f1817767": null,
+                "0b5ca378f50d36782b8ff2111836c540cd314c": null,
+                "b3b266f1c3aab1b32f80d53cfd211771883b61": null,
+                "b4475fc7d75aa2de6b32420f25eb6f26442f5f": null,
+                "c944517156fd5dd2113c9fe6d604814bce2383": null
+            },
+            "91": {
+                "2dc5bc5cf58f569cf7b96d51ecb44f5e5b2f25": null,
+                "3aaaf310bf62f93ce9a42d29fc1db280fe919c": null,
+                "a7ffa3a2c8feb1aabded99601bba5077c2116d": null
+            },
+            "92": {
+                "2cfa8d604e3c7b21bdff40e5a2e3f40471a524": null,
+                "ee6e7472c3bd1d9ce102cd401975c91065dfe1": null,
+                "f07cc328a0f51e106296a63f5415f392349cf4": null
+            },
+            "93": {
+                "511fda0e0fdc6e6211e6e7836b88f16297998c": null,
+                "5ac6339a3488a56f7d839e66c10e602d605f62": null,
+                "f21e918ecf5a9197018b339678f173f35a1035": null
+            },
+            "94": {
+                "44308afe7c04a7690cec7db1f15c65aeaa8a2e": null,
+                "4b067b22384846b73b51588240047957ea2193": null,
+                "65e128a79459f81252cb3de4edac87533de7f6": null,
+                "a0b16549681322aa70b7ec2e5286db5796fe17": null
+            },
+            "95": {
+                "2427f9d84e2d3137d4113233144f08dfb08477": null,
+                "3166a8d9d8d8361d311700d5a212a8d7a773e8": null
+            },
+            "96": {
+                "ac65439e855bd8c1e43e0aa271acad1ecdf7eb": null,
+                "d87666f152abab51f9918ddf1b56d8077fa6b8": null
+            },
+            "97": {
+                "11902103058c09314039e9641482088ad60952": null,
+                "5c177e967e166dda7d15daee519cec9e34af3f": null,
+                "5f8eb74ebaa25f19492ca7d1a3d2395752b9d4": null,
+                "a76fc57666b7ebdb7c13a28cfff720b78295a7": null,
+                "b726177ab04bf3af84a54fd3baf7c4fd9c4c94": null,
+                "c6b2ddbf3cf9f9a39bc6606fc1c7c35b807e05": null
+            },
+            "99": {
+                "e0bd58011dd00dcbe2b332472b623f2dfc50a1": null
+            },
+            "9a": {
+                "13dd44a71b2c95e1315a22d83d70ff19d0c331": null,
+                "308c71cf936d248597602ac489e7cc78b61e83": null,
+                "5da8ca36e67fe97bedf0f0b7219ff994283fda": null
+            },
+            "9b": {
+                "736b984c172bb48efaef2942354c88829ced24": null,
+                "b9461930f573a27a7b3259f898351778d9a2b8": null,
+                "c22da02b0133369825616d6dbd247332c94ff5": null,
+                "e38be5a84cf265e4d4581bab80f7b0e362df1e": null
+            },
+            "9c": {
+                "052be50f9b9c104698e293513a260be2ed05b5": null,
+                "29e673bb1bbdd33bbd7c6d194ab3c89479b055": null,
+                "2e81e0e7015de4005e7697faf751dce9c92b74": null,
+                "ad25c7619cb3f46b3208408826887f8bc3e1bf": null
+            },
+            "9d": {
+                "417572ba12324bdf425a4c8401ddb92611a24a": null,
+                "67f625ad8a2b4603ac74d959cb31555ad89fbf": null,
+                "c70d38a69cc88ec8f4eeda41e20b4015cca134": null,
+                "ee0e330ed86e17d8ff93ad5d6092fb6ede7399": null
+            },
+            "9f": {
+                "ae12f26b5c485a7857f9f63a808aefc6f57773": null,
+                "c490fe0f41b85748caa514c0d8a14bd53e6648": null,
+                "d72e69a1dc4994e33aba439ab7adb3635f0fff": null,
+                "dea951ada9d4c7248cb29f90aeb25adee79420": null
+            },
+            "a0": {
+                "0dda4a758372297c3fc779e3b6142725d705f6": null,
+                "3076c503b98a96a7076808c2e07e0b48c1378b": null,
+                "86cf945343a895e34e4e1847c84b905facb4aa": null,
+                "983e0411a85802611bdb936554a1e6b12adb25": null,
+                "fa13dd2a9ef44a347894ca342514a5aed81e55": null
+            },
+            "a1": {
+                "e90f3cdf395a111537c07a262421a4a62b1049": null
+            },
+            "a2": {
+                "30abb204ad440fd36dd33c95f8f827eeb19732": null,
+                "348d055fc22e82ae81011ec56fe2c22add1915": null,
+                "72949ffda08ea6ab8bd4540a57e22d68df41ca": null
+            },
+            "a3": {
+                "3a44a01fea1d275f56efe3f6cb4f98216d8d4d": null,
+                "d8673436aa0db4ae9a032a1bbb01a97adcabfa": null
+            },
+            "a4": {
+                "08172ecf97a54fcc6382675184405a32b86b10": null,
+                "c3810b6ac8b0ad570e65d2875817d69bd66a87": null
+            },
+            "a5": {
+                "8cd8e063d6bfce63fa5df2b3466736f45f21c9": null,
+                "f1cb8eb43eb2777b191179b0b717eb76bef666": null
+            },
+            "a6": {
+                "6eef709ddc23857b13c6f9999ebdc617ac60ab": null,
+                "869dd3bc982f9f2d808fb22da8b9d08acb68fb": null,
+                "e2df7fb8e29796f1b533eb7f2890ef24c7ee84": null
+            },
+            "a7": {
+                "29fd20688d445fb5d7cdb6a6a62973cd7a901e": null,
+                "778dd84106552613dfbcf52fef7f9f652d511a": null,
+                "d28e82a64aee2451167dc956f9065ec36b2a73": null
+            },
+            "a8": {
+                "d3908f37f8a0f0b71d7125d36c65ac0f39954e": null,
+                "d77657d01440f10a8c70bacc8882e147aabd85": null
+            },
+            "a9": {
+                "7582caf2eb5b6c478c0bf1e2c2f3860d0f6dfe": null,
+                "7fceb16883c2032a45badcbe71b0d20411bd53": null,
+                "c2791742cf9564c679120dd2a335b720317262": null
+            },
+            "aa": {
+                "9260b4b93d928e81b2ebf932b402df09d8aea8": null
+            },
+            "ab": {
+                "09c72c61319664f7bfb77ada9effc3832ca39d": null,
+                "481aa26c305bb6c80636b398b539cbcdfaebc2": null,
+                "737eb47180b646af4ca8880fa21632d355ec7b": null,
+                "b2c1c4b203a3fba09948aae3181064305280d2": null,
+                "e532bc885e9599df9c04ca448afbd7cfce663f": null
+            },
+            "ac": {
+                "004aaf6f3fceb1b6b0efced7d548b3a814b8c9": null,
+                "5976cf6770fd15dcdfb0b7b8f0249bea1a52e7": null
+            },
+            "ad": {
+                "2721361401e88a9da6ba3e31c6bcdf306c8ab8": null,
+                "58262ced23236eb51db9ce1d8dd7e73f2fb131": null,
+                "676d0813ca3d54fa738dec19ae8e74663a6ca2": null,
+                "6a7e5da8dbc7deb7d72bb4ee1e7cf8f507b694": null,
+                "b5bcd77de735b9b8b4ec18f2c987d1e204bba2": null
+            },
+            "ae": {
+                "28451b93e013145c7d8b43280a017f337c9bda": null,
+                "33a2beae2858e3332c46a08876270b8c8e6710": null,
+                "66cd0bdae89e3ebb6dd453b43b93e1a3a8493f": null,
+                "90b353fc9be3eb19bcfa0d08ce2e8acbd60271": null
+            },
+            "af": {
+                "bd97bff6b7ce08e0c115e7cc74680b0657a423": null,
+                "c3baef8aa8c6aa0235d3f64d6bd60ef8776632": null
+            },
+            "b0": {
+                "09908dfc65fea0891fce564ea80f4eaebc2467": null,
+                "3aebf669650c65918084192dd6673880302d82": null,
+                "c56e43249ea6da58116ba917a5233f8aa1644a": null
+            },
+            "b1": {
+                "0ee6f4ff84e1d150252a75822895b39dfee0c9": null,
+                "2b87cd6335511c36fdf9d32714700e1d1b3fe0": null,
+                "bb6437b72c5590168f4b7cdfe64750f9909cc8": null,
+                "c790680da2a42839cc3d917491f5a681fad1a8": null
+            },
+            "b2": {
+                "40814f0e248cee08256cbc143e0ba3c1bdef74": null,
+                "60f714f5241e0824e23852e12371c85bf65107": null,
+                "ae8a71a46f0c71194052b5078a124ca459cc22": null,
+                "cc7584b3de361c62f3e14de800414798155429": null
+            },
+            "b3": {
+                "469da6f003c8e09b60d6c7b5c5208560a5d148": null,
+                "4e652e54ba83f4a6881f5cd060772347159c11": null
+            },
+            "b5": {
+                "b34aab0602240054fca5a3f25b2477137f5ba2": null
+            },
+            "b7": {
+                "3bd9f5c85c2f78437bf4d47dfca39d4079f8c1": null,
+                "680630b10a7d4a4fc6da669bda672306b73818": null,
+                "a94648e92225b4d3640b9d244fb53099680580": null
+            },
+            "b9": {
+                "337ba2c95096a6268927929e690c55e99b0198": null,
+                "37bca923a2bd43f2ddf51a9a451b3e56c37dca": null,
+                "5c0aceaab34d62a91bbd8d4516ca6897dbb6bb": null
+            },
+            "ba": {
+                "049b9d7fd8954024dbbe1c77703a2438fde99e": null,
+                "1434a19ec5863ab218ea566ee1f59d3a4cf6f9": null,
+                "19be5d32d99dbcd265ac2c77fb8d35e1828b7d": null,
+                "561b5e8f0e6a965138a6302110d419eb4c25af": null,
+                "959c00197c37ddf1bee58209269b9b24482776": null,
+                "b24f679d5b2821c669666c6642c6f41ea805cb": null,
+                "b8182c64193fe026a24372b9fc3c0a4133b15c": null
+            },
+            "bb": {
+                "b73a09e038fb878f620b396e90e27da0d91661": null
+            },
+            "bc": {
+                "da2ed7804565ac7ec5ca40b779b17bef550f0a": null,
+                "dd3c45a9b6efa1c5f7e0387ae366673cf8d25d": null,
+                "dd5fa03a03c4b868b0677773f699240938803c": null,
+                "f6df8db768c6c0fcf97ec09c9ec2c6641f519b": null
+            },
+            "be": {
+                "3d98da163ead3576d55a8b6b746f790152ba4d": null,
+                "a9ae702ae1f6135e93beb37553ce9811a1f12c": null,
+                "db1b399ee0f271ad5bb6437d815dc59708af78": null,
+                "fa783931808565d5a9750111fe37213ae468c4": null
+            },
+            "bf": {
+                "92b2dafbd742f50b5a1c340f8eaec9e9304838": null
+            },
+            "c0": {
+                "55361cb7f95576da9acf7ab2ff0b9ea434a5cd": null,
+                "69da67249f75097beadbc9a6be226285267bab": null,
+                "a1930eea22282bb10d4ac9be725e1acc54c019": null
+            },
+            "c1": {
+                "1f2671252281e1bb93a49eb47bfc3a7bdecb52": null,
+                "5dee8d4c9d355b1dd1e682d2336bd9df37e99a": null,
+                "93d70dc3695fda15933122bafc178e7e566fda": null,
+                "bf56a5f609eb7cc3a4205a5a50a47d8907b438": null
+            },
+            "c2": {
+                "4f0c01a87080cfc9db80d0ea3622fc8ef40e67": null,
+                "df3f09be11acc4df925622237276b75eea369b": null
+            },
+            "c3": {
+                "4c9e6bb9bd9e3c6b1bdfe993748bec46c8e638": null,
+                "8dd7c3342ae2b7226e1b0d8769a892de71c1f3": null,
+                "9296b3fac4af772a9c863cb0c37c8aea78d8ee": null
+            },
+            "c4": {
+                "6f5a63af33c9acacdc70203f5ef0d5b22e2bd4": null,
+                "767f2facf80a7776bad42a55ca08a6ddb44a59": null
+            },
+            "c5": {
+                "0a1c928d9fb5cd267a84cc7a6b9041eb364798": null,
+                "3e2f9bffb6b713b20be309d329a65768e66b32": null,
+                "5844eeb4a0835105f1977bddfdcb92cdcb6660": null,
+                "5e9b9edde875377ec32f0744f936010c7fff6d": null,
+                "73f3e69fb89e3d57f95d7650d677faf8c87aee": null,
+                "b980bd9e9e032ba69340053300e3024ebe19f2": null,
+                "ba4e4047a15b3adc61340c781307d9c6e89413": null,
+                "f84f051dfec1feef7f21b3bde669913158811a": null
+            },
+            "c6": {
+                "11c4e17f7534e6f1f9a9627a7f8216b80c426d": null,
+                "810fdec78218cf9bec6f9d06ea5b6f3829f776": null
+            },
+            "c7": {
+                "41e04028873ecb6bdd6bc8ebc0e1202957d6d4": null,
+                "638de66f8ef540476c4ae5723bede89c52ae34": null,
+                "6e5ea275e5755561e64de625c4be8c0597f01a": null
+            },
+            "c8": {
+                "4986d261e8874184ea598183fab7b8978ea8e9": null,
+                "fa9c938f2be24db6d487ec202a2abfd3de1559": null
+            },
+            "c9": {
+                "046ee82ad88d13d3043e3ac230ffb593b7b7d2": null,
+                "a7b9925ad50f5c03455ba175e0c996b2aa4309": null,
+                "e7871f730c85d549af17e66639da9a0b6a099a": null
+            },
+            "ca": {
+                "791b19ab53f67c98748616cbc73df0a835ce42": null,
+                "9c5fa981048bef2a978b3521b5158ac6f1cf2e": null
+            },
+            "cb": {
+                "3714171af46dc7483ab7f6524c4f1f7bdb8d6c": null,
+                "46e0f824a27d384ecb06da16a2a8d7fea25a67": null,
+                "929bf9ba030ba54d4a4adfe723afdbfad7160c": null,
+                "d18fafd3e7eb732a77a56061ee3c119a25d60c": null
+            },
+            "cc": {
+                "7a5a069aebfd440446126a0325c7a3d25e1e7f": null,
+                "d8e9b47d053dbfd2cb3f8dfffe1548c1c77ab5": null
+            },
+            "cd": {
+                "7f9366e68780bd8a1872e91e2d94a020202681": null
+            },
+            "ce": {
+                "1c74feeb8f9ca2491f99eadae03d5995f88585": null,
+                "24ba9e86f865b3470bc76142da4d484ab235d3": null,
+                "6a622503df6d1b6883f6bdb86c4e0b662f603f": null,
+                "c0f3b5444abd67550146dc9783222f582e629e": null,
+                "e7e902ab53d6a46faad262dfa430c0c1c2b433": null
+            },
+            "cf": {
+                "11ea6d376381dc2ba6ee49ce80794851151773": null,
+                "1a1aabe0d25a779e37afd5659e8d4db4926541": null,
+                "21d9bd4addda3519ed38efc00b571809dec0df": null,
+                "e2c5cf5eefeaa380c84384fc528468acdd05ea": null
+            },
+            "d0": {
+                "963807af5b052d90c551ffcba7143bcb63097e": null,
+                "987c97a209d5d5b650f83fa361a167b3f75030": null,
+                "bb8d084e5e9b8b380caa752e773906fe13d444": null,
+                "c0db7264ca697a41924d98ff1da0e7d4672126": null,
+                "e9e23b0b06d63ce08f386b1df0c2706827850e": null
+            },
+            "d1": {
+                "585054c39ec54f6313ae573210f16568561c4d": null
+            },
+            "d2": {
+                "1e8d9ddab32de182c03325dbdafd701d7eaa41": null,
+                "7058428ef337623de08de2c0905a55a85fd84c": null,
+                "aae66fb38a3a3e73c5df027cf69e41a22ad1d3": null
+            },
+            "d3": {
+                "17a874a18a2d6b839cc7562d9f28ef06138e93": null,
+                "72f2caf831da27a337d0f98d4f890b4d3fa119": null,
+                "fe346e8f56f84422c37d515ead7eea8acf4021": null
+            },
+            "d4": {
+                "c6b5e33e5c3eb3717e7714622146d5a9d677f8": null,
+                "cd2642196a3a165131bd69d9b2a4d9b7b3c320": null,
+                "f9e746a3da0c5e3f6da5c799adad4e05072fdc": null
+            },
+            "d5": {
+                "4133f14f7646d5756a93638c3de03af3dec4fc": null,
+                "8ad542db17b5452a6e3f21ac2898d9ecb9c381": null,
+                "fe78c55bb8739a6edbbfcaa6647c4cab96edbe": null
+            },
+            "d6": {
+                "a3088d0b6e3dc639584ecfc8e6eb06c9105791": null,
+                "c361e05d874a721386ca9c68dfc32a700c5dc4": null,
+                "fe7e3cf2eefec1fc883c438daf2e7283b09382": null
+            },
+            "d7": {
+                "0423e3ac9d61b408ace46a66e5ed4eaec81c76": null,
+                "07481cce77eb8cbcbabea933aa7f5a4e65bfb5": null,
+                "2a51a1a720c874af28040e419fd886de36ecf3": null,
+                "55e23a7fd0c08ecd95c7d9cad577a65b43fa99": null,
+                "9a9d6702ebcfef93b63cf065afc88b1487710a": null
+            },
+            "d8": {
+                "023cc763bcc38e6537119472b0e89a03459b02": null
+            },
+            "d9": {
+                "5606dc8425c9b5a5421a6ec2f0398c10825897": null,
+                "57ef19f8ca34ceaac2870448dfb9c363ccfb03": null,
+                "79dcf892a6a058812139de56934b64c25ed8c8": null,
+                "b839d703e011461dc7ce2a0f2acdcddbf9edea": null,
+                "bf304aedfe7dc91c206c47fe1402cc7791cebe": null,
+                "fb478cf176306f649907f7dc1aec84331be854": null
+            },
+            "da": {
+                "1791de6285b186c964ddb8abaee24baf521b1a": null,
+                "a87088dfe743fc418664559f57d6ffd3503526": null,
+                "e77165bf5d52df2c7d9d34a01693ddc989f72a": null
+            },
+            "dd": {
+                "4e1d33b01bee7e4754d9d15770cda73c735154": null,
+                "aa084170fbf6cac9a768c23b87d7106ac42c12": null,
+                "e5bbc65be89cc07e962375ba7f1de05f4e3e55": null
+            },
+            "de": {
+                "045421606e804e692d4e0e1e958e3eb5731d1a": null,
+                "0e0abea141bfe0061b3d9d82c5d5ec80058077": null,
+                "ac7b0cbb639b92fa09ff69e2e5ce91faa7dc1d": null,
+                "ae7ac5232ca198fdbb975a692a85b3aa34fc79": null,
+                "bf61e25533de774450f95dc19445bd708388a2": null
+            },
+            "df": {
+                "0436f6fc277eac4396045ce01db7418650cdd8": null,
+                "8cb50d8ff2169f64f9b5b14d4ff03b38029cb3": null,
+                "9dd8c01f0ef8646ed252933c0a680f00e4151f": null
+            },
+            "e0": {
+                "03acb90c879b3e97e9b4bb5af5b51685295cdd": null,
+                "39167e272bf8b46d0aa47541b5b30bb66289b5": null,
+                "5445001319c799552c58295b1533c6c3bc1c50": null,
+                "5dc84b4f5f0c6c6e8389e0168407a7dfb6e87e": null,
+                "b6120758a0626e7fc81fab841d4dc8154cb530": null,
+                "e10e37e2c340a869051015aa5b75bfe189bb28": null
+            },
+            "e1": {
+                "2ebeb60a4e24df0251e7f54834d1a4d149686d": null,
+                "417670137f1160e7046196e458e5cb284c60d7": null,
+                "b78c7ad15bf3ed3cec436bc13d19654cb0fec5": null,
+                "bdfcd0d6077ebc9b22d2757747855bd77b4da2": null,
+                "df1dcc854f358416234077d79182409eafe8aa": null
+            },
+            "e2": {
+                "06f0c7ccd6f49f6298a3d7cf459d5e81632c0e": null
+            },
+            "e3": {
+                "4f1dde2f9841587ee6708b972b781ec1baf490": null,
+                "d9281beeac594c27bb84a5ce9e6267eb107b12": null
+            },
+            "e4": {
+                "30e83fa100c09445d7900ea0f643c11a1abd9d": null,
+                "46f92f8e2c1f7598b0573ac614fc581d021959": null,
+                "4c6efb0757ca5647863c845fe53dbf023ff3f8": null,
+                "5ceb38ca0612aa7c7b21d69d7b0b0299c36f49": null,
+                "f201ad4ebd08249205eef0bbe7a308bffd7f95": null
+            },
+            "e5": {
+                "06252e6cd6e4d8dcb5e83a1ca86ae8ec0200ca": null,
+                "2551437c60b2b5a7e6881028976df29f7218a0": null,
+                "56f0d797cb9c3a0b57c841fdaf94e647ed7553": null
+            },
+            "e6": {
+                "395f2ff8d2f4ed1da11a8bc631016f7a5bbaed": null,
+                "57b28b1fbe47b0dafcbc6997f78781cf86d246": null,
+                "6f5bf44dc569193b42927094aa64ef63c61a11": null,
+                "9de29bb2d1d6434b8b29ae775ad8c2e48c5391": null,
+                "9fa32f620a462dd1a6cef1215d3c7732b8bbd3": null,
+                "c893b17ee6cf4c3af50c7dd63a67a6b02f74d8": null,
+                "ceec290cd3c856b14719478e228e1e8b3c1c0a": null,
+                "fad9ad01c3b626f0e902f608eead5931ef071c": null
+            },
+            "e7": {
+                "2ae81d47ec27af6bd061ba16aecd861f72a020": null,
+                "701946b1f8b45c116b0317fa1b2f992672e2cd": null,
+                "9bf1164371e964d061adfe3ce7dcfa74d2afba": null
+            },
+            "e8": {
+                "bee3a0f3457c6cf983cb112756f858d7bbefcb": null,
+                "f7da5b479b98e4adb7c2fb0d5dbfe1d3b37ce4": null
+            },
+            "e9": {
+                "49b34bec8c080315844f198e9d6567806a0a80": null,
+                "b77d4140db009417d9bdb8394e3234311dd25e": null,
+                "bde95280a8c3329aa41e7c7604c62b0ea8c886": null,
+                "ea04fd1086b72b592cd8257b27aa5457491525": null
+            },
+            "ea": {
+                "0d3532078646c4c7436eba9a16d427a7178afe": null,
+                "9abf366f1564ba79e0176e228e476575c79338": null
+            },
+            "eb": {
+                "5e91e7e1908c708ad79737473e87d71f032c89": null,
+                "622b9963159d43846360d48a92316943c63fb6": null
+            },
+            "ec": {
+                "84fc5fb04417dfd4350246c63178372d2484f6": null,
+                "d6b5f1691f30ff7a46925fbd2c74e71dfca937": null,
+                "f833ac346dec2606979275af64bf6608efa09c": null
+            },
+            "ed": {
+                "9e00c9b3bdcd876da78bc15814419a8296b324": null,
+                "f0dde4c76e5a859b983c3423b4cc716b3f647a": null
+            },
+            "ee": {
+                "ec92852705946904d0e2fa0443d454075781f5": null
+            },
+            "ef": {
+                "9b9325fe5457fecfe703385fb37cc571468814": null,
+                "b657af63dea185df1691b2ba5ce36c9fc0031f": null,
+                "cc51307f7eafa7823470e14102c299ddcc4067": null
+            },
+            "f0": {
+                "025e31221903c1fc3f490e37c6628e7563472d": null
+            },
+            "f1": {
+                "a3f079d153f8878f8d28b80c75b4bd44afc706": null
+            },
+            "f2": {
+                "0076215e35bf7336acbad7a1d65053dd368c08": null,
+                "25c3ae004a1808a19d31436c61f390907b44f7": null,
+                "37ff8ad8362b31049a8bb639059ae56cfff858": null,
+                "3a674760a25e0dcc1c56c9751e5e06a4f84c8a": null,
+                "7f68f0752fd374fb8f8cf15e2c27acb222c54b": null,
+                "a70924bde9c7dbeacd6e45272b999cf55c1321": null,
+                "d83c51416e90dbc31154545b16df3b3f7a7909": null
+            },
+            "f3": {
+                "3c1c95f585e28584b06994b3e13d5585784590": null,
+                "6a98d72dbf3ba08d7b6733ad0097d13dc56509": null,
+                "decf03dea9ecdf0f72dba1adec171b5f0b764c": null
+            },
+            "f4": {
+                "0fca13e0f3a5f19c32cfa3b572b365ae30b664": null,
+                "19c4504948cfeec73a663c997d372f46478998": null,
+                "1edcc287e2aa08a37294d77ec89f77a86ba6de": null,
+                "8491676db581ebbabeab9a5d8a6a605af34c13": null
+            },
+            "f5": {
+                "a366937f6e248637656acabbed1e3690f85faf": null
+            },
+            "f6": {
+                "1d3d2589fb43121586b45347c4f86498230c45": null,
+                "39ce6b8f89cd1e65186a6fd5cfaec5d099eb69": null,
+                "69cf29d5322c091be27933ce1a5d25059908d0": null,
+                "8c74f18114b1be40b126b2571a631b3ed1f3aa": null,
+                "8f62fc6693fc32607071f9fc24227bbfa4fcde": null
+            },
+            "f7": {
+                "18ffb863839ccb421ce9ee69dc4cc3a64f5aef": null,
+                "9462102df9918d87a70b83108d54c00a7c6052": null,
+                "fc4553e6035fb07c952b9b0f131149ce9b5806": null
+            },
+            "f8": {
+                "e2dccd1957d9c5c00097a145e63a767942aded": null
+            },
+            "f9": {
+                "805b3bacfd869676706e8b74eb25a6045d4e2f": null,
+                "837a4abc3f7aec39dcb942154895c2b50586b5": null,
+                "8e1454d85f02c0960031534cc84b188e5f196f": null,
+                "fc9b37b7e5a256155e9ce2352a8069ff9ece32": null
+            },
+            "fa": {
+                "6ecb934876be7835ffb0e6fc8bcbba76238b53": null
+            },
+            "fb": {
+                "0156114a2c9dc38df53a04fea1883f82ab5764": null,
+                "501a8cec95bc7c9ab1224ed0d732745494acfb": null
+            },
+            "fc": {
+                "bc8c146c30f777bbe08bb21f0c5b8749355055": null,
+                "c2168c224c81d8fec41af2a32a146c709f02fc": null,
+                "fb7275f8bd5e183af981c53e99f67d5b13f2f6": null
+            },
+            "fd": {
+                "3e03831498170b69ae2dbbe84f0c87334b365f": null,
+                "ba1c7f559d08f3ecc9d95356bc4c4132b078d1": null
+            },
+            "fe": {
+                "1813ff3149a19630d5d43893687bbf409630c8": null,
+                "30b6a19612950f49a9705a65e7f75927fe7ab9": null,
+                "ebc618d42c1c1890c0384f507577fa6a4d4bf4": null
+            },
+            "ff": {
+                "5de3b0f712e7c3e5396beee718fadaceb814aa": null
+            },
+            "info": {},
+            "pack": {}
+        },
+        "refs": {
+            "heads": {
+                "main": null,
+                "main-PassportPowell": null
+            },
+            "original": {
+                "refs": {
+                    "heads": {
+                        "main": null
+                    },
+                    "remotes": {
+                        "origin": {
+                            "main": null
+                        }
+                    }
+                }
+            },
+            "remotes": {
+                "origin": {
+                    "main": null
+                }
+            },
+            "tags": {}
+        }
+    },
+    ".streamlit": {
+        "config.toml": null,
+        "secrets.toml": null,
+        "secrets.toml.template": null
+    },
+    "Docker": {
+        "ngrok.exe": null,
+        "ngrok_recovery_codes.txt": null,
+        "nova_7_working.json": null,
+        "Nova_Outlook_Management.json": null,
+        "Nova_Sharepoint.json": null,
+        "prompt 3.json": null,
+        "Archive": {
+            "Emil.json": null,
+            "hmmm.json": null,
+            "Ivan.json": null,
+            "Lola.json": null,
+            "n8n nova test.html": null,
+            "Nova 2.json": null,
+            "Nova 3.json": null,
+            "Nova 4.json": null,
+            "Nova 5.json": null,
+            "Nova 6.json": null,
+            "Nova 7.json": null,
+            "nova openai.json": null,
+            "nova stub.json": null,
+            "Nova.json": null,
+            "prompt 2.json": null,
+            "prompt.json": null
+        },
+        "n8n-rag": {
+            "credentials.txt": null,
+            "launch-nova.cmd": null
+        }
+    },
+    "docs": {
+        "07 05 2025 Nova Project.pdf": null,
+        "08 05 2025 Task Delegation System.pdf": null,
+        "09 05 2025 Nova n8n Workflow Analysis.pdf": null,
+        "1_4_25 1 Nova Async Update.docx": null,
+        "26_3_25 Enhanced Workflow Mapping with Code References.docx": null,
+        "28_3_25 Nova flow Chart Enhanced Workflow Mapping with Code References.docx": null,
+        "28_3_25 Nova flow Chart Task Hierarchy Structure Breakdown.docx": null,
+        "28_3_25 Nova flow Chart Things to do.docx": null,
+        "2_4_25 1 Nova Async Update Testing.docx": null,
+        "2_4_25 2 Nova Async Update Flow Breakdown.docx": null,
+        "4_4_25 1 Nova Async Continue context.docx": null,
+        "4_4_25 2 Nova Async History Context Code mapping flow.docx": null,
+        "Agent Documentation": {
+            "base_agent.pdf": null,
+            "csv_function_mapper.pdf": null,
+            "do_maths.pdf": null,
+            "emil.pdf": null,
+            "functions_registery.pdf": null,
+            "function_logger.pdf": null,
+            "general_knowledge.pdf": null,
+            "ivan.pdf": null,
+            "knowledge_base.pdf": null,
+            "lola.pdf": null,
+            "main.pdf": null,
+            "nova.pdf": null,
+            "open_ai_calls.pdf": null,
+            "open_ai_utils.pdf": null,
+            "Prompt Example Summary 22 04 25.pdf": null,
+            "simplified_parameter_collection.pdf": null,
+            "task_manager.pdf": null
+        },
+        "Presentation": {
+            "01 05 2025 evaluation system flow v2.pdf": null,
+            "01 05 2025 evaluation system flow.pdf": null,
+            "01 05 2025 evaluation.js": null,
+            "01 05 2025 prompt evaluation.pdf": null,
+            "06 05 2025 evaluation system flow v2.pdf": null,
+            "06 05 2025 model-analyze-report-pipeline-fixes.pdf": null,
+            "06 05 2025 model-analyze-report-pipeline-fixes.pptx": null,
+            "23 04 25 Ai context Fix.pdf": null,
+            "23 05 2025 Nova agent pass off & verbose implemetnation.pdf": null,
+            "25 05 2025 Session fix.pdf": null,
+            "26 05 2025 fix nova emil lola handover parameters.pdf": null,
+            "28 04 2025 change from hard code to llm.docx": null,
+            "Nova AI Coordinator System.pdf": null,
+            "Nova Knowledgebase.pdf": null,
+            "Nova_AI_Coordinator_System-PassportPowell.pptx": null,
+            "Nova_AI_Coordinator_System.pptx": null,
+            "Prompt Processing Flow.png": null,
+            "Agents Breakdown": {
+                "Ivan Image Generator.docx": null,
+                "Nova Knowledge Base V1.docx": null
+            }
+        }
+    },
+    "knowledge_db": {
+        "backup_20250531_17.json": null,
+        "backup_20250601_08.json": null,
+        "backup_20250601_09.json": null,
+        "backup_20250601_10.json": null,
+        "backup_20250601_13.json": null,
+        "backup_20250601_15.json": null,
+        "backup_20250601_16.json": null,
+        "backup_20250601_18.json": null,
+        "backup_20250601_19.json": null,
+        "backup_20250601_20.json": null,
+        "main_db.json": null
+    },
+    "sessions": {
+        "index.json": null,
+        "2025": {
+            "05": {
+                "28": {
+                    "index.json": null,
+                    "session_2025_05_28_T11_06_18_f2531b.json": null
+                }
+            },
+            "06": {
+                "01": {
+                    "index.json": null,
+                    "session_2025_06_01_T15_22_53_ab4c37.json": null,
+                    "session_2025_06_01_T15_23_07_3de462.json": null,
+                    "session_2025_06_01_T15_23_45_6e05b3.json": null,
+                    "session_2025_06_01_T15_27_44_ac5493.json": null,
+                    "session_2025_06_01_T15_31_36_50f70e.json": null,
+                    "session_2025_06_01_T15_31_45_d41717.json": null,
+                    "session_2025_06_01_T15_35_23_e2fe6c.json": null
+                }
+            }
+        }
+    },
+    "src": {
+        "basefile.xml": null,
+        "directory_tree.json": null,
+        "directory_tree.txt": null,
+        "main.py": null,
+        "test questions.txt": null,
+        "__init__.py": null,
+        "agents": {
+            "base_agent.py": null,
+            "cli_parameter_collection.py": null,
+            "emil.py": null,
+            "Emil_function_map_enhanced.csv": null,
+            "ivan.py": null,
+            "Ivan_function_map.csv": null,
+            "lola.py": null,
+            "Lola_function_map.csv": null,
+            "nova.py": null,
+            "Nova_function_map_enhanced.csv": null,
+            "parameter_collection.py": null,
+            "plexos_base_model_final.py": null,
+            "query_enums.txt": null,
+            "run_plexos_model.py": null,
+            "__init__.py": null,
+            "Archive": {
+                "Back end working example.txt": null,
+                "base_agent old.py": null,
+                "emil chatgpt.py": null,
+                "emil old.py": null,
+                "ivan - Copy.py": null,
+                "prompt example.txt": null,
+                "simplified_parameter_collection.py": null,
+                "streamlit_parameter_collection.py": null
+            },
+            "PLEXOS 10.0 API": {
+                "adodb.dll": null,
+                "EECommon.dll": null,
+                "EEDataSets.dll": null,
+                "EEDataSets.dll.config": null,
+                "EETDataFactory.dll": null,
+                "EEUTILITY.dll": null,
+                "EE_reg_products.xml": null,
+                "EnergyExemplar.Auditing.Api.Contracts.dll": null,
+                "EnergyExemplar.PLEXOS.Utility.dll": null,
+                "GreenDonut.dll": null,
+                "HotChocolate.Abstractions.dll": null,
+                "HotChocolate.AspNetCore.Authorization.dll": null,
+                "HotChocolate.Execution.dll": null,
+                "HotChocolate.Fetching.dll": null,
+                "HotChocolate.Language.dll": null,
+                "HotChocolate.Language.SyntaxTree.dll": null,
+                "HotChocolate.Language.Utf8.dll": null,
+                "HotChocolate.Language.Visitors.dll": null,
+                "HotChocolate.Subscriptions.dll": null,
+                "HotChocolate.Subscriptions.InMemory.dll": null,
+                "HotChocolate.Types.CursorPagination.dll": null,
+                "HotChocolate.Types.dll": null,
+                "HotChocolate.Types.Mutations.dll": null,
+                "HotChocolate.Types.OffsetPagination.dll": null,
+                "HotChocolate.Utilities.dll": null,
+                "HotChocolate.Utilities.Introspection.dll": null,
+                "HotChocolate.Validation.dll": null,
+                "KeyObject.dll": null,
+                "Library.Connect.Controls.dll": null,
+                "Library.Connect.Core.dll": null,
+                "Library.Connect.Core.dll.config": null,
+                "Library.LaunchControl.dll": null,
+                "Library.LaunchControl.dll.config": null,
+                "master.xml": null,
+                "MathExpression.dll": null,
+                "MathNet.Numerics.dll": null,
+                "Microsoft.AspNetCore.Authorization.dll": null,
+                "Microsoft.AspNetCore.Metadata.dll": null,
+                "Microsoft.Bcl.AsyncInterfaces.dll": null,
+                "Microsoft.Extensions.DependencyInjection.Abstractions.dll": null,
+                "Microsoft.Extensions.DependencyInjection.dll": null,
+                "Microsoft.Extensions.DiagnosticAdapter.dll": null,
+                "Microsoft.Extensions.Logging.Abstractions.dll": null,
+                "Microsoft.Extensions.ObjectPool.dll": null,
+                "Microsoft.Extensions.Options.dll": null,
+                "Microsoft.Extensions.Primitives.dll": null,
+                "Microsoft.Win32.Registry.dll": null,
+                "Newtonsoft.Json.dll": null,
+                "PLEXOSCommon.dll": null,
+                "PLEXOSConnect.IO.dll": null,
+                "PLEXOSConnect.OS.dll": null,
+                "PLEXOSConnect.ServiceModel.dll": null,
+                "PLEXOSUtilities.dll": null,
+                "PLEXOSVars.m": null,
+                "PLEXOS_NET.Core.dll": null,
+                "PLEXOS_NET.dll": null,
+                "PLEXOS_NET.tlb": null,
+                "PLEXOS_NET.xml": null,
+                "System.Buffers.dll": null,
+                "System.CodeDom.dll": null,
+                "System.Collections.Immutable.dll": null,
+                "System.ComponentModel.Annotations.dll": null,
+                "System.Configuration.ConfigurationManager.dll": null,
+                "System.Data.SqlClient.dll": null,
+                "System.Diagnostics.DiagnosticSource.dll": null,
+                "System.Diagnostics.EventLog.dll": null,
+                "System.Diagnostics.PerformanceCounter.dll": null,
+                "System.Memory.dll": null,
+                "System.Numerics.Vectors.dll": null,
+                "System.Runtime.CompilerServices.Unsafe.dll": null,
+                "System.Security.AccessControl.dll": null,
+                "System.Security.Cryptography.Pkcs.dll": null,
+                "System.Security.Cryptography.ProtectedData.dll": null,
+                "System.Security.Principal.Windows.dll": null,
+                "System.Text.Encodings.Web.dll": null,
+                "System.Text.Json.dll": null,
+                "System.Threading.Channels.dll": null,
+                "System.Threading.Tasks.Extensions.dll": null,
+                "System.ValueTuple.dll": null,
+                "Transform.xsl": null,
+                "Ude.dll": null
+            },
+            "PLEXOS_functions": {
+                "enums_as_df.py": null,
+                "get_api_keys.py": null,
+                "loading_bar.py": null,
+                "open_ai_calls.py": null,
+                "plexos_build_functions_final.py": null,
+                "plexos_database_core_methods.py": null,
+                "prompt_templates.py": null,
+                "query_enums.txt": null,
+                "search_embedding.py": null
+            },
+            "PLEXOS_inputs": {
+                "documents_corrected_v6.json": null,
+                "node_mapping.csv": null,
+                "PLEXOS_Model_Builder.xlsx": null,
+                "PLEXOS_Model_Builder_v2.xlsx": null
+            },
+            "PLEXOS_models": {
+                "Benelux_Electricity_Methane_Model.his": null,
+                "Benelux_Electricity_Methane_Model.xml": null,
+                "Benelux_Energy_System_Model.xml": null,
+                "blank 10_07.xml": null,
+                "blank 9_1.xml": null,
+                "blank.xml": null,
+                "Bosnia_wind_electricity_20250531_171208.xml": null,
+                "croatia_solar_2024.xml": null,
+                "croatia_solar_energy_2024.xml": null,
+                "croatia_solar_energy_model.xml": null,
+                "croatia_solar_energy_simulation.xml": null,
+                "croatia_solar_model.xml": null,
+                "croatia_solar_power_2024.xml": null,
+                "france_germany_electricity_model.xml": null,
+                "France_hydro_electricity_20250601_091307.xml": null,
+                "France_hydro_electricity_20250601_095008.xml": null,
+                "France_hydro_electricity_20250601_101300.xml": null,
+                "France_hydro_electricity_20250601_102138.xml": null,
+                "France_None_electricity_20250529_130201.xml": null,
+                "France_solar_electricity_20250529_130442.xml": null,
+                "France_solar_electricity_20250529_131712.xml": null,
+                "France_solar_electricity_20250529_132312.xml": null,
+                "France_solar_electricity_20250529_134228.xml": null,
+                "France_solar_electricity_20250529_134512.xml": null,
+                "France_wind_electricity_20250529_132902.xml": null,
+                "grecce_solar_electricity_20250530_234931.xml": null,
+                "Greece, Spain_solar_electricity_20250531_003158.xml": null,
+                "Greece, Spain_solar_electricity_20250531_165321.xml": null,
+                "Greece, Spain_solar_electricity_20250601_151051.xml": null,
+                "Greece_hydro_electricity_20250529_001254.xml": null,
+                "Greece_None_electricity_20250529_000913.xml": null,
+                "Greece_solar_electricity_20250530_101911.xml": null,
+                "Greece_solar_electricity_20250530_104902.xml": null,
+                "Greece_solar_electricity_20250531_170634.xml": null,
+                "Greece_solar_electricity_20250601_161628.xml": null,
+                "iberia_france_energy_model.xml": null,
+                "italy, bosnia_hydro_electricity_20250530_112525.xml": null,
+                "Italy, Greece, UK, France_wind_electricity_20250530_112845.xml": null,
+                "italy_hungary_netherlands_electricity_model.xml": null,
+                "Italy_hydro_electricity_20250531_170913.xml": null,
+                "Italy_solar_electricity_20250601_162239.xml": null,
+                "Italy_solar_electricity_20250601_163530.xml": null,
+                "Italy_Solar_Energy_2024.xml": null,
+                "Italy_Solar_Expansion_2024.xml": null,
+                "italy_solar_model.xml": null,
+                "jash_full_model.xml": null,
+                "new_blank_file.xml": null,
+                "Norway_hydro_electricity_20250529_133503.xml": null,
+                "Norway_hydro_electricity_20250529_134818.xml": null,
+                "Norway_hydro_electricity_20250601_153111.xml": null,
+                "Norway_hydro_electricity_20250601_153337.xml": null,
+                "Norway_hydro_electricity_20250601_153743.xml": null,
+                "Norway_hydro_electricity_20250601_154902.xml": null,
+                "Norway_hydro_electricity_20250601_155712.xml": null,
+                "Norway_hydro_electricity_20250601_155852.xml": null,
+                "Norway_hydro_electricity_20250601_183114.xml": null,
+                "Norway_hydro_electricity_20250601_183250.xml": null,
+                "Norway_hydro_electricity_20250601_183905.xml": null,
+                "Norway_hydro_electricity_20250601_192435.xml": null,
+                "Norway_hydro_electricity_20250601_194523.xml": null,
+                "Scotland, France, Montenegro_wind_electricity_20250530_113716.xml": null,
+                "Scotland, France, Montenegro_wind_electricity_20250530_113815.xml": null,
+                "Scotland, france, montenegro_wind_electricity_20250530_114554.xml": null,
+                "solar_croatia_2024.xml": null,
+                "Spain, Germany_wind_electricity_20250530_110811.xml": null,
+                "Spain, Greece, Denmark_wind_electricity_20250530_111430.xml": null,
+                "Spain, Greece, Denmark_wind_electricity_20250530_111800.xml": null,
+                "Spain, Greece, Denmark_wind_electricity_20250530_112420.xml": null,
+                "Spain, Greece_solar_electricity_20250601_200752.xml": null,
+                "Spain_hydro_electricity_20250531_164306.xml": null,
+                "Spain_solar_electricity_20250530_104438.xml": null,
+                "Spain_solar_electricity_20250530_105420.xml": null,
+                "Spain_solar_electricity_20250530_105549.xml": null,
+                "Spain_solar_electricity_20250530_234536.xml": null,
+                "Spain_solar_electricity_20250601_131545.xml": null,
+                "Spain_solar_electricity_20250601_200525.xml": null,
+                "Spain_wind_electricity_20250529_141845.xml": null,
+                "Spain_wind_electricity_20250529_143649.xml": null,
+                "Spain_wind_electricity_20250529_144008.xml": null,
+                "Spain_wind_electricity_20250530_105850.xml": null,
+                "Spain_wind_electricity_20250601_085343.xml": null,
+                "TJ_2050_Debug_V16.xml": null,
+                "TJ_2050_Debug_V20_agents.xml": null,
+                "~Model ( TJ Dispatch_Future_Nuclear+ ) Log.txt": null
+            }
+        },
+        "archive": {
+            "open_ai_calls.py": null,
+            "workflow.svg": null
+        },
+        "core": {
+            "functions_registery.py": null,
+            "knowledge_base.py": null,
+            "lightweight_session_manager.py": null,
+            "session_manager.py": null,
+            "task_manager.py": null,
+            "__init__.py": null,
+            "models": {
+                "All_all_Electricity_20250401_105844.xml": null,
+                "All_all_Electricity_20250401_110433.xml": null,
+                "All_all_Electricity_20250401_110642.xml": null,
+                "All_all_Electricity_20250409_114046.xml": null,
+                "All_all_Electricity_20250409_115208.xml": null,
+                "All_all_Electricity_20250411_111251.xml": null,
+                "All_all_Electricity_20250526_131916.xml": null,
+                "All_All_Hydrogen_20250314_122619.xml": null,
+                "All_default_Electricity_20250422_110037.xml": null,
+                "All_electricity_Electricity_20250411_104926.xml": null,
+                "All_electricity_Electricity_20250411_105129.xml": null,
+                "All_electricity_Electricity_20250411_105500.xml": null,
+                "All_electricity_Electricity_20250411_105733.xml": null,
+                "All_electricity_Electricity_20250428_172224.xml": null,
+                "All_electricity_Electricity_20250502_120628.xml": null,
+                "All_electricity_Electricity_20250502_120629.xml": null,
+                "All_electricity_Electricity_20250502_120843.xml": null,
+                "All_hydrogen_Electricity_20250411_105330.xml": null,
+                "All_solar_Electricity_20250528_215806.xml": null,
+                "Bio_electricity_Electricity_20250411_110022.xml": null,
+                "Bio_electricity_Electricity_20250411_110515.xml": null,
+                "Bio_hydrogeb_Electricity_20250415_001632.xml": null,
+                "Bio_hydrogen_Electricity_20250414_235831.xml": null,
+                "Bosnia_hydro_Electricity_20250526_142045.xml": null,
+                "Bosnia_solar_Electricity_20250523_122648.xml": null,
+                "Bosnia_solar_Electricity_20250523_122748.xml": null,
+                "Bosnia_solar_Electricity_20250525_192902.xml": null,
+                "Bosnia_solar_Electricity_20250525_193352.xml": null,
+                "Bosnia_solar_Electricity_20250525_193658.xml": null,
+                "Bosnia_solar_Electricity_20250525_194111.xml": null,
+                "Bosnia_solar_Electricity_20250525_194501.xml": null,
+                "Bosnia_solar_Electricity_20250525_194957.xml": null,
+                "Bosnia_solar_Electricity_20250525_195439.xml": null,
+                "Bosnia_solar_Electricity_20250525_195740.xml": null,
+                "Bosnia_solar_Electricity_20250525_195915.xml": null,
+                "Bosnia_solar_Electricity_20250525_200147.xml": null,
+                "Bosnia_solar_Electricity_20250525_201426.xml": null,
+                "Comprehensive_Model_20250314_124946.his": null,
+                "Comprehensive_Model_20250314_124946.xml": null,
+                "Comprehensive_Model_20250314_125504.his": null,
+                "Comprehensive_Model_20250314_125504.xml": null,
+                "Comprehensive_Model_20250314_131113.his": null,
+                "Comprehensive_Model_20250314_131113.xml": null,
+                "Comprehensive_Model_20250314_133226.xml": null,
+                "Comprehensive_Model_20250314_153422.xml": null,
+                "Comprehensive_Model_20250314_153948.his": null,
+                "Comprehensive_Model_20250314_153948.xml": null,
+                "Comprehensive_Model_20250314_175112.xml": null,
+                "Comprehensive_Model_20250318_142213.xml": null,
+                "Comprehensive_Model_20250318_143524.xml": null,
+                "Comprehensive_Model_20250318_143707.xml": null,
+                "Comprehensive_Model_20250318_143821.xml": null,
+                "Comprehensive_Model_20250318_162512.xml": null,
+                "Comprehensive_Model_20250318_164355.xml": null,
+                "Comprehensive_Model_20250321_110733.xml": null,
+                "Comprehensive_Model_20250325_125722.xml": null,
+                "Comprehensive_Model_20250326_134330.xml": null,
+                "Comprehensive_Model_20250326_140642.xml": null,
+                "Comprehensive_Model_20250326_211300.xml": null,
+                "Comprehensive_Model_20250328_121527.xml": null,
+                "Comprehensive_Model_20250401_111910.xml": null,
+                "Comprehensive_Model_20250401_113207.xml": null,
+                "Comprehensive_Model_20250401_162621.xml": null,
+                "Comprehensive_Model_20250402_135114.xml": null,
+                "Comprehensive_Model_20250402_135316.xml": null,
+                "Comprehensive_Model_20250404_112047.xml": null,
+                "Comprehensive_Model_20250404_112803.xml": null,
+                "Comprehensive_Model_20250408_055815.xml": null,
+                "Croatia_all_Electricity_20250408_055833.xml": null,
+                "Croatia_hydro_Electricity_20250523_011210.xml": null,
+                "Croatia_hydro_Electricity_20250523_012130.xml": null,
+                "Croatia_hydro_Electricity_20250528_120000.xml": null,
+                "Croatia_hydro_Electricity_20250528_131238.xml": null,
+                "Croatia_solar_Electricity_20250404_113506.xml": null,
+                "Croatia_solar_Electricity_20250404_113632.xml": null,
+                "Croatia_solar_Electricity_20250404_113732.xml": null,
+                "Croatia_solar_Electricity_20250404_114306.xml": null,
+                "Croatia_solar_Electricity_20250404_114759.xml": null,
+                "Croatia_solar_Electricity_20250404_115718.xml": null,
+                "Croatia_solar_Electricity_20250404_115947.xml": null,
+                "Croatia_solar_Electricity_20250404_120524.xml": null,
+                "Croatia_solar_Electricity_20250408_055653.xml": null,
+                "Croatia_solar_Electricity_20250525_203602.xml": null,
+                "Croatia_solar_Electricity_20250525_203903.xml": null,
+                "Croatia_solar_Electricity_20250528_131100.xml": null,
+                "Croatia_solar_Electricity_20250528_230044.xml": null,
+                "Croatia_solar_Electricity_20250528_234709.xml": null,
+                "Croatia_wind_Electricity_20250528_115651.xml": null,
+                "Croatia_wind_Electricity_20250528_120046.xml": null,
+                "Croatia_wind_Electricity_20250528_120232.xml": null,
+                "Croatia_wind_Electricity_20250528_125842.xml": null,
+                "Croatia_wind_Electricity_20250528_133459.xml": null,
+                "Cyprus_solar_Electricity_20250523_122602.xml": null,
+                "Denmark_hydro_Electricity_20250526_131141.xml": null,
+                "Denmark_hydro_Electricity_20250526_141145.xml": null,
+                "Denmark_hydro_Electricity_20250526_142349.xml": null,
+                "energy_model_20250528_230725.xml": null,
+                "energy_model_20250528_231510.xml": null,
+                "Finalnd_solatr_Hydrogen_20250401_111152.xml": null,
+                "Finland_Bio_Fuels_Electricity_20250324_211828.xml": null,
+                "France_all_Default_20250411_111251.xml": null,
+                "France_all_Default_20250411_111524.xml": null,
+                "France_bio_Electricity_20250526_132015.xml": null,
+                "France_Bio_Fuels_Hydrogen_20250328_114427.xml": null,
+                "France_hydro_Electricity_20250526_122149.xml": null,
+                "France_solar_Electricity_20250411_111914.xml": null,
+                "France_solar_Electricity_20250526_125204.xml": null,
+                "France_solar_Electricity_20250529_000442.xml": null,
+                "France_wind_Electricity_20250526_123239.xml": null,
+                "France_wind_Electricity_20250526_125221.xml": null,
+                "Germany_solar_Electricity_20250526_131056.xml": null,
+                "Germany_wind_Electricity_20250526_122150.xml": null,
+                "Greece_solar_Electricity_20250523_115335.xml": null,
+                "Greece_solar_Electricity_20250526_143214.xml": null,
+                "Greece_wind_Electricity_20250526_143732.xml": null,
+                "Greece_wind_Electricity_20250526_143822.xml": null,
+                "Ireland_solar_Electricity_20250523_121129.xml": null,
+                "Italy_hydro_Electricity_20250526_125242.xml": null,
+                "Italy_solar_Electricity_20250522_210133.xml": null,
+                "Italy_solar_Electricity_20250523_113722.xml": null,
+                "Italy_solar_Electricity_20250528_220407.xml": null,
+                "Italy_wind_Electricity_20250526_122228.xml": null,
+                "Italy_wind__Electricity_20250528_220017.xml": null,
+                "Montenegro_solar_Electricity_20250526_122631.xml": null,
+                "Netherlands_Bio_Fuels_Default_20250328_120749.xml": null,
+                "Norway_solar_Electricity_20250523_120001.xml": null,
+                "Norway_solar_Electricity_20250525_204702.xml": null,
+                "Norway_solar_Electricity_20250525_205045.xml": null,
+                "Norway_solar_Electricity_20250525_205820.xml": null,
+                "Portugal_solar_Electricity_20250525_203358.xml": null,
+                "Solar_electricity_Electricity_20250411_114640.xml": null,
+                "Solar_electricity_Electricity_20250416_035921.xml": null,
+                "Solar_electricity_Electricity_20250416_051258.xml": null,
+                "Solar_electricity_Electricity_20250417_134725.xml": null,
+                "Solar_electricity_Electricity_20250417_144444.xml": null,
+                "Solar_electricity_Electricity_20250417_214019.xml": null,
+                "Solar_electricity_Electricity_20250417_214759.xml": null,
+                "Solar_electricity_Electricity_20250417_215532.xml": null,
+                "Solar_electricity_Electricity_20250417_220445.xml": null,
+                "Solar_electricity_Electricity_20250422_094630.xml": null,
+                "Solar_electricity_Electricity_20250422_110037.xml": null,
+                "Solar_electricity_Electricity_20250506_094157.xml": null,
+                "Solar_electricity_Electricity_20250506_094213.xml": null,
+                "Solar_electricity_Electricity_20250506_094432.xml": null,
+                "Solar_electricity_Electricity_20250506_094439.xml": null,
+                "Solar_electricity_Electricity_20250506_094447.xml": null,
+                "Solar_electricity_Electricity_20250506_094507.xml": null,
+                "Solar_electricity_Electricity_20250506_095541.xml": null,
+                "Solar_electricity_Electricity_20250506_095655.xml": null,
+                "Solar_electricity_Electricity_20250506_102722.xml": null,
+                "Solar_electricity_Electricity_20250506_102921.xml": null,
+                "Solar_electricity_Electricity_20250506_103153.xml": null,
+                "Solar_electricity_Electricity_20250506_103542.xml": null,
+                "Solar_hydrogen_Electricity_20250415_011023.xml": null,
+                "Solar_hydrogen_Electricity_20250415_090852.xml": null,
+                "Solar_hydrogen_Electricity_20250415_100521.xml": null,
+                "Spain_bio_Electricity_20250528_110932.xml": null,
+                "Spain_bio_Electricity_20250528_115456.xml": null,
+                "Spain_croatia_solar_Electricity_20250522_160713.xml": null,
+                "Spain_hydro_Electricity_20250522_213050.xml": null,
+                "Spain_hydro_Electricity_20250522_213143.xml": null,
+                "Spain_hydro_Electricity_20250522_223254.xml": null,
+                "Spain_hydro_Electricity_20250522_223606.xml": null,
+                "Spain_hydro_Electricity_20250522_234111.xml": null,
+                "Spain_hydro_Electricity_20250522_234427.xml": null,
+                "Spain_hydro_Electricity_20250522_234949.xml": null,
+                "Spain_hydro_Electricity_20250523_122910.xml": null,
+                "Spain_hydro_Electricity_20250526_131940.xml": null,
+                "Spain_hydro_Electricity_20250526_132555.xml": null,
+                "Spain_hydro_Electricity_20250526_211246.xml": null,
+                "Spain_hydro_Electricity_20250526_211453.xml": null,
+                "Spain_hydro_Electricity_20250528_114418.xml": null,
+                "Spain_solar_Electricity_20250409_114046.xml": null,
+                "Spain_solar_Electricity_20250409_115208.xml": null,
+                "Spain_solar_Electricity_20250409_122755.xml": null,
+                "Spain_solar_Electricity_20250506_104009.xml": null,
+                "Spain_solar_Electricity_20250506_104445.xml": null,
+                "Spain_solar_Electricity_20250522_160609.xml": null,
+                "Spain_solar_Electricity_20250522_210031.xml": null,
+                "Spain_solar_Electricity_20250522_212612.xml": null,
+                "Spain_solar_Electricity_20250523_113125.xml": null,
+                "Spain_solar_Electricity_20250525_200330.xml": null,
+                "Spain_solar_Electricity_20250525_201436.xml": null,
+                "Spain_solar_Electricity_20250525_202904.xml": null,
+                "Spain_solar_Electricity_20250526_121803.xml": null,
+                "Spain_solar_Electricity_20250526_121839.xml": null,
+                "Spain_solar_Electricity_20250526_123640.xml": null,
+                "Spain_solar_Electricity_20250526_205409.xml": null,
+                "Spain_Solar_PV_Electricity_20250314_124353.his": null,
+                "Spain_Solar_PV_Electricity_20250314_124353.xml": null,
+                "Spain_wind_Electricity_20250526_135901.xml": null,
+                "Spain_wind_Electricity_20250526_194928.xml": null,
+                "Spain_wind_Electricity_20250528_114833.xml": null,
+                "Spain_wind_Electricity_20250528_123458.xml": null,
+                "Spain_wind_Electricity_20250528_123937.xml": null,
+                "Spain_wind_Electricity_20250528_124023.xml": null,
+                "Spain_wind_Electricity_20250528_125412.xml": null,
+                "Sweden_hydro_Electricity_20250523_102932.xml": null,
+                "Sweden_hydro_Electricity_20250523_104328.xml": null,
+                "Sweden_hydro_Electricity_20250523_104413.xml": null,
+                "Uk_solar_Electricity_20250506_105232.xml": null,
+                "Uk_solar_Electricity_20250506_105446.xml": null,
+                "Uk_solar_Electricity_20250523_112703.xml": null,
+                "Unknown_hydro_Electricity_20250523_121824.xml": null,
+                "Unknown_solar_Electricity_20250522_225129.xml": null,
+                "Unknown_solar_Electricity_20250522_233716.xml": null,
+                "Unknown_solar_Electricity_20250522_233831.xml": null,
+                "Unknown_solar_Electricity_20250522_235325.xml": null,
+                "Unknown_solar_Electricity_20250522_235404.xml": null,
+                "Unknown_solar_Electricity_20250522_235804.xml": null,
+                "Unknown_solar_Electricity_20250523_011727.xml": null,
+                "Unknown_solar_Electricity_20250523_111729.xml": null,
+                "Unknown_solar_Electricity_20250523_112225.xml": null,
+                "Unknown_solar_Electricity_20250523_113537.xml": null,
+                "Unknown_solar_Electricity_20250523_115106.xml": null,
+                "Unknown_solar_Electricity_20250523_120221.xml": null,
+                "Unknown_solar_Electricity_20250523_120449.xml": null,
+                "Unknown_solar_Electricity_20250523_120746.xml": null,
+                "Unknown_solar_Electricity_20250523_121547.xml": null,
+                "Unknown_solar_Electricity_20250525_211245.xml": null,
+                "Unknown_solar_Electricity_20250525_211825.xml": null,
+                "Unknown_solar_Electricity_20250525_211934.xml": null,
+                "Unknown_solar_Electricity_20250526_122331.xml": null,
+                "Wind_hydrgen_Electricity_20250415_091050.xml": null,
+                "Wind_hydrogen_Electricity_20250415_004449.xml": null
+            }
+        },
+        "kb_dumps": {
+            "knowledge_base_dump_20250522_212612.txt": null,
+            "knowledge_base_dump_20250522_213051.txt": null,
+            "knowledge_base_dump_20250522_213208.txt": null
+        },
+        "utils": {
+            "csv_function_mapper.py": null,
+            "do_maths.py": null,
+            "evaluation.py": null,
+            "function_logger.py": null,
+            "general_knowledge.py": null,
+            "get_api_keys.py": null,
+            "internet_search.py": null,
+            "open_ai_utils.py": null,
+            "search_engine_id": null,
+            "streamlit_progress.py": null,
+            "__init__.py": null,
+            "function maps": {
+                "classes.yaml": null,
+                "config.yaml": null,
+                "Emil_function_map.csv": null,
+                "Emil_function_map_enhanced.csv": null,
+                "Ivan_function_map.csv": null,
+                "Ivan_function_map_enhanced.csv": null,
+                "joule_classes.yaml": null,
+                "Lola_function_map.csv": null,
+                "Lola_function_map_enhanced.csv": null,
+                "Nova_function_map.csv": null,
+                "Nova_function_map_enhanced.csv": null,
+                "__init__.py": null
+            }
+        }
+    },
+    "tests": {}
+}

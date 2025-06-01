@@ -3,62 +3,83 @@ CLI Back end working example
 ***************
 Asyncronous Mode
 ****************
-Loaded 159 items from persistent storage
-Continuing existing session: session_2025_05_28_T11_06_18_f2531b
+Loaded 204 items from persistent storage
+Continuing existing session: session_2025_06_01_T15_35_23_e2fe6c
 
 Enter prompts (type 'done' to process, 'exit' to quit, 'close' to end session):
-> what is the capital of spain, build a model for craotia and write a report
+> uild a model for solar in spain and greece
 > done
-✅ OpenAI categorization: general_question
-⚠️ Pre-check identified energy modeling request: 'build a model for craotia'
-✅ OpenAI categorization: copywriting and proofreading
+⚠️ Pre-check identified energy modeling request: 'build a model for solar in spain and greece'
 
 ------------------------
-Processing prompt 1/1: what is the capital of spain, build a model for craotia and write a report
-Answering general knowledge question: what is the capital of spain
-DETECTED: Country mention: Spain
-EXTRACTED: Country from answer: Spain
-EXTRACTED: City from answer: Madrid
+Processing prompt 1/1: uild a model for solar in spain and greece
 
 📋 Context handover: Nova → Emil
-   Task: build a model for craotia...
+   Task: build a model for solar in spain and greece
 
-Emil needs additional information for Handle Intent: build a model for craotia...
-Using CLI for parameter collection
+🔍 Extracting parameters from prompt: build a model for solar in spain and greece
+🧠 Using LLM to extract parameters from: 'build a model for solar in spain and greece'    
+🧠 LLM extracted location: Spain, Greece
+------------------------
+Processing prompt 1/1: uild a model for solar in spain and greece
 
-===== Nova needs input for process_emil_request =====
+📋 Context handover: Nova → Emil
+   Task: build a model for solar in spain and greece
 
-Nova: I need the 'generation' for this task.
-Description: The generation type (e.g., solar, wind, hydro, thermal, bio)
-Examples: solar, wind, hydro, etc.
-Please enter generation: wind
-
-===== Parameters collected successfully =====
-Processing Emil request with prompt: build a model for craotia
-Extracting model parameters from prompt...
-Extracted parameters: {'locations': ['Unknown'], 'generation_types': [], 'energy_carriers': ['electricity'], 'model_type': 'single'}
-Original Parameters: generation_types=[], energy_carriers=['electricity']
-User Added Parameters: generation=wind, energy_carrier=Not provided
-Parameters from Nova to Emil: location=Croatia, generation=wind, energy_carrier=electricity
-
-Creating model for wind Electricity in Croatia
-PLEXOS not available or basefile not found, creating simple XML...
-✅ Created simple XML: d:\Tera-joule\Terajoule - AI Architecture\AI Assistants\Nova - AI Coordinator v2\src\core\models\Croatia_wind_Electricity_20250528_125842.xml
-------------------------------
-
-📋 Context handover: Nova → Lola
-   Task: write a report...
-   Location: Croatia
-   Generation type: wind
-   Energy carrier: Electricity
-   Model file: Croatia_wind_Electricity_20250528_125842.xml
-
-Writing report in executive_summary style
-Report stored in session session_2025_05_28_T11_06_18_f2531b and session history
-Session now has 20 reports
-History now has 39 reports
-
-🗂️  Session updated and remains open: D:\Tera-joule\Terajoule - AI Architecture\AI Assistaants\Nova - AI Coordinator v2\sessions\2025\05\28\session_2025_05_28_T11_06_18_f2531b.json 
+🔍 Extracting parameters from prompt: build a model for solar in spain and greece
+🧠 Using LLM to extract parameters from: 'build a model for solar in spain and greece'    
+🧠 LLM extracted location: Spain, Greece
+🧠 LLM extracted location: Spain, Greece
+🧠 LLM extracted generation: solar
+✅ LLM extraction successful: {'location': 'Spain, Greece', 'generation': 'solar', 'energy_carrier': 'electricity'}
+✅ Auto-filled parameter location: Spain, Greece
+✅ Auto-filled parameter generation: solar
+✅ Auto-filled parameter energy_carrier: electricity
+clr module imported successfully
+['Electricity', '-']
+🧠 Extracting countries from: 'build a solar model for Spain, Greece'
+🔍 Attempt 1/3
+🧠 Response: ["ES", "GR"]
+✅ Extracted countries: ['ES', 'GR']
+_carrier': 'electricity'}
+✅ Auto-filled parameter location: Spain, Greece
+✅ Auto-filled parameter generation: solar
+✅ Auto-filled parameter energy_carrier: electricity
+clr module imported successfully
+['Electricity', '-']
+🧠 Extracting countries from: 'build a solar model for Spain, Greece'
+🔍 Attempt 1/3
+🧠 Response: ["ES", "GR"]
+✅ Extracted countries: ['ES', 'GR']
+✅ Auto-filled parameter generation: solar
+✅ Auto-filled parameter energy_carrier: electricity
+clr module imported successfully
+['Electricity', '-']
+🧠 Extracting countries from: 'build a solar model for Spain, Greece'
+🔍 Attempt 1/3
+🧠 Response: ["ES", "GR"]
+✅ Extracted countries: ['ES', 'GR']
+clr module imported successfully
+['Electricity', '-']
+🧠 Extracting countries from: 'build a solar model for Spain, Greece'
+🔍 Attempt 1/3
+🧠 Response: ["ES", "GR"]
+✅ Extracted countries: ['ES', 'GR']
+🧠 Extracting countries from: 'build a solar model for Spain, Greece'
+🔍 Attempt 1/3
+🧠 Response: ["ES", "GR"]
+✅ Extracted countries: ['ES', 'GR']
+🧠 Response: ["ES", "GR"]
+✅ Extracted countries: ['ES', 'GR']
+Embedding-based guess for countries: ['Greece']
+Extracted countries from LLM: ['ES', 'GR']
+Creating Categories |--------------------| 4.1% Rooftop TertiaEmbedding-based guess for countries: ['Greece']
+Extracted countries from LLM: ['ES', 'GR']
+Creating Categories |--------------------| 4.1% Rooftop Tertiary Solar Expansion__ElectricCreating Categories |██------------------| 11.4% Rooftop Residential Solar Expansion__ElecCreating Categories |███-----------------| 17.9% Offshore Wind Radial Fixed Bottom__ElectrCreating Categories |███-----------------| 18.7% Offshore Wind Hub Fixed Bottom__ElectriciCreating Categories |███████-------------| 35.8% Residential Battery Expansion__ElectricitCreating Objects |████████████████████| 100.0% 1931██| 161.8% All Modelslesateiesopityyy
+Creating Memberships |████████████████████| 100.0% 1931       
+Creating Properties |████████████████████| 100.0% 11812       
+Model Build Completed
+- AI Architecture\AI Assistants\Nova - AI Coordinator v2\sessions\2025\06\01\session_2025_06_01_T15_35_23_e2fe6c.json
 Ready for next set of prompts...
 
 
@@ -68,36 +89,12 @@ Results
  ------------------------
 -------------------
 
-Task: what is the capital of spain...
-Agent: Nova
-  Result: The capital of Spain is Madrid.
-
--------------------
-
-Task: build a model for craotia...
+Task: build a model for solar in spain and greece
 Agent: Emil
-  ✅ Created wind Electricity model for Croatia
-  Parameters: Location: Croatia, Type: wind, Carrier: Electricity
-  File: Croatia_wind_Electricity_20250528_125842.xml
+  ✅ Created solar electricity model for Spain, Greece
+  Parameters: Location: Spain, Greece, Type: solar, Carrier: electricity
+  File: Spain, Greece_solar_electricity_20250601_200752.xml
 
--------------------
 
-Task: write a report...
-Agent: Lola
-  Result:
-# Executive Summary: Wind Energy Model for Croatia
-
-## Overview
-This report summarizes the energy model created for Croatia, focusing on wind generation with Electricity as the primary energy carrier.
-
-## Key Findings
-- Model was created successfully for Croatia
-
-## Recommendations
-- Consider running a detailed analysis on this model
-- Validate with historical data
-
-## Summary
-A wind model was created for Croatia.
-
-Report generated based on user request: "write a report"
+Enter prompts (type 'done' to process, 'exit' to quit, 'close' to end session):
+>

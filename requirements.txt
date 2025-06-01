@@ -24,3 +24,11 @@ pyttsx3
 pythonnet
 nest_asyncio
 dotenv
+streamlit>=1.28.0
+asyncio
+pandas
+numpy
+openai
+sentence-transformers
+python-dotenv
+pydantic
