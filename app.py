@@ -48,7 +48,7 @@ try:
     from agents.PLEXOS_functions.loading_bar import (
         printProgressBar, 
         save_progress,
-        PROGRESS_FILE
+        PROGRESS_FILE  # FIXED: Import PROGRESS_FILE for real-time monitoring
     )
     from agents.PLEXOS_functions.plexos_build_functions_final import (
         load_plexos_xml,
@@ -370,127 +370,81 @@ async def extract_countries_with_progress(prompt: str, progress_container=None, 
                 status_container.empty()
         return ['XX']  # Default on error
 
-# REAL BACKEND: Function to show model creation progress
+# REAL BACKEND: FIXED Function to show model creation progress with real-time monitoring
 def show_model_creation_progress_real(progress_container=None, status_container=None):
     """
-    REAL BACKEND INTEGRATION: Monitor actual model creation progress from backend
+    FIXED: Shows ACTUAL real-time CLI output from backend
     """
     if not BACKEND_AVAILABLE:
         return show_model_creation_progress_placeholder()
     
-    # Setup progress tracking
-    if progress_container:
-        model_progress = progress_container.empty()
-        model_status = status_container.empty() if status_container else st.empty()
-    else:
-        model_progress = st.empty()
-        model_status = st.empty()
-    
-    # Show model creation header
     st.markdown("### ⚙️ Creating Real PLEXOS Model Components")
     
-    try:
-        # Monitor the REAL progress file that the backend writes to
-        progress_data = {}
-        
-        # Read from the REAL progress file
+    # The EXACT keys that backend writes (case-sensitive!)
+    stages = {
+        'Creating Categories': '📂 Creating Categories',
+        'Creating Objects': '🔧 Creating Objects', 
+        'Creating Memberships': '🔗 Creating Memberships',
+        'Creating Properties': '⚙️ Creating Properties'
+    }
+    
+    # Create UI elements
+    progress_bars = {}
+    status_texts = {}
+    
+    for backend_key, title in stages.items():
+        st.write(f"**{title}**")
+        progress_bars[backend_key] = st.progress(0)
+        status_texts[backend_key] = st.empty()
+    
+    # REAL-TIME monitoring loop
+    start_time = time.time()
+    completed_stages = set()
+    
+    while len(completed_stages) < len(stages) and (time.time() - start_time) < 300:
+        # Read ACTUAL progress file
         if os.path.exists(PROGRESS_FILE):
             try:
                 with open(PROGRESS_FILE, 'r') as f:
                     progress_data = json.load(f)
-            except (json.JSONDecodeError, FileNotFoundError):
-                pass
+                
+                # Update each stage with REAL backend data
+                for backend_key, title in stages.items():
+                    if backend_key in progress_data:
+                        data = progress_data[backend_key]
+                        current = data.get('current', 0)
+                        total = data.get('total', 1)
+                        percent = min(100, int(data.get('percent', 0) * 100))
+                        message = data.get('message', '')
+                        
+                        # Update with REAL data
+                        progress_bars[backend_key].progress(percent)
+                        
+                        # Show ACTUAL CLI output
+                        cli_output = f"{title}... {percent}% | {current}/{total}"
+                        if message:
+                            # Extract the actual item being processed
+                            item = message.split('|')[-1].strip() if '|' in message else message
+                            cli_output += f" | {item}"
+                        
+                        status_texts[backend_key].text(cli_output)
+                        
+                        # Mark completed
+                        if percent >= 100 and backend_key not in completed_stages:
+                            completed_stages.add(backend_key)
+                            status_texts[backend_key].success(f"✅ {title} completed! ({total} items)")
+                
+            except Exception as e:
+                st.error(f"Error reading progress: {e}")
         
-        # Monitor real backend progress for Objects
-        st.write("**Creating Objects**")
-        objects_progress = st.progress(0)
-        objects_status = st.empty()
-        
-        # Check if backend has reported objects progress
-        if 'Creating objects' in progress_data:
-            objects_data = progress_data['Creating objects']
-            current = objects_data.get('current', 0)
-            total = objects_data.get('total', 1931)
-            percent = int(objects_data.get('percent', 0) * 100)
-            
-            objects_status.text(f"Creating objects... {percent}% | {current}/{total}")
-            objects_progress.progress(percent)
-        else:
-            # Simulate if no real data available yet
-            for i in range(0, 101, 5):
-                objects_status.text(f"Creating objects... {i}% | {int(1931 * i / 100)}/1931")
-                objects_progress.progress(i)
-                time.sleep(0.1)
-        
-        objects_status.text("✅ Objects created successfully!")
+        # Poll every 0.5 seconds for real-time updates
         time.sleep(0.5)
-        objects_status.empty()
-        
-        # Monitor real backend progress for Memberships
-        st.write("**Creating Memberships**")
-        memberships_progress = st.progress(0)
-        memberships_status = st.empty()
-        
-        # Check if backend has reported memberships progress
-        if 'Creating memberships' in progress_data:
-            memberships_data = progress_data['Creating memberships']
-            current = memberships_data.get('current', 0)
-            total = memberships_data.get('total', 1931)
-            percent = int(memberships_data.get('percent', 0) * 100)
-            
-            memberships_status.text(f"Creating memberships... {percent}% | {current}/{total}")
-            memberships_progress.progress(percent)
-        else:
-            # Simulate if no real data available yet
-            for i in range(0, 101, 8):
-                memberships_status.text(f"Creating memberships... {i}% | {int(1931 * i / 100)}/1931")
-                memberships_progress.progress(i)
-                time.sleep(0.08)
-        
-        memberships_status.text("✅ Memberships created successfully!")
-        time.sleep(0.5)
-        memberships_status.empty()
-        
-        # Monitor real backend progress for Properties
-        st.write("**Creating Properties**")
-        properties_progress = st.progress(0)
-        properties_status = st.empty()
-        
-        # Check if backend has reported properties progress
-        if 'Creating properties' in progress_data:
-            properties_data = progress_data['Creating properties']
-            current = properties_data.get('current', 0)
-            total = properties_data.get('total', 4105)
-            percent = int(properties_data.get('percent', 0) * 100)
-            
-            properties_status.text(f"Creating properties... {percent}% | {current}/{total}")
-            properties_progress.progress(percent)
-        else:
-            # Simulate based on actual CLI behavior - stops at 34.8%
-            for i in range(0, 35, 3):
-                properties_status.text(f"Creating properties... {i}% | {int(4105 * i / 100)}/4105")
-                properties_progress.progress(i)
-                time.sleep(0.12)
-            
-            # Final update to match actual CLI output
-            properties_status.text("Creating properties... 34.8% | 1429/4105")
-            properties_progress.progress(35)
-            time.sleep(1)
-        
-        properties_status.text("✅ Properties creation in progress...")
-        time.sleep(0.5)
-        properties_status.empty()
-        
-    except Exception as e:
-        print(f"❌ Error monitoring real backend progress: {str(e)}")
-        # Fall back to placeholder if real monitoring fails
-        return show_model_creation_progress_placeholder()
     
-    # Clear main progress
-    if model_progress:
-        model_progress.empty()
-    if model_status:
-        model_status.empty()
+    # Final status
+    if len(completed_stages) == len(stages):
+        st.success("🎉 All model creation completed!")
+    else:
+        st.warning("Progress monitoring completed or timed out")
 
 # PLACEHOLDER FUNCTIONS: Used when real backend is not available
 
@@ -772,7 +726,7 @@ def initialize_system():
             "create_simple_multi_location_xml": create_simple_multi_location_xml,
             "create_comprehensive_model": create_comprehensive_model,
             "create_simple_comprehensive_xml": create_simple_comprehensive_xml,
-            "process_emil_request": process_emil_request,
+            "process_emil_request": process_emil_request_enhanced,
             "do_maths": do_maths,
             "answer_general_question": answer_general_question,
             "ai_chat_session": ai_chat_session,
@@ -1241,12 +1195,19 @@ async def process_prompts_with_ui_params(prompts_text: str, progress_container, 
                             'energy_carrier': task.args.get('energy_carrier')
                         }
                         
-                        # REAL BACKEND: Show model creation progress
+                        # REAL BACKEND: Show model creation progress with REAL-TIME monitoring
                         st.markdown("---")
-                        if BACKEND_AVAILABLE:
-                            show_model_creation_progress_real()
-                        else:
-                            show_model_creation_progress_placeholder()
+                        
+                        # FIXED: Clear progress file for fresh start
+                        if BACKEND_AVAILABLE and os.path.exists(PROGRESS_FILE):
+                            try:
+                                os.remove(PROGRESS_FILE)
+                                print(f"🧹 Cleared progress file: {PROGRESS_FILE}")
+                            except Exception as e:
+                                print(f"⚠️ Could not clear progress file: {e}")
+                        
+                        # Use FIXED real-time progress monitor
+                        show_model_creation_progress_real()
                     
                     # Execute task using safe async runner
                     try:
