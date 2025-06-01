@@ -1,0 +1,69 @@
+{
+  "date": "2025-06-01",
+  "sessions_count": 7,
+  "sessions": [
+    {
+      "id": "session_2025_06_01_T15_22_53_ab4c37",
+      "timestamp": "2025-06-01T15:22:53.055266",
+      "prompt_summary": "No prompts",
+      "agents_used": [],
+      "tasks_completed": 0,
+      "duration_seconds": 0,
+      "file": "session_2025_06_01_T15_22_53_ab4c37.json"
+    },
+    {
+      "id": "session_2025_06_01_T15_23_07_3de462",
+      "timestamp": "2025-06-01T15:23:07.645247",
+      "prompt_summary": "No prompts",
+      "agents_used": [],
+      "tasks_completed": 0,
+      "duration_seconds": 0,
+      "file": "session_2025_06_01_T15_23_07_3de462.json"
+    },
+    {
+      "id": "session_2025_06_01_T15_23_45_6e05b3",
+      "timestamp": "2025-06-01T15:23:45.566786",
+      "prompt_summary": "No prompts",
+      "agents_used": [],
+      "tasks_completed": 0,
+      "duration_seconds": 0,
+      "file": "session_2025_06_01_T15_23_45_6e05b3.json"
+    },
+    {
+      "id": "session_2025_06_01_T15_27_44_ac5493",
+      "timestamp": "2025-06-01T15:27:44.474459",
+      "prompt_summary": "No prompts",
+      "agents_used": [],
+      "tasks_completed": 0,
+      "duration_seconds": 0,
+      "file": "session_2025_06_01_T15_27_44_ac5493.json"
+    },
+    {
+      "id": "session_2025_06_01_T15_31_36_50f70e",
+      "timestamp": "2025-06-01T15:31:36.606712",
+      "prompt_summary": "No prompts",
+      "agents_used": [],
+      "tasks_completed": 0,
+      "duration_seconds": 0,
+      "file": "session_2025_06_01_T15_31_36_50f70e.json"
+    },
+    {
+      "id": "session_2025_06_01_T15_31_45_d41717",
+      "timestamp": "2025-06-01T15:31:45.899949",
+      "prompt_summary": "No prompts",
+      "agents_used": [],
+      "tasks_completed": 0,
+      "duration_seconds": 0,
+      "file": "session_2025_06_01_T15_31_45_d41717.json"
+    },
+    {
+      "id": "session_2025_06_01_T15_35_23_e2fe6c",
+      "timestamp": "2025-06-01T15:35:23.492362",
+      "prompt_summary": "No prompts",
+      "agents_used": [],
+      "tasks_completed": 0,
+      "duration_seconds": 0,
+      "file": "session_2025_06_01_T15_35_23_e2fe6c.json"
+    }
+  ]
+}

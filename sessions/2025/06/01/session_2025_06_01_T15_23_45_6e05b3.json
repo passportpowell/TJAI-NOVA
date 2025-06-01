@@ -1,0 +1,16 @@
+{
+  "id": "session_2025_06_01_T15_23_45_6e05b3",
+  "metadata": {
+    "timestamp": "2025-06-01T15:23:45.566786",
+    "created_at": "2025-06-01T15:23:45.566786",
+    "last_modified": "2025-06-01T15:23:45.566786",
+    "finalized_at": null,
+    "context_open": true,
+    "session_active": true
+  },
+  "prompts": [],
+  "parameters": [],
+  "context_handovers": [],
+  "results": [],
+  "summary": null
+}
