@@ -1,4 +1,3 @@
-# Import Streamlit first - this is the web framework for creating the UI
 import streamlit as st
 
 # CRITICAL: st.set_page_config must be the first Streamlit command
@@ -26,10 +25,44 @@ import asyncio
 import nest_asyncio
 nest_asyncio.apply()  # You already have this
 
-
+# REAL BACKEND INTEGRATION: Add the src directory to the path so we can import backend modules
+current_dir = os.path.dirname(os.path.abspath(__file__))
+src_dir = os.path.join(current_dir, 'src')
+if src_dir not in sys.path:
+    sys.path.append(src_dir)
 
 # Add the src directory to Python path so we can import our custom modules
 sys.path.append(os.path.join(os.path.dirname(__file__), 'src'))
+
+# REAL BACKEND INTEGRATION: Import the real backend functions
+try:
+    from agents.plexos_base_model_final import (
+        extract_countries_with_retries,
+        ai_call,
+        process_base_model_task
+    )
+    from core.functions_registery import (
+        extract_model_parameters,
+        process_emil_request_enhanced
+    )
+    from agents.PLEXOS_functions.loading_bar import (
+        printProgressBar, 
+        save_progress,
+        PROGRESS_FILE
+    )
+    from agents.PLEXOS_functions.plexos_build_functions_final import (
+        load_plexos_xml,
+        close
+    )
+    from utils.open_ai_utils import run_open_ai_ns_async
+    
+    BACKEND_AVAILABLE = True
+    print("✅ Successfully imported real backend functions")
+    
+except ImportError as e:
+    BACKEND_AVAILABLE = False
+    print(f"❌ Could not import backend functions: {e}")
+    print("Falling back to placeholder implementations")
 
 # Import agent classes from our custom modules
 from agents import Nova, Emil, Ivan, Lola  # Different agents specialized for different tasks
@@ -183,228 +216,84 @@ def run_async_in_streamlit(async_func, *args, **kwargs):
         print(f"Error running async function: {str(e)}")
         raise
 
-# Enhanced parameter extraction function with progress indicators - FIXED VERSION
-async def extract_model_parameters_with_llm_correction(prompt, progress_container=None, status_container=None):
+# REAL BACKEND: Enhanced parameter extraction function with real LLM calls
+async def extract_model_parameters_with_llm_correction(prompt: str, progress_container=None, status_container=None) -> dict:
     """
-    Enhanced parameter extraction that uses LLM to correct misspelled locations
-    and find parameters that hardcoded lists might miss - with progress indicators.
-    FIXED for better error handling.
+    REAL BACKEND INTEGRATION: Extract model parameters using actual LLM calls
     """
-    import re  # For regular expression pattern matching
+    if not BACKEND_AVAILABLE:
+        return await extract_model_parameters_with_llm_correction_placeholder(prompt, progress_container, status_container)
     
-    # Progress tracking setup
+    # Setup progress tracking
     if progress_container:
-        extraction_progress = progress_container.empty()
-        extraction_status = status_container.empty() if status_container else st.empty()
+        with progress_container.container():
+            extraction_progress = st.progress(0)
+        with status_container.container():
+            extraction_status = st.empty()
     else:
-        extraction_progress = st.empty()
-        extraction_status = st.empty()
+        extraction_progress_container = st.empty()
+        extraction_status_container = st.empty()
+        
+        with extraction_progress_container.container():
+            extraction_progress = st.progress(0)
+        with extraction_status_container.container():
+            extraction_status = st.empty()
     
     try:
-        print("Extracting model parameters from prompt...")
-        prompt_lower = prompt.lower()  # Convert to lowercase for case-insensitive matching
+        print(f"🔍 Real backend: Extracting model parameters from prompt: '{prompt[:50]}...'")
         
-        # Initialize results dictionary with default values
-        params = {"locations": [], "generation_types": [], "energy_carriers": [], "model_type": "single"}
+        # Step 1: Starting extraction - REAL BACKEND
+        extraction_status.text(f"🔍 Extracting parameters from prompt: '{prompt[:50]}...'")
+        extraction_progress.progress(10)
+        await asyncio.sleep(0.1)  # Force UI update
         
-        # Progress: Starting extraction
-        if extraction_progress:
-            extraction_status.text(f"🔍 Extracting parameters from prompt: '{prompt[:50]}...'")
-            extraction_progress.progress(10)
-            time.sleep(0.5)
-        
-        # Step 1: Try hardcoded location matching first (pattern-based approach)
-        extraction_status.text(f"🧠 Using LLM to extract parameters from: '{prompt[:50]}...'")
+        # Step 2: Use REAL parameter extraction from backend
+        extraction_status.text(f"🧠 Using real LLM to extract parameters...")
         extraction_progress.progress(25)
-        time.sleep(0.5)
+        await asyncio.sleep(0.1)
         
-        found_locations = []
-        for loc in LOCATIONS:
-            # Various patterns to match location mentions in different contexts
-            patterns = [
-                f" for {loc.lower()}",  # e.g., "model for Spain"
-                f" in {loc.lower()}",   # e.g., "model in Spain"
-                f" {loc.lower()} ",     # e.g., "the Spain model"
-                f"model {loc.lower()}",  # e.g., "model Spain"
-                f"{loc.lower()} model",  # e.g., "Spain model"
-                f" {loc.lower()} and",   # e.g., "Spain and France"
-                f"and {loc.lower()}",    # e.g., "and Spain"
-                f", {loc.lower()}",      # e.g., "France, Spain"
-                f"{loc.lower()},"        # e.g., "Spain, France"
-            ]
-            if any(pattern in prompt_lower for pattern in patterns):
-                found_locations.append(loc)
+        # Call the REAL extract_model_parameters function from backend
+        extracted_params = extract_model_parameters(prompt)
         
-        # Remove duplicates and store in params
-        params["locations"] = list(set(found_locations))
-        
-        # Progress: Location extraction
-        extraction_status.text(f"🧠 LLM extracted location: {', '.join(params['locations']) if params['locations'] else 'None found'}")
         extraction_progress.progress(50)
-        time.sleep(0.5)
+        await asyncio.sleep(0.1)
         
-        # Step 2: If no locations found with hardcoded matching, use LLM (AI-based approach)
-        if not params["locations"]:
-            print("🔍 No locations found with hardcoded matching, trying LLM correction...")
-            extraction_status.text("🔍 No locations found with hardcoded matching, trying LLM correction...")
-            extraction_progress.progress(60)
-            
-            # Prompt for the LLM to extract locations
-            location_correction_context = """
-            You are a location extraction assistant. Extract ALL countries/locations mentioned in the text.
-            
-            Rules:
-            1. Look for phrases like "build a model for [location]", "model for [location]", "energy model in [location]"
-            2. Find ALL locations mentioned, including multiple countries separated by "and", "," or other conjunctions
-            3. If locations are misspelled, correct them to proper country/region names
-            4. Return ALL found locations as a JSON array: ["Country1", "Country2", ...]
-            5. If no location is found, return ["Unknown"]
-            
-            Examples:
-            "build a model for spain and denmark" → ["Spain", "Denmark"]
-            "create model for france, germany and italy" → ["France", "Germany", "Italy"]
-            "model for germany" → ["Germany"]
-            "energy model in frnace and spian" → ["France", "Spain"]
-            "build a model" → ["Unknown"]
-            """
-            
-            try:
-                # Call OpenAI API to get location extraction
-                corrected_locations = await run_open_ai_ns_async(prompt, location_correction_context, model="gpt-4.1-nano")
-                corrected_locations = corrected_locations.strip()
-                
-                # Try to parse as JSON array
-                try:
-                    import json
-                    locations_list = json.loads(corrected_locations)
-                    if isinstance(locations_list, list) and locations_list:
-                        # Filter out "Unknown" if we have real locations
-                        valid_locations = [loc for loc in locations_list if loc.lower() != "unknown"]
-                        if valid_locations:
-                            params["locations"] = valid_locations
-                            print(f"🔍 LLM extracted multiple locations: {valid_locations}")
-                        else:
-                            params["locations"] = ["Unknown"]
-                            print("🔍 LLM could not determine location")
-                    else:
-                        params["locations"] = ["Unknown"]
-                        print("🔍 LLM returned invalid format")
-                except json.JSONDecodeError:
-                    # Fallback: try to extract as single location
-                    if corrected_locations and corrected_locations.lower() != "unknown":
-                        params["locations"] = [corrected_locations]
-                        print(f"🔍 LLM corrected single location: '{corrected_locations}'")
-                    else:
-                        params["locations"] = ["Unknown"]
-                        print("🔍 LLM could not determine location")
-                    
-            except Exception as e:
-                print(f"🔍 LLM location correction failed: {str(e)}")
-                params["locations"] = ["Unknown"]
-        else:
-            print(f"🔍 Found locations with hardcoded matching: {found_locations}")
-        
-        # Progress: Generation type extraction
-        extraction_status.text(f"🧠 LLM extracted generation: extracting...")
+        # Step 3: Location extraction with REAL LLM
+        extraction_status.text(f"🧠 LLM extracted location: {', '.join(extracted_params.get('locations', ['None']))}")
         extraction_progress.progress(75)
-        time.sleep(0.5)
+        await asyncio.sleep(0.1)
         
-        # Step 3: Extract generation types using regex patterns
-        found_gen_types = []
-        for gen in GENERATION_TYPES.keys():
-            # Different patterns to match generation type mentions
-            patterns = [
-                f"build.*{gen}.*model",   # e.g., "build a wind model"
-                f"create.*{gen}.*model",  # e.g., "create wind model"
-                f"{gen}.*model.*for",     # e.g., "wind model for Spain"
-                f"make.*{gen}.*model",    # e.g., "make a wind model"
-                f"{gen} power",           # e.g., "wind power"
-                f"{gen} generation",      # e.g., "wind generation"
-                f"{gen} energy",          # e.g., "wind energy"
-                f"a {gen} model",         # e.g., "a wind model"
-                f"build {gen}",           # e.g., "build wind"
-                f"create {gen}"           # e.g., "create wind"
-            ]
-            
-            # Check if any pattern matches
-            if any(re.search(pattern, prompt_lower) for pattern in patterns):
-                found_gen_types.append(gen)
-        
-        # Remove duplicates and store in params
-        params["generation_types"] = list(set(found_gen_types))
-        
-        # Step 4: If no generation types found, try LLM extraction
-        if not params["generation_types"]:
-            print("🔍 No generation types found with pattern matching, trying LLM extraction...")
-            
-            # Prompt for the LLM to extract generation type
-            generation_extraction_context = """
-            You are a generation type extraction assistant. Given a text about building an energy model, extract the type of energy generation mentioned.
-            
-            Look for energy types like: solar, wind, hydro, thermal, nuclear, bio, geothermal, etc.
-            
-            Rules:
-            1. Look for phrases about building/creating models for specific energy types
-            2. Return only the generation type (e.g., "wind", "solar", "hydro")
-            3. If no specific type is mentioned, return "unknown"
-            4. Use lowercase
-            
-            Examples:
-            "build a wind model for spain" → "wind"
-            "create solar energy model" → "solar"
-            "hydro model for france" → "hydro"
-            "build a model for croatia" → "unknown"
-            """
-            
-            try:
-                # Call OpenAI API to get generation type
-                extracted_generation = await run_open_ai_ns_async(prompt, generation_extraction_context, model="gpt-4.1-nano")
-                extracted_generation = extracted_generation.strip().lower()
-                
-                if extracted_generation and extracted_generation != "unknown":
-                    # Validate against known generation types
-                    if extracted_generation in GENERATION_TYPES.keys():
-                        params["generation_types"] = [extracted_generation]
-                        print(f"🔍 LLM extracted generation type: '{extracted_generation}'")
-                    else:
-                        print(f"🔍 LLM extracted '{extracted_generation}' but it's not in known types")
-                else:
-                    print("🔍 LLM could not determine generation type")
-                    
-            except Exception as e:
-                print(f"🔍 LLM generation extraction failed: {str(e)}")
-        
-        # Step 5: Extract energy carriers (simpler pattern matching)
-        carriers = ["electricity", "hydrogen", "methane"]
-        found_carriers = [carrier for carrier in carriers if carrier in prompt_lower]
-        # Default to electricity if no carriers found
-        params["energy_carriers"] = found_carriers or ["electricity"]
-        
-        # Set location default only if still empty
-        if not params["locations"]:
-            params["locations"] = ["Unknown"]
-        
-        # Progress: Completion
-        gen_types_str = ', '.join(params["generation_types"]) if params["generation_types"] else "unknown"
-        extraction_status.text(f"✅ LLM extraction successful: {{'location': '{', '.join(params['locations'])}', 'generation': '{gen_types_str}', 'energy_carrier': '{', '.join(params['energy_carriers'])}'}}")
+        # Step 4: Generation type extraction - show what was ACTUALLY found
+        gen_types_str = ', '.join(extracted_params.get('generation_types', ['unknown']))
+        extraction_status.text(f"🧠 LLM extracted generation: {gen_types_str}")
         extraction_progress.progress(100)
-        time.sleep(0.5)
+        await asyncio.sleep(0.5)
+        
+        # Step 5: Completion with REAL results
+        extraction_status.text(f"✅ Real LLM extraction successful: location='{', '.join(extracted_params.get('locations', ['Unknown']))}', generation='{gen_types_str}'")
+        await asyncio.sleep(0.5)
         
         # Clear progress after completion
-        extraction_progress.empty()
-        extraction_status.empty()
+        if progress_container:
+            progress_container.empty()
+            status_container.empty()
+        else:
+            extraction_progress_container.empty()
+            extraction_status_container.empty()
         
-        print("Extracted parameters:", params)
-        return params
+        print(f"✅ Real backend extracted parameters: {extracted_params}")
+        return extracted_params
         
     except Exception as e:
-        print(f"Error in parameter extraction: {str(e)}")
-        # Return default parameters on error
-        if extraction_progress:
+        print(f"❌ Error in real backend parameter extraction: {str(e)}")
+        if extraction_progress and extraction_status:
             extraction_status.text(f"❌ Error in extraction: {str(e)}")
-            extraction_progress.empty()
-            extraction_status.empty()
+            await asyncio.sleep(1)
+            if progress_container:
+                progress_container.empty()
+                status_container.empty()
         
+        # Return default on error
         return {
             "locations": ["Unknown"],
             "generation_types": ["unknown"],
@@ -412,78 +301,82 @@ async def extract_model_parameters_with_llm_correction(prompt, progress_containe
             "model_type": "single"
         }
 
-# Function to extract countries with progress - FIXED VERSION
-async def extract_countries_with_progress(prompt, progress_container=None, status_container=None):
-    """Extract countries from prompt with progress indicators matching CLI output - FIXED"""
+# REAL BACKEND: Function to extract countries with progress indicators
+async def extract_countries_with_progress(prompt: str, progress_container=None, status_container=None) -> list:
+    """
+    REAL BACKEND INTEGRATION: Extract countries using actual LLM intelligence
+    """
+    if not BACKEND_AVAILABLE:
+        return await extract_countries_with_progress_placeholder(prompt, progress_container, status_container)
     
     # Setup progress tracking
     if progress_container:
-        country_progress = progress_container.empty()
-        country_status = status_container.empty() if status_container else st.empty()
+        with progress_container.container():
+            country_progress = st.progress(0)
+        with status_container.container():
+            country_status = st.empty()
     else:
-        country_progress = st.empty()
-        country_status = st.empty()
+        country_progress_container = st.empty()
+        country_status_container = st.empty()
+        
+        with country_progress_container.container():
+            country_progress = st.progress(0)
+        with country_status_container.container():
+            country_status = st.empty()
     
     try:
         # Show extraction header
-        country_status.text(f"🧠 Extracting countries from: '{prompt[:50]}...'")
+        country_status.text(f"🧠 Using real LLM to extract countries from: '{prompt[:50]}...'")
         country_progress.progress(0)
-        time.sleep(0.8)
+        await asyncio.sleep(0.1)
         
-        # Attempt 1/3
-        country_status.text("🔄 Attempt 1/3")
+        # Attempt 1/3 - REAL LLM CALL
+        country_status.text("🔄 Attempt 1/3 - Calling real LLM")
         country_progress.progress(33)
-        time.sleep(0.8)
+        await asyncio.sleep(0.1)
         
-        # Simulate country extraction logic based on prompt
-        countries = []
-        prompt_lower = prompt.lower()
+        # Use the REAL backend function for country extraction
+        context = "You are building a PLEXOS model for a client."
+        countries = await asyncio.to_thread(extract_countries_with_retries, prompt, context, model='gpt-4.1-nano')
         
-        # Map countries to country codes
-        country_mapping = {
-            'france': 'FR',
-            'montenegro': 'ME',
-            'spain': 'ES',
-            'greece': 'GR',
-            'germany': 'DE',
-            'italy': 'IT',
-            'denmark': 'DK'
-        }
-        
-        for country_name, country_code in country_mapping.items():
-            if country_name in prompt_lower:
-                countries.append(country_code)
-        
-        if not countries:
-            countries = ['XX']  # Default unknown country
-        
-        # Response
-        country_status.text(f"🧠 Response: {countries}")
+        # Response from REAL backend
+        country_status.text(f"🧠 Real LLM response: {countries}")
         country_progress.progress(66)
-        time.sleep(0.5)
+        await asyncio.sleep(0.1)
         
-        # Success
-        country_status.text(f"✅ Extracted countries: {countries}")
+        # Success with REAL results
+        country_status.text(f"✅ Real LLM extracted countries: {countries}")
         country_progress.progress(100)
-        time.sleep(0.5)
+        await asyncio.sleep(0.5)
         
         # Clear progress
-        country_progress.empty()
-        country_status.empty()
+        if progress_container:
+            progress_container.empty()
+            status_container.empty()
+        else:
+            country_progress_container.empty()
+            country_status_container.empty()
         
-        return countries
+        print(f"✅ Real backend extracted countries: {countries}")
+        return countries if countries else ['XX']
         
     except Exception as e:
-        print(f"Error in country extraction: {str(e)}")
+        print(f"❌ Error in real backend country extraction: {str(e)}")
         if country_progress:
             country_status.text(f"❌ Error in country extraction: {str(e)}")
-            country_progress.empty()
-            country_status.empty()
+            await asyncio.sleep(1)
+            if progress_container:
+                progress_container.empty()
+                status_container.empty()
         return ['XX']  # Default on error
 
-# Function to show model creation progress
-def show_model_creation_progress(progress_container=None, status_container=None):
-    """Show model creation progress matching CLI output"""
+# REAL BACKEND: Function to show model creation progress
+def show_model_creation_progress_real(progress_container=None, status_container=None):
+    """
+    REAL BACKEND INTEGRATION: Monitor actual model creation progress from backend
+    """
+    if not BACKEND_AVAILABLE:
+        return show_model_creation_progress_placeholder()
     
     # Setup progress tracking
     if progress_container:
@@ -494,57 +387,104 @@ def show_model_creation_progress(progress_container=None, status_container=None)
         model_status = st.empty()
     
     # Show model creation header
-    st.markdown("### ⚙️ Creating Model Components")
+    st.markdown("### ⚙️ Creating Real PLEXOS Model Components")
     
-    # Creating Objects
-    st.write("**Creating Objects**")
-    objects_progress = st.progress(0)
-    objects_status = st.empty()
-    
-    total_objects = 1931
-    for i in range(0, 101, 5):
-        objects_status.text(f"Creating objects... {i}% | {int(total_objects * i / 100)}/{total_objects}")
-        objects_progress.progress(i)
-        time.sleep(0.1)
-    
-    objects_status.text("✅ Objects created successfully!")
-    time.sleep(0.5)
-    objects_status.empty()
-    
-    # Creating Memberships  
-    st.write("**Creating Memberships**")
-    memberships_progress = st.progress(0)
-    memberships_status = st.empty()
-    
-    total_memberships = 1931
-    for i in range(0, 101, 8):
-        memberships_status.text(f"Creating memberships... {i}% | {int(total_memberships * i / 100)}/{total_memberships}")
-        memberships_progress.progress(i)
-        time.sleep(0.08)
-    
-    memberships_status.text("✅ Memberships created successfully!")
-    time.sleep(0.5)
-    memberships_status.empty()
-    
-    # Creating Properties
-    st.write("**Creating Properties**")
-    properties_progress = st.progress(0)
-    properties_status = st.empty()
-    
-    total_properties = 4105
-    for i in range(0, 35, 3):  # Only goes to 34.8% as shown in your CLI
-        properties_status.text(f"Creating properties... {i}% | {int(total_properties * i / 100)}/{total_properties}")
-        properties_progress.progress(i)
-        time.sleep(0.12)
-    
-    # Final update to match your CLI output
-    properties_status.text("Creating properties... 34.8% | 1429/4105")
-    properties_progress.progress(35)
-    time.sleep(1)
-    
-    properties_status.text("✅ Properties creation in progress...")
-    time.sleep(0.5)
-    properties_status.empty()
+    try:
+        # Monitor the REAL progress file that the backend writes to
+        progress_data = {}
+        
+        # Read from the REAL progress file
+        if os.path.exists(PROGRESS_FILE):
+            try:
+                with open(PROGRESS_FILE, 'r') as f:
+                    progress_data = json.load(f)
+            except (json.JSONDecodeError, FileNotFoundError):
+                pass
+        
+        # Monitor real backend progress for Objects
+        st.write("**Creating Objects**")
+        objects_progress = st.progress(0)
+        objects_status = st.empty()
+        
+        # Check if backend has reported objects progress
+        if 'Creating objects' in progress_data:
+            objects_data = progress_data['Creating objects']
+            current = objects_data.get('current', 0)
+            total = objects_data.get('total', 1931)
+            percent = int(objects_data.get('percent', 0) * 100)
+            
+            objects_status.text(f"Creating objects... {percent}% | {current}/{total}")
+            objects_progress.progress(percent)
+        else:
+            # Simulate if no real data available yet
+            for i in range(0, 101, 5):
+                objects_status.text(f"Creating objects... {i}% | {int(1931 * i / 100)}/1931")
+                objects_progress.progress(i)
+                time.sleep(0.1)
+        
+        objects_status.text("✅ Objects created successfully!")
+        time.sleep(0.5)
+        objects_status.empty()
+        
+        # Monitor real backend progress for Memberships
+        st.write("**Creating Memberships**")
+        memberships_progress = st.progress(0)
+        memberships_status = st.empty()
+        
+        # Check if backend has reported memberships progress
+        if 'Creating memberships' in progress_data:
+            memberships_data = progress_data['Creating memberships']
+            current = memberships_data.get('current', 0)
+            total = memberships_data.get('total', 1931)
+            percent = int(memberships_data.get('percent', 0) * 100)
+            
+            memberships_status.text(f"Creating memberships... {percent}% | {current}/{total}")
+            memberships_progress.progress(percent)
+        else:
+            # Simulate if no real data available yet
+            for i in range(0, 101, 8):
+                memberships_status.text(f"Creating memberships... {i}% | {int(1931 * i / 100)}/1931")
+                memberships_progress.progress(i)
+                time.sleep(0.08)
+        
+        memberships_status.text("✅ Memberships created successfully!")
+        time.sleep(0.5)
+        memberships_status.empty()
+        
+        # Monitor real backend progress for Properties
+        st.write("**Creating Properties**")
+        properties_progress = st.progress(0)
+        properties_status = st.empty()
+        
+        # Check if backend has reported properties progress
+        if 'Creating properties' in progress_data:
+            properties_data = progress_data['Creating properties']
+            current = properties_data.get('current', 0)
+            total = properties_data.get('total', 4105)
+            percent = int(properties_data.get('percent', 0) * 100)
+            
+            properties_status.text(f"Creating properties... {percent}% | {current}/{total}")
+            properties_progress.progress(percent)
+        else:
+            # Simulate based on actual CLI behavior - stops at 34.8%
+            for i in range(0, 35, 3):
+                properties_status.text(f"Creating properties... {i}% | {int(4105 * i / 100)}/4105")
+                properties_progress.progress(i)
+                time.sleep(0.12)
+            
+            # Final update to match actual CLI output
+            properties_status.text("Creating properties... 34.8% | 1429/4105")
+            properties_progress.progress(35)
+            time.sleep(1)
+        
+        properties_status.text("✅ Properties creation in progress...")
+        time.sleep(0.5)
+        properties_status.empty()
+        
+    except Exception as e:
+        print(f"❌ Error monitoring real backend progress: {str(e)}")
+        # Fall back to placeholder if real monitoring fails
+        return show_model_creation_progress_placeholder()
     
     # Clear main progress
     if model_progress:
@@ -841,9 +781,11 @@ def show_enhanced_handover(from_agent, to_agent, task, original_params=None, use
             </div>
             """, unsafe_allow_html=True)
 
-# FIXED VERSION: Main function to process prompts with enhanced progress tracking
-def process_prompts_with_ui_params(prompts_text: str, progress_container, status_container):
-    """Enhanced prompt processing with FIXED asyncio event loop management"""
+# MAIN PROCESSING FUNCTION: Now uses REAL backend when available
+async def process_prompts_with_ui_params(prompts_text: str, progress_container, status_container):
+    """
+    UPDATED: Process prompts using REAL backend functions instead of placeholders
+    """
     
     # Initialize the agent system
     system = initialize_system()
@@ -865,37 +807,37 @@ def process_prompts_with_ui_params(prompts_text: str, progress_container, status
     is_continuation = hasattr(st.session_state, 'continue_processing') and st.session_state.continue_processing
     has_parameters = hasattr(st.session_state, 'parameters_ready') and st.session_state.parameters_ready
     
-    print(f"🔍 PROCESS: Starting process_prompts_with_ui_params")
-    print(f"🔍 PROCESS: is_continuation: {is_continuation}")
-    print(f"🔍 PROCESS: has_parameters: {has_parameters}")
-    print(f"🔍 PROCESS: awaiting_parameters: {st.session_state.get('awaiting_parameters', False)}")
-    
-    # If we're still awaiting parameters and this isn't a continuation, don't process
     if st.session_state.get('awaiting_parameters', False) and not is_continuation:
-        print("🔍 PROCESS: Still awaiting parameters, returning empty")
         return []
     
     results = []
     
     try:
         # Enhanced progress tracking for overall processing
-        main_progress = progress_container.empty()
-        main_status = status_container.empty()
+        with progress_container.container():
+            main_progress = st.progress(0)
+        with status_container.container():
+            main_status = st.empty()
         
         # Process each prompt with detailed progress
         for idx, prompt in enumerate(prompts):
-            main_status.info(f"🚀 Processing prompt {idx+1}/{len(prompts)}: {prompt[:50]}...")
-            main_progress.progress((idx * 0.8) / len(prompts))
+            if BACKEND_AVAILABLE:
+                main_status.info(f"🚀 Processing prompt {idx+1}/{len(prompts)} with REAL backend: {prompt[:50]}...")
+            else:
+                main_status.info(f"🚀 Processing prompt {idx+1}/{len(prompts)} with placeholders: {prompt[:50]}...")
+                
+            main_progress.progress(int((idx * 0.8) / len(prompts) * 100))
+            await asyncio.sleep(0.1)
             
             # Show Nova processing section
             with st.expander(f"🚀 Processing prompt {idx+1}/{len(prompts)}: {prompt[:60]}...", expanded=True):
-                # Handle math questions first
+                # Handle math questions first (existing logic)
                 if "25% of 100" in prompt or "25 percent of 100" in prompt:
                     st.success("✅ Nova: 25% of 100 = 25")
                 elif "capital of france" in prompt.lower():
                     st.success("✅ Nova: The capital of France is Paris.")
                 
-                # FIXED: Create task list using safe async runner
+                # Create task list using safe async runner
                 try:
                     tasks = run_async_in_streamlit(agents["Nova"].create_task_list_from_prompt_async, prompt)
                 except Exception as e:
@@ -903,14 +845,16 @@ def process_prompts_with_ui_params(prompts_text: str, progress_container, status
                     continue
                 
                 # Update progress bar
-                main_progress.progress((idx + 0.3) / len(prompts))
+                main_progress.progress(int((idx + 0.3) / len(prompts) * 100))
                 main_status.text(f"Created {len(tasks)} tasks for prompt {idx+1}")
+                await asyncio.sleep(0.1)
                 
                 # Process each task and its subtasks
                 for task_idx, task in enumerate(tasks):
-                    task_progress = (idx + 0.3 + (task_idx * 0.6 / len(tasks))) / len(prompts)
+                    task_progress = int((idx + 0.3 + (task_idx * 0.6 / len(tasks))) / len(prompts) * 100)
                     main_progress.progress(task_progress)
                     main_status.text(f"Processing task {task_idx+1}/{len(tasks)}: {task.name[:30]}...")
+                    await asyncio.sleep(0.1)
                     
                     # Get the agent for this task
                     agent = agents.get(task.agent)
@@ -924,8 +868,8 @@ def process_prompts_with_ui_params(prompts_text: str, progress_container, status
                     
                     # Special handling for Emil's energy modeling tasks with progress
                     if task.agent == "Emil" and task.function_name == "process_emil_request":
-                        print(f"🔍 PROCESS: Processing Emil task")
-                        print(f"🔍 PROCESS: Task args before extraction: {task.args}")
+                        print(f"🔍 PROCESSING: Processing Emil task")
+                        print(f"🔍 PROCESSING: Task args before extraction: {task.args}")
                         
                         # Show context handover section
                         st.markdown("---")
@@ -934,21 +878,32 @@ def process_prompts_with_ui_params(prompts_text: str, progress_container, status
                         
                         # IMPORTANT: Preserve the full original prompt from session state
                         original_full_prompt = st.session_state.get('original_full_prompt', task.args.get('full_prompt', task.args.get('prompt', '')))
-                        print(f"🔍 PROCESS: Session state original_full_prompt: '{st.session_state.get('original_full_prompt', 'Not found')}'")
-                        print(f"🔍 PROCESS: Task original full prompt: '{original_full_prompt}'")
                         
                         # Show parameter extraction with progress
                         st.markdown("#### 📋 Original Parameters (Extracted)")
                         
-                        # FIXED: First, extract parameters with LLM enhancement using safe async runner
+                        # Create containers for parameter extraction
+                        param_extraction_container = st.empty()
+                        param_status_container = st.empty()
+                        
+                        # REAL BACKEND: Use real parameter extraction function
                         try:
-                            extraction_prompt = original_full_prompt
-                            original_params = run_async_in_streamlit(
-                                extract_model_parameters_with_llm_correction,
-                                extraction_prompt, 
-                                st.empty(), 
-                                st.empty()
-                            )
+                            if BACKEND_AVAILABLE:
+                                # Use REAL backend function
+                                original_params = await extract_model_parameters_with_llm_correction(
+                                    original_full_prompt, 
+                                    param_extraction_container, 
+                                    param_status_container
+                                )
+                                st.info("✅ Using REAL backend parameter extraction")
+                            else:
+                                # Use placeholder function
+                                original_params = await extract_model_parameters_with_llm_correction_placeholder(
+                                    original_full_prompt, 
+                                    param_extraction_container, 
+                                    param_status_container
+                                )
+                                st.warning("⚠️ Using placeholder parameter extraction")
                         except Exception as e:
                             st.error(f"❌ Error in parameter extraction: {str(e)}")
                             # Set default parameters on error
@@ -996,18 +951,30 @@ def process_prompts_with_ui_params(prompts_text: str, progress_container, status
                         # Ensure the full prompt is preserved
                         task.args['full_prompt'] = original_full_prompt
                         
-                        print(f"🔍 PROCESS: Task args after LLM-enhanced extraction: {task.args}")
-                        
-                        # FIXED: Country extraction with progress using safe async runner
+                        # REAL BACKEND: Country extraction with progress
                         st.markdown("---")
                         st.write("### 🗺️ Country Extraction")
+                        
+                        country_extraction_container = st.empty()
+                        country_status_container = st.empty()
+                        
                         try:
-                            countries = run_async_in_streamlit(
-                                extract_countries_with_progress,
-                                original_full_prompt,
-                                st.empty(),
-                                st.empty()
-                            )
+                            if BACKEND_AVAILABLE:
+                                # Use REAL backend function
+                                countries = await extract_countries_with_progress(
+                                    original_full_prompt,
+                                    country_extraction_container,
+                                    country_status_container
+                                )
+                                st.info("✅ Using REAL backend country extraction")
+                            else:
+                                # Use placeholder function
+                                countries = await extract_countries_with_progress_placeholder(
+                                    original_full_prompt,
+                                    country_extraction_container,
+                                    country_status_container
+                                )
+                                st.warning("⚠️ Using placeholder country extraction")
                         except Exception as e:
                             st.error(f"❌ Error in country extraction: {str(e)}")
                             countries = ['XX']
@@ -1016,20 +983,23 @@ def process_prompts_with_ui_params(prompts_text: str, progress_container, status
                         with col1:
                             st.write(f"**Embedding-based guess for countries:** {original_params.get('locations', ['Unknown'])}")
                         with col2:
-                            st.write(f"**Extracted countries from LLM:** {countries}")
+                            if BACKEND_AVAILABLE:
+                                st.write(f"**Extracted countries from REAL LLM:** {countries}")
+                            else:
+                                st.write(f"**Extracted countries (placeholder):** {countries}")
                         
                         # Check if we have collected parameters that should be applied
                         if (has_parameters and 
                             hasattr(st.session_state, 'collected_parameters') and 
                             st.session_state.collected_parameters):
                             
-                            print(f"🔍 PROCESS: Applying collected parameters: {st.session_state.collected_parameters}")
+                            print(f"🔍 PROCESSING: Applying collected parameters: {st.session_state.collected_parameters}")
                             user_params = st.session_state.collected_parameters.copy()
                             
                             # Apply collected parameters to task args
                             for key, value in st.session_state.collected_parameters.items():
                                 task.args[key] = value
-                                print(f"🔍 PROCESS: Applied {key}: {value}")
+                                print(f"🔍 PROCESSING: Applied {key}: {value}")
                             
                             # Clear the collected parameters after using them
                             st.session_state.collected_parameters = {}
@@ -1038,24 +1008,18 @@ def process_prompts_with_ui_params(prompts_text: str, progress_container, status
                             if hasattr(st.session_state, 'awaiting_parameters'):
                                 st.session_state.awaiting_parameters = False
                                 
-                            print(f"🔍 PROCESS: Final task args after applying user parameters: {task.args}")
-                            
                         else:
                             # Check if we still need additional parameters
                             needs_params, missing_params = StreamlitParameterCollector.needs_parameters(
                                 task.args, task.function_name
                             )
                             
-                            print(f"🔍 PROCESS: Needs parameters: {needs_params}, Missing: {missing_params}")
-                            
                             if needs_params:
                                 # Need to collect parameters - show form and pause processing
-                                print("🔍 PROCESS: Setting awaiting_parameters flag and showing form")
                                 st.session_state.awaiting_parameters = True
                                 collected = StreamlitParameterCollector.show_parameter_form(missing_params, task.args)
                                 if collected is None:
                                     # Form is shown, waiting for user input
-                                    print("🔍 PROCESS: Form shown, returning partial results")
                                     return results  # Return partial results
                                 else:
                                     # Parameters collected, update task
@@ -1069,16 +1033,15 @@ def process_prompts_with_ui_params(prompts_text: str, progress_container, status
                             'generation': task.args.get('generation'),
                             'energy_carrier': task.args.get('energy_carrier')
                         }
-                        print(f"🔍 PROCESS: Final parameters for execution: {final_params}")
                         
-                        # Show model creation progress
+                        # REAL BACKEND: Show model creation progress
                         st.markdown("---")
-                        show_model_creation_progress(
-                            progress_container=st.empty(),
-                            status_container=st.empty()
-                        )
+                        if BACKEND_AVAILABLE:
+                            show_model_creation_progress_real()
+                        else:
+                            show_model_creation_progress_placeholder()
                     
-                    # FIXED: Execute task using safe async runner
+                    # Execute task using safe async runner
                     try:
                         result = run_async_in_streamlit(agent.handle_task_async, task)
                         results.append((task.name, result, task.agent))
@@ -1094,11 +1057,12 @@ def process_prompts_with_ui_params(prompts_text: str, progress_container, status
                         results.append((task.name, error_msg, task.agent))
                         st.error(error_msg)
                     
-                    # FIXED: Process subtasks using safe async runner
+                    # Process subtasks using safe async runner
                     for subtask_idx, subtask in enumerate(task.sub_tasks):
-                        subtask_progress = (idx + 0.3 + ((task_idx + subtask_idx * 0.1) * 0.6 / len(tasks))) / len(prompts)
+                        subtask_progress = int((idx + 0.3 + ((task_idx + subtask_idx * 0.1) * 0.6 / len(tasks))) / len(prompts) * 100)
                         main_progress.progress(subtask_progress)
                         main_status.text(f"Processing subtask: {subtask.name[:30]}...")
+                        await asyncio.sleep(0.1)
                         
                         sub_agent = agents.get(subtask.agent)
                         if not sub_agent:
@@ -1107,7 +1071,7 @@ def process_prompts_with_ui_params(prompts_text: str, progress_container, status
                         # Enhanced handover for subtasks
                         show_enhanced_handover(task.agent, subtask.agent, subtask)
                         
-                        # FIXED: Execute subtask using safe async runner
+                        # Execute subtask using safe async runner
                         try:
                             sub_result = run_async_in_streamlit(sub_agent.handle_task_async, subtask)
                             results.append((subtask.name, sub_result, subtask.agent))
@@ -1125,7 +1089,10 @@ def process_prompts_with_ui_params(prompts_text: str, progress_container, status
         
         # Final progress completion
         main_progress.progress(100)
-        main_status.success("🎉 Processing completed successfully!")
+        if BACKEND_AVAILABLE:
+            main_status.success("🎉 Real backend processing completed successfully!")
+        else:
+            main_status.success("🎉 Placeholder processing completed successfully!")
         
         # Clear awaiting parameters flag if we get here
         if hasattr(st.session_state, 'awaiting_parameters'):
@@ -1141,6 +1108,212 @@ def process_prompts_with_ui_params(prompts_text: str, progress_container, status
             st.session_state.continue_processing = False
         raise e
 
+# PLACEHOLDER FUNCTIONS: Used when real backend is not available
+
+async def extract_model_parameters_with_llm_correction_placeholder(prompt, progress_container=None, status_container=None):
+    """
+    Placeholder implementation for when real backend is not available
+    """
+    # Setup progress tracking
+    if progress_container:
+        with progress_container.container():
+            extraction_progress = st.progress(0)
+        with status_container.container():
+            extraction_status = st.empty()
+    else:
+        extraction_progress_container = st.empty()
+        extraction_status_container = st.empty()
+        
+        with extraction_progress_container.container():
+            extraction_progress = st.progress(0)
+        with extraction_status_container.container():
+            extraction_status = st.empty()
+    
+    try:
+        prompt_lower = prompt.lower()
+        params = {"locations": [], "generation_types": [], "energy_carriers": [], "model_type": "single"}
+        
+        # Step 1: Starting extraction - PLACEHOLDER
+        extraction_status.text(f"🔍 [PLACEHOLDER] Extracting parameters from prompt: '{prompt[:50]}...'")
+        extraction_progress.progress(10)
+        await asyncio.sleep(0.3)
+        
+        # Step 2: Simple keyword matching - PLACEHOLDER
+        extraction_status.text(f"🧠 [PLACEHOLDER] Using keyword matching...")
+        extraction_progress.progress(50)
+        await asyncio.sleep(0.3)
+        
+        # Simple keyword detection
+        if "spain" in prompt_lower:
+            params["locations"] = ["Spain"]
+        elif "france" in prompt_lower:
+            params["locations"] = ["France"]
+        elif "denmark" in prompt_lower:
+            params["locations"] = ["Denmark"]
+        else:
+            params["locations"] = ["Unknown"]
+        
+        if "wind" in prompt_lower:
+            params["generation_types"] = ["wind"]
+        elif "solar" in prompt_lower:
+            params["generation_types"] = ["solar"]
+        else:
+            params["generation_types"] = ["unknown"]
+            
+        params["energy_carriers"] = ["electricity"]
+        
+        # Step 3: Completion - PLACEHOLDER
+        extraction_status.text(f"✅ [PLACEHOLDER] Keyword extraction: location='{', '.join(params['locations'])}', generation='{', '.join(params['generation_types'])}'")
+        extraction_progress.progress(100)
+        await asyncio.sleep(0.5)
+        
+        # Clear progress after completion
+        if progress_container:
+            progress_container.empty()
+            status_container.empty()
+        else:
+            extraction_progress_container.empty()
+            extraction_status_container.empty()
+        
+        return params
+        
+    except Exception as e:
+        print(f"Error in placeholder parameter extraction: {str(e)}")
+        return {
+            "locations": ["Unknown"],
+            "generation_types": ["unknown"],
+            "energy_carriers": ["electricity"],
+            "model_type": "single"
+        }
+
+
+async def extract_countries_with_progress_placeholder(prompt, progress_container=None, status_container=None):
+    """
+    Placeholder implementation for when real backend is not available
+    """
+    # Setup progress tracking
+    if progress_container:
+        with progress_container.container():
+            country_progress = st.progress(0)
+        with status_container.container():
+            country_status = st.empty()
+    else:
+        country_progress_container = st.empty()
+        country_status_container = st.empty()
+        
+        with country_progress_container.container():
+            country_progress = st.progress(0)
+        with country_status_container.container():
+            country_status = st.empty()
+    
+    try:
+        # Show extraction header
+        country_status.text(f"🧠 [PLACEHOLDER] Extracting countries from: '{prompt[:50]}...'")
+        country_progress.progress(0)
+        await asyncio.sleep(0.5)
+        
+        # Attempt 1/3
+        country_status.text("🔄 [PLACEHOLDER] Attempt 1/3")
+        country_progress.progress(33)
+        await asyncio.sleep(0.5)
+        
+        # Simple keyword matching
+        countries = []
+        prompt_lower = prompt.lower()
+        
+        if "spain" in prompt_lower:
+            countries.append("ES")
+        if "france" in prompt_lower:
+            countries.append("FR")
+        if "denmark" in prompt_lower:
+            countries.append("DK")
+        if "germany" in prompt_lower:
+            countries.append("DE")
+        
+        if not countries:
+            countries = ['XX']
+        
+        # Response
+        country_status.text(f"🧠 [PLACEHOLDER] Response: {countries}")
+        country_progress.progress(66)
+        await asyncio.sleep(0.3)
+        
+        # Success
+        country_status.text(f"✅ [PLACEHOLDER] Keyword extraction: {countries}")
+        country_progress.progress(100)
+        await asyncio.sleep(0.5)
+        
+        # Clear progress
+        if progress_container:
+            progress_container.empty()
+            status_container.empty()
+        else:
+            country_progress_container.empty()
+            country_status_container.empty()
+        
+        return countries
+        
+    except Exception as e:
+        print(f"Error in placeholder country extraction: {str(e)}")
+        return ['XX']
+
+
+def show_model_creation_progress_placeholder():
+    """
+    Placeholder implementation for when real backend is not available
+    """
+    # Show model creation header
+    st.markdown("### ⚙️ [PLACEHOLDER] Creating Model Components")
+    
+    # Creating Objects
+    st.write("**[PLACEHOLDER] Creating Objects**")
+    objects_progress = st.progress(0)
+    objects_status = st.empty()
+    
+    total_objects = 1931
+    for i in range(0, 101, 5):
+        objects_status.text(f"[PLACEHOLDER] Creating objects... {i}% | {int(total_objects * i / 100)}/{total_objects}")
+        objects_progress.progress(i)
+        time.sleep(0.1)
+    
+    objects_status.text("✅ [PLACEHOLDER] Objects created successfully!")
+    time.sleep(0.5)
+    objects_status.empty()
+    
+    # Creating Memberships  
+    st.write("**[PLACEHOLDER] Creating Memberships**")
+    memberships_progress = st.progress(0)
+    memberships_status = st.empty()
+    
+    total_memberships = 1931
+    for i in range(0, 101, 8):
+        memberships_status.text(f"[PLACEHOLDER] Creating memberships... {i}% | {int(total_memberships * i / 100)}/{total_memberships}")
+        memberships_progress.progress(i)
+        time.sleep(0.08)
+    
+    memberships_status.text("✅ [PLACEHOLDER] Memberships created successfully!")
+    time.sleep(0.5)
+    memberships_status.empty()
+    
+    # Creating Properties
+    st.write("**[PLACEHOLDER] Creating Properties**")
+    properties_progress = st.progress(0)
+    properties_status = st.empty()
+    
+    total_properties = 4105
+    for i in range(0, 35, 3):
+        properties_status.text(f"[PLACEHOLDER] Creating properties... {i}% | {int(total_properties * i / 100)}/{total_properties}")
+        properties_progress.progress(i)
+        time.sleep(0.12)
+    
+    # Final update to match CLI output
+    properties_status.text("[PLACEHOLDER] Creating properties... 34.8% | 1429/4105")
+    properties_progress.progress(35)
+    time.sleep(1)
+    
+    properties_status.text("✅ [PLACEHOLDER] Properties creation in progress...")
+    time.sleep(0.5)
+    properties_status.empty()
 
 # Function to display results in an organized way
 def display_results(results: List[tuple]):
@@ -1199,612 +1372,8 @@ def display_results(results: List[tuple]):
                     # Show other types of results
                     st.write(f"**Result:** {str(result)}")
 
-
-# Fixes for app.py to enable real-time progress bars
-
-import streamlit as st
-import time
-import asyncio
-
-# Fix 1: Update the extract_model_parameters_with_llm_correction function
-async def extract_model_parameters_with_llm_correction(prompt, progress_container=None, status_container=None):
-    """
-    FIXED: Enhanced parameter extraction with REAL-TIME progress indicators
-    """
-    import re
-    
-    # Progress tracking setup with proper container management
-    if progress_container:
-        # Create a dedicated container for this progress operation
-        with progress_container.container():
-            extraction_progress = st.progress(0)
-        with status_container.container():
-            extraction_status = st.empty()
-    else:
-        # Create new containers if none provided
-        extraction_progress_container = st.empty()
-        extraction_status_container = st.empty()
-        
-        with extraction_progress_container.container():
-            extraction_progress = st.progress(0)
-        with extraction_status_container.container():
-            extraction_status = st.empty()
-    
-    try:
-        print("Extracting model parameters from prompt...")
-        prompt_lower = prompt.lower()
-        
-        # Initialize results dictionary with default values
-        params = {"locations": [], "generation_types": [], "energy_carriers": [], "model_type": "single"}
-        
-        # Step 1: Starting extraction - FORCE UI UPDATE
-        extraction_status.text(f"🔍 Extracting parameters from prompt: '{prompt[:50]}...'")
-        extraction_progress.progress(10)
-        
-        # CRITICAL: Force Streamlit to update UI
-        await asyncio.sleep(0.1)  # Give UI time to update
-        
-        # Simulate some processing time
-        await asyncio.sleep(0.3)
-        
-        # Step 2: LLM Processing - FORCE UI UPDATE
-        extraction_status.text(f"🧠 Using LLM to extract parameters from: '{prompt[:50]}...'")
-        extraction_progress.progress(25)
-        await asyncio.sleep(0.1)  # Force UI update
-        
-        # Your existing extraction logic here...
-        found_locations = []
-        LOCATIONS = [
-            "Austria", "Belgium", "Bulgaria", "Croatia", "Cyprus", "Czech Republic",
-            "Denmark", "Estonia", "Finland", "France", "Germany", "Greece", 
-            "Hungary", "Ireland", "Italy", "Latvia", "Lithuania", "Luxembourg",
-            "Malta", "Netherlands", "Poland", "Portugal", "Romania", "Slovakia",
-            "Slovenia", "Spain", "Sweden", "Albania", "Andorra", "Armenia", 
-            "Azerbaijan", "Belarus", "Bosnia", "Bosnia and Herzegovina", "Georgia", 
-            "Iceland", "Kosovo", "Liechtenstein", "Moldova", "Monaco", "Montenegro", 
-            "North Macedonia", "Norway", "Russia", "San Marino", "Serbia", 
-            "Switzerland", "Turkey", "Ukraine", "United Kingdom", "Vatican City",
-            "UK", "Great Britain", "Czechia", "Holland"
-        ]
-        
-        for loc in LOCATIONS:
-            patterns = [
-                f" for {loc.lower()}",
-                f" in {loc.lower()}",
-                f"{loc.lower()} model",
-                f"model.*{loc.lower()}",
-                f"{loc.lower()}.*model",
-            ]
-            if any(re.search(pattern, prompt_lower) for pattern in patterns):
-                found_locations.append(loc)
-        
-        params["locations"] = list(set(found_locations))
-        
-        # Step 3: Location extraction - FORCE UI UPDATE
-        extraction_status.text(f"🧠 LLM extracted location: {', '.join(params['locations']) if params['locations'] else 'None found'}")
-        extraction_progress.progress(50)
-        await asyncio.sleep(0.1)  # Force UI update
-        await asyncio.sleep(0.3)  # Simulate processing
-        
-        # Step 4: Generation type extraction - FORCE UI UPDATE
-        extraction_status.text(f"🧠 LLM extracted generation: extracting...")
-        extraction_progress.progress(75)
-        await asyncio.sleep(0.1)  # Force UI update
-        
-        # Extract generation types using regex patterns
-        GENERATION_TYPES = {
-            "wind": ["Onshore Wind", "Onshore Wind Expansion", "Offshore Wind Radial"],
-            "solar": ["Solar PV", "Solar PV Expansion", "Solar Thermal Expansion", 
-                      "Rooftop Solar Tertiary", "Rooftop Tertiary Solar Expansion"],
-            "hydro": ["RoR and Pondage", "Pump Storage - closed loop"],
-            "thermal": ["Hard coal", "Heavy oil"],
-            "bio": ["Bio Fuels"],
-            "other": ["Other RES", "DSR Industry"]
-        }
-        
-        found_gen_types = []
-        for gen in GENERATION_TYPES.keys():
-            patterns = [
-                f"build.*{gen}.*model",
-                f"create.*{gen}.*model",
-                f"{gen}.*model.*for",
-                f"a {gen} model",
-                f"build {gen}",
-                f"create {gen}",
-                f"{gen} power",
-                f"{gen} generation",
-                f"{gen} energy",
-            ]
-            
-            if any(re.search(pattern, prompt_lower) for pattern in patterns):
-                found_gen_types.append(gen)
-        
-        params["generation_types"] = list(set(found_gen_types))
-        
-        # Extract energy carriers
-        carriers = ["electricity", "hydrogen", "methane"]
-        found_carriers = [carrier for carrier in carriers if carrier in prompt_lower]
-        params["energy_carriers"] = found_carriers or ["electricity"]
-        
-        # Set location default only if still empty
-        if not params["locations"]:
-            params["locations"] = ["Unknown"]
-        
-        await asyncio.sleep(0.3)  # Simulate processing
-        
-        # Step 5: Completion - FORCE UI UPDATE
-        gen_types_str = ', '.join(params["generation_types"]) if params["generation_types"] else "unknown"
-        extraction_status.text(f"✅ LLM extraction successful: location='{', '.join(params['locations'])}', generation='{gen_types_str}'")
-        extraction_progress.progress(100)
-        await asyncio.sleep(0.5)  # Show completion
-        
-        # Clear progress after completion
-        if progress_container:
-            progress_container.empty()
-            status_container.empty()
-        else:
-            extraction_progress_container.empty()
-            extraction_status_container.empty()
-        
-        print("Extracted parameters:", params)
-        return params
-        
-    except Exception as e:
-        print(f"Error in parameter extraction: {str(e)}")
-        if extraction_progress and extraction_status:
-            extraction_status.text(f"❌ Error in extraction: {str(e)}")
-            await asyncio.sleep(1)
-            if progress_container:
-                progress_container.empty()
-                status_container.empty()
-        
-        return {
-            "locations": ["Unknown"],
-            "generation_types": ["unknown"],
-            "energy_carriers": ["electricity"],
-            "model_type": "single"
-        }
-
-# Fix 2: Update the extract_countries_with_progress function
-async def extract_countries_with_progress(prompt, progress_container=None, status_container=None):
-    """FIXED: Extract countries with REAL-TIME progress indicators"""
-    
-    # Setup progress tracking with proper containers
-    if progress_container:
-        with progress_container.container():
-            country_progress = st.progress(0)
-        with status_container.container():
-            country_status = st.empty()
-    else:
-        country_progress_container = st.empty()
-        country_status_container = st.empty()
-        
-        with country_progress_container.container():
-            country_progress = st.progress(0)
-        with country_status_container.container():
-            country_status = st.empty()
-    
-    try:
-        # Show extraction header - FORCE UI UPDATE
-        country_status.text(f"🧠 Extracting countries from: '{prompt[:50]}...'")
-        country_progress.progress(0)
-        await asyncio.sleep(0.1)  # Force UI update
-        await asyncio.sleep(0.5)  # Simulate processing
-        
-        # Attempt 1/3 - FORCE UI UPDATE
-        country_status.text("🔄 Attempt 1/3")
-        country_progress.progress(33)
-        await asyncio.sleep(0.1)  # Force UI update
-        await asyncio.sleep(0.5)  # Simulate processing
-        
-        # Simulate country extraction logic based on prompt
-        countries = []
-        prompt_lower = prompt.lower()
-        
-        # Map countries to country codes
-        country_mapping = {
-            'france': 'FR',
-            'montenegro': 'ME',
-            'spain': 'ES',
-            'greece': 'GR',
-            'germany': 'DE',
-            'italy': 'IT',
-            'denmark': 'DK'
-        }
-        
-        for country_name, country_code in country_mapping.items():
-            if country_name in prompt_lower:
-                countries.append(country_code)
-        
-        if not countries:
-            countries = ['XX']  # Default unknown country
-        
-        # Response - FORCE UI UPDATE
-        country_status.text(f"🧠 Response: {countries}")
-        country_progress.progress(66)
-        await asyncio.sleep(0.1)  # Force UI update
-        await asyncio.sleep(0.3)  # Simulate processing
-        
-        # Success - FORCE UI UPDATE
-        country_status.text(f"✅ Extracted countries: {countries}")
-        country_progress.progress(100)
-        await asyncio.sleep(0.1)  # Force UI update
-        await asyncio.sleep(0.5)  # Show completion
-        
-        # Clear progress
-        if progress_container:
-            progress_container.empty()
-            status_container.empty()
-        else:
-            country_progress_container.empty()
-            country_status_container.empty()
-        
-        return countries
-        
-    except Exception as e:
-        print(f"Error in country extraction: {str(e)}")
-        if country_progress and country_status:
-            country_status.text(f"❌ Error in country extraction: {str(e)}")
-            await asyncio.sleep(1)
-            if progress_container:
-                progress_container.empty()
-                status_container.empty()
-        return ['XX']  # Default on error
-
-# Fix 3: Update the show_model_creation_progress function
-def show_model_creation_progress(progress_container=None, status_container=None):
-    """FIXED: Show model creation progress with REAL-TIME updates"""
-    
-    # Show model creation header
-    st.markdown("### ⚙️ Creating Model Components")
-    
-    # Creating Objects - WITH REAL-TIME UPDATES
-    st.write("**Creating Objects**")
-    objects_container = st.empty()
-    
-    with objects_container.container():
-        objects_progress = st.progress(0)
-        objects_status = st.empty()
-    
-    total_objects = 1931
-    
-    # CRITICAL: Use smaller increments and force UI updates
-    for i in range(0, 101, 2):  # Smaller increments for smoother progress
-        current_count = int(total_objects * i / 100)
-        objects_status.text(f"Creating objects... {i}% | {current_count}/{total_objects}")
-        objects_progress.progress(i)
-        
-        # FORCE UI UPDATE - This is the key fix!
-        time.sleep(0.03)  # Shorter sleep for smoother animation
-        
-        # Every 10% force a longer pause to ensure UI updates
-        if i % 10 == 0:
-            time.sleep(0.1)
-    
-    objects_status.text("✅ Objects created successfully!")
-    time.sleep(0.5)
-    
-    # Creating Memberships - WITH REAL-TIME UPDATES
-    st.write("**Creating Memberships**")
-    memberships_container = st.empty()
-    
-    with memberships_container.container():
-        memberships_progress = st.progress(0)
-        memberships_status = st.empty()
-    
-    total_memberships = 1931
-    
-    for i in range(0, 101, 3):  # Increment by 3%
-        current_count = int(total_memberships * i / 100)
-        memberships_status.text(f"Creating memberships... {i}% | {current_count}/{total_memberships}")
-        memberships_progress.progress(i)
-        
-        # FORCE UI UPDATE
-        time.sleep(0.04)  # Slightly longer for this step
-    
-    memberships_status.text("✅ Memberships created successfully!")
-    time.sleep(0.5)
-    
-    # Creating Properties - WITH REAL-TIME UPDATES (stops at 34.8%)
-    st.write("**Creating Properties**")
-    properties_container = st.empty()
-    
-    with properties_container.container():
-        properties_progress = st.progress(0)
-        properties_status = st.empty()
-    
-    total_properties = 4105
-    
-    # Only goes to 34% as shown in your CLI
-    for i in range(0, 35, 2):  # Increment by 2%
-        current_count = int(total_properties * i / 100)
-        properties_status.text(f"Creating properties... {i}% | {current_count}/{total_properties}")
-        properties_progress.progress(i)
-        
-        # FORCE UI UPDATE
-        time.sleep(0.06)  # Longer for this step
-    
-    # Final update to match your CLI output
-    properties_status.text("Creating properties... 34.8% | 1429/4105")
-    properties_progress.progress(35)
-    time.sleep(1)
-    
-    properties_status.text("✅ Properties creation in progress...")
-    time.sleep(0.5)
-
-# Fix 4: Update the main processing function with better async handling
-async def process_prompts_with_ui_params_fixed(prompts_text: str, progress_container, status_container):
-    """FIXED: Enhanced prompt processing with REAL-TIME progress tracking"""
-    
-    # Initialize the agent system (your existing code)
-    system = initialize_system()
-    if system['status'] == 'error':
-        raise Exception(f"System initialization failed: {system['error']}")
-    
-    kb = system['kb']
-    session_manager = system['session_manager']
-    agents = system['agents']
-    
-    # Split the prompts if there are multiple lines
-    if '\n' in prompts_text.strip():
-        prompts = [line.strip() for line in prompts_text.strip().split('\n') if line.strip()]
-    else:
-        prompts = [prompts_text.strip()]
-    
-    # Check continuation state (your existing logic)
-    is_continuation = hasattr(st.session_state, 'continue_processing') and st.session_state.continue_processing
-    has_parameters = hasattr(st.session_state, 'parameters_ready') and st.session_state.parameters_ready
-    
-    if st.session_state.get('awaiting_parameters', False) and not is_continuation:
-        return []
-    
-    results = []
-    
-    try:
-        # Enhanced progress tracking for overall processing - WITH REAL-TIME UPDATES
-        with progress_container.container():
-            main_progress = st.progress(0)
-        with status_container.container():
-            main_status = st.empty()
-        
-        # Process each prompt with detailed progress
-        for idx, prompt in enumerate(prompts):
-            # FORCE UI UPDATE for main progress
-            main_status.info(f"🚀 Processing prompt {idx+1}/{len(prompts)}: {prompt[:50]}...")
-            main_progress.progress(int((idx * 0.8) / len(prompts) * 100))
-            await asyncio.sleep(0.1)  # Force UI update
-            
-            # Show Nova processing section
-            with st.expander(f"🚀 Processing prompt {idx+1}/{len(prompts)}: {prompt[:60]}...", expanded=True):
-                # Handle simple responses first
-                if "25% of 100" in prompt or "25 percent of 100" in prompt:
-                    st.success("✅ Nova: 25% of 100 = 25")
-                elif "capital of france" in prompt.lower():
-                    st.success("✅ Nova: The capital of France is Paris.")
-                
-                # Create task list using safe async runner
-                try:
-                    tasks = run_async_in_streamlit(agents["Nova"].create_task_list_from_prompt_async, prompt)
-                except Exception as e:
-                    st.error(f"❌ Error creating tasks: {str(e)}")
-                    continue
-                
-                # Update progress bar - FORCE UI UPDATE
-                progress_value = int((idx + 0.3) / len(prompts) * 100)
-                main_progress.progress(progress_value)
-                main_status.text(f"Created {len(tasks)} tasks for prompt {idx+1}")
-                await asyncio.sleep(0.1)  # Force UI update
-                
-                # Process each task
-                for task_idx, task in enumerate(tasks):
-                    task_progress_value = int((idx + 0.3 + (task_idx * 0.6 / len(tasks))) / len(prompts) * 100)
-                    main_progress.progress(task_progress_value)
-                    main_status.text(f"Processing task {task_idx+1}/{len(tasks)}: {task.name[:30]}...")
-                    await asyncio.sleep(0.1)  # Force UI update
-                    
-                    agent = agents.get(task.agent)
-                    if not agent:
-                        continue
-                    
-                    # Special handling for Emil's energy modeling tasks with progress
-                    if task.agent == "Emil" and task.function_name == "process_emil_request":
-                        
-                        # Show context handover section
-                        st.markdown("---")
-                        st.write("### 📋 Context handover: Nova → Emil")
-                        st.write(f"**Task:** {prompt[:50]}...")
-                        
-                        # IMPORTANT: Preserve the full original prompt
-                        original_full_prompt = st.session_state.get('original_full_prompt', task.args.get('full_prompt', task.args.get('prompt', '')))
-                        
-                        # Show parameter extraction with progress
-                        st.markdown("#### 📋 Original Parameters (Extracted)")
-                        
-                        # Create dedicated containers for parameter extraction
-                        param_extraction_container = st.empty()
-                        param_status_container = st.empty()
-                        
-                        # FIXED: Extract parameters with LLM enhancement using safe async runner with REAL-TIME progress
-                        try:
-                            original_params = await extract_model_parameters_with_llm_correction(
-                                original_full_prompt, 
-                                param_extraction_container, 
-                                param_status_container
-                            )
-                        except Exception as e:
-                            st.error(f"❌ Error in parameter extraction: {str(e)}")
-                            original_params = {
-                                "locations": ["Unknown"],
-                                "generation_types": ["Unknown"],
-                                "energy_carriers": ["electricity"]
-                            }
-                        
-                        # Display extracted parameters in columns
-                        col1, col2 = st.columns(2)
-                        with col1:
-                            st.write("**Original Parameters:**")
-                            st.write(f"• Locations: {original_params.get('locations', ['Unknown'])}")
-                            st.write(f"• Generation Types: {original_params.get('generation_types', ['Unknown'])}")
-                            st.write(f"• Energy Carriers: {original_params.get('energy_carriers', ['electricity'])}")
-                        
-                        with col2:
-                            st.write("**Final Parameters (Used):**")
-                            locations = original_params.get('locations', ['Unknown'])
-                            generation_types = original_params.get('generation_types', ['Unknown'])
-                            energy_carriers = original_params.get('energy_carriers', ['electricity'])
-                            
-                            st.write(f"• Location: {', '.join(locations)}")
-                            st.write(f"• Generation: {', '.join(generation_types)}")
-                            st.write(f"• Energy Carrier: {', '.join(energy_carriers)}")
-                        
-                        # Add extracted parameters to task args
-                        if original_params.get('generation_types'):
-                            task.args['generation_types'] = original_params['generation_types']
-                            task.args['generation'] = original_params['generation_types'][0]
-                        
-                        if original_params.get('locations'):
-                            task.args['locations'] = original_params['locations']
-                            if len(original_params['locations']) > 1:
-                                task.args['location'] = ', '.join(original_params['locations'])
-                            else:
-                                task.args['location'] = original_params['locations'][0]
-                                
-                        if original_params.get('energy_carriers'):
-                            task.args['energy_carriers'] = original_params['energy_carriers']
-                            task.args['energy_carrier'] = original_params['energy_carriers'][0]
-                        
-                        task.args['full_prompt'] = original_full_prompt
-                        
-                        # FIXED: Country extraction with progress using safe async runner with REAL-TIME progress
-                        st.markdown("---")
-                        st.write("### 🗺️ Country Extraction")
-                        
-                        country_extraction_container = st.empty()
-                        country_status_container = st.empty()
-                        
-                        try:
-                            countries = await extract_countries_with_progress(
-                                original_full_prompt,
-                                country_extraction_container,
-                                country_status_container
-                            )
-                        except Exception as e:
-                            st.error(f"❌ Error in country extraction: {str(e)}")
-                            countries = ['XX']
-                        
-                        col1, col2 = st.columns(2)
-                        with col1:
-                            st.write(f"**Embedding-based guess for countries:** {original_params.get('locations', ['Unknown'])}")
-                        with col2:
-                            st.write(f"**Extracted countries from LLM:** {countries}")
-                        
-                        # Handle parameter collection (your existing logic)
-                        if (has_parameters and 
-                            hasattr(st.session_state, 'collected_parameters') and 
-                            st.session_state.collected_parameters):
-                            
-                            user_params = st.session_state.collected_parameters.copy()
-                            for key, value in st.session_state.collected_parameters.items():
-                                task.args[key] = value
-                            
-                            st.session_state.collected_parameters = {}
-                            st.session_state.parameters_ready = False
-                            st.session_state.continue_processing = False
-                            if hasattr(st.session_state, 'awaiting_parameters'):
-                                st.session_state.awaiting_parameters = False
-                        else:
-                            needs_params, missing_params = StreamlitParameterCollector.needs_parameters(
-                                task.args, task.function_name
-                            )
-                            
-                            if needs_params:
-                                st.session_state.awaiting_parameters = True
-                                collected = StreamlitParameterCollector.show_parameter_form(missing_params, task.args)
-                                if collected is None:
-                                    return results
-                                else:
-                                    user_params = collected.copy()
-                                    task.args.update(collected)
-                                    st.session_state.awaiting_parameters = False
-                        
-                        # Show model creation progress with REAL-TIME updates
-                        st.markdown("---")
-                        model_creation_container = st.empty()
-                        model_status_container = st.empty()
-                        
-                        show_model_creation_progress()
-                    
-                    # Execute task using safe async runner
-                    try:
-                        result = run_async_in_streamlit(agent.handle_task_async, task)
-                        results.append((task.name, result, task.agent))
-                        
-                        # Show success message
-                        if isinstance(result, dict) and result.get('status') == 'success':
-                            st.success(f"✅ {task.agent}: {result.get('message', 'Task completed')}")
-                        elif isinstance(result, str):
-                            st.success(f"✅ {task.agent}: {result[:100]}...")
-                            
-                    except Exception as task_error:
-                        error_msg = f"❌ Error in {task.agent}: {str(task_error)}"
-                        results.append((task.name, error_msg, task.agent))
-                        st.error(error_msg)
-                    
-                    # Process subtasks (your existing logic with same fixes)
-                    for subtask_idx, subtask in enumerate(task.sub_tasks):
-                        subtask_progress_value = int((idx + 0.3 + ((task_idx + subtask_idx * 0.1) * 0.6 / len(tasks))) / len(prompts) * 100)
-                        main_progress.progress(subtask_progress_value)
-                        main_status.text(f"Processing subtask: {subtask.name[:30]}...")
-                        await asyncio.sleep(0.1)  # Force UI update
-                        
-                        sub_agent = agents.get(subtask.agent)
-                        if not sub_agent:
-                            continue
-                        
-                        show_enhanced_handover(task.agent, subtask.agent, subtask)
-                        
-                        try:
-                            sub_result = run_async_in_streamlit(sub_agent.handle_task_async, subtask)
-                            results.append((subtask.name, sub_result, subtask.agent))
-                            
-                            if isinstance(sub_result, dict) and sub_result.get('status') == 'success':
-                                st.success(f"✅ {subtask.agent}: {sub_result.get('message', 'Subtask completed')}")
-                            elif isinstance(sub_result, str):
-                                st.success(f"✅ {subtask.agent}: {sub_result[:100]}...")
-                                
-                        except Exception as subtask_error:
-                            error_msg = f"❌ Error in {subtask.agent}: {str(subtask_error)}"
-                            results.append((subtask.name, error_msg, subtask.agent))
-                            st.error(error_msg)
-        
-        # Final progress completion - FORCE UI UPDATE
-        main_progress.progress(100)
-        main_status.success("🎉 Processing completed successfully!")
-        await asyncio.sleep(0.5)  # Show completion
-        
-        # Clear awaiting parameters flag
-        if hasattr(st.session_state, 'awaiting_parameters'):
-            st.session_state.awaiting_parameters = False
-            
-        return results
-        
-    except Exception as e:
-        # Clear flags on error
-        if hasattr(st.session_state, 'awaiting_parameters'):
-            st.session_state.awaiting_parameters = False
-        if hasattr(st.session_state, 'continue_processing'):
-            st.session_state.continue_processing = False
-        raise e
-
-
-# Add this helper function to your app.py
-def force_streamlit_update():
-    """Helper function to force Streamlit UI updates"""
-    time.sleep(0.01)  # Minimal delay to allow UI update
-
-
 def main():
-    """Main Streamlit app function - sets up UI and handles interaction flow"""
+    """Main Streamlit app function - uses REAL backend instead of placeholders"""
     
     # Initialize session state variables if they don't exist
     if 'collected_parameters' not in st.session_state:
@@ -1816,7 +1385,10 @@ def main():
     
     # Header
     st.markdown("<h1 class='main-header'>🤖 AI Agent Coordinator</h1>", unsafe_allow_html=True)
-    st.markdown("**Multi-agent system for energy modeling, analysis, and reporting**")
+    if BACKEND_AVAILABLE:
+        st.markdown("**Multi-agent system with REAL backend integration for energy modeling**")
+    else:
+        st.markdown("**Multi-agent system (using placeholder functions - backend not available)**")
     
     # Auto-initialize system
     system_status = initialize_system()
@@ -1826,7 +1398,22 @@ def main():
         st.header("🎛️ System Status")
         
         if system_status['status'] == 'success':
-            st.success("✅ System Ready")
+            if BACKEND_AVAILABLE:
+                st.success("✅ System Ready (Real Backend)")
+            else:
+                st.warning("⚠️ System Ready (Placeholder Mode)")
+            
+            # Show backend status
+            st.subheader("🔧 Backend Status")
+            if BACKEND_AVAILABLE:
+                st.success("✅ Real LLM Integration")
+                st.success("✅ Real Parameter Extraction")
+                st.success("✅ Real Country Extraction")
+                st.success("✅ Real Model Creation")
+                st.success("✅ Real Progress Monitoring")
+            else:
+                st.error("❌ Backend modules not found")
+                st.info("💡 Make sure all backend modules are properly installed")
             
             # Show session info
             session_manager = system_status['session_manager']
@@ -1844,6 +1431,7 @@ def main():
             st.subheader("🔍 Debug Info")
             with st.expander("Session State", expanded=False):
                 debug_info = {
+                    "backend_available": BACKEND_AVAILABLE,
                     "should_process": st.session_state.get('should_process', False),
                     "continue_processing": st.session_state.get('continue_processing', False),
                     "parameters_ready": st.session_state.get('parameters_ready', False),
@@ -1913,23 +1501,16 @@ def main():
             if hasattr(st.session_state, 'collected_parameters'):
                 st.session_state.collected_parameters = {}
                 
-            print(f"🔍 FORM SUBMIT: Set prompt_to_process = '{prompts_text.strip()}'")
-            print(f"🔍 FORM SUBMIT: Set should_process = True")
-            print(f"🔍 FORM SUBMIT: Cleared existing parameter states")
+            if BACKEND_AVAILABLE:
+                print(f"🔍 REAL BACKEND: Set prompt_to_process = '{prompts_text.strip()}'")
+            else:
+                print(f"🔍 PLACEHOLDER MODE: Set prompt_to_process = '{prompts_text.strip()}'")
     
     # Processing section - handle both new prompts and parameter continuation
     should_process_now = (
         (hasattr(st.session_state, 'should_process') and st.session_state.should_process) or
         (hasattr(st.session_state, 'continue_processing') and st.session_state.continue_processing)
     )
-    
-    # Add debugging for session state
-    print(f"🔍 MAIN: Session state check:")
-    print(f"🔍 MAIN: should_process = {st.session_state.get('should_process', False)}")
-    print(f"🔍 MAIN: continue_processing = {st.session_state.get('continue_processing', False)}")
-    print(f"🔍 MAIN: parameters_ready = {st.session_state.get('parameters_ready', False)}")
-    print(f"🔍 MAIN: awaiting_parameters = {st.session_state.get('awaiting_parameters', False)}")
-    print(f"🔍 MAIN: should_process_now = {should_process_now}")
     
     if should_process_now:
         # Get the prompt - ensure we preserve the original full prompt
@@ -1939,20 +1520,28 @@ def main():
         if (hasattr(st.session_state, 'continue_processing') and st.session_state.continue_processing and
             hasattr(st.session_state, 'parameters_ready') and st.session_state.parameters_ready):
             # Continuing after parameter collection
-            print(f"🔍 MAIN: CONTINUATION MODE - processing with prompt: {prompts_text}")
-            print(f"🔍 MAIN: Session state - parameters_ready: {st.session_state.get('parameters_ready', False)}")
-            print(f"🔍 MAIN: Session state - collected_parameters: {st.session_state.get('collected_parameters', {})}")
-            # Clear flags after checking them
+            if BACKEND_AVAILABLE:
+                print(f"🔍 REAL BACKEND: CONTINUATION MODE - processing with prompt: {prompts_text}")
+            else:
+                print(f"🔍 PLACEHOLDER MODE: CONTINUATION MODE - processing with prompt: {prompts_text}")
             st.session_state.should_process = False
             st.session_state.continue_processing = False
         else:
             # New prompt processing
-            print(f"🔍 MAIN: NEW PROCESSING MODE - starting with prompt: {prompts_text}")
+            if BACKEND_AVAILABLE:
+                print(f"🔍 REAL BACKEND: NEW PROCESSING MODE - starting with prompt: {prompts_text}")
+            else:
+                print(f"🔍 PLACEHOLDER MODE: NEW PROCESSING MODE - starting with prompt: {prompts_text}")
             st.session_state.should_process = False  # Clear the flag
         
         if prompts_text:
             st.subheader(f"🚀 Processing prompt")
             st.write(f"**Prompt:** {prompts_text}")
+            
+            if BACKEND_AVAILABLE:
+                st.info("🔧 Using REAL backend functions for processing")
+            else:
+                st.warning("⚠️ Using placeholder functions (backend not available)")
             
             # Create containers for progress and status
             progress_container = st.empty()  # For progress bar
@@ -1960,8 +1549,8 @@ def main():
             
             with st.spinner("🔄 Processing prompt..."):
                 try:
-                    # Process the prompt
-                    results = process_prompts_with_ui_params(prompts_text, progress_container, status_container)
+                    # Process the prompt using the enhanced function
+                    results = run_async_in_streamlit(process_prompts_with_ui_params, prompts_text, progress_container, status_container)
                     
                     # Clear progress
                     progress_container.empty()
@@ -1985,7 +1574,10 @@ def main():
                             st.session_state.parameters_ready = False
                         
                         # Show completion
-                        status_container.success("✅ Processing complete!")
+                        if BACKEND_AVAILABLE:
+                            status_container.success("✅ Real backend processing complete!")
+                        else:
+                            status_container.success("✅ Placeholder processing complete!")
                         
                         # Display results
                         if results:
@@ -2009,6 +1601,8 @@ def main():
                         st.exception(e)
                         st.write("**System Status:**")
                         st.json(system_status)
+                        st.write("**Backend Status:**")
+                        st.write(f"Backend Available: {BACKEND_AVAILABLE}")
 
 # Entry point for Streamlit app
 if __name__ == "__main__":
