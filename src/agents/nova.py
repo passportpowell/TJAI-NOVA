@@ -323,6 +323,62 @@ class Nova(BaseAgent):
 
     
     
+    async def _create_task_with_category(self, intent_text: str, csv_path: str, agent: str = None, function: str = None) -> Task:
+        # First check if this is a math query using regex
+        import re
+        math_patterns = [
+            r'\d+\s*[\+\-\*\/]\s*\d+',  # Simple operations like 2+2
+            r'what\s+is\s+\d+\s*[\+\-\*\/]\s*\d+',  # "What is 2+2"
+            r'calculate\s+\d+',  # "Calculate 25"
+        ]
+        
+        # If it matches a math pattern, directly assign the function
+        is_math = any(re.search(pattern, intent_text.lower()) for pattern in math_patterns)
+        
+        if is_math:
+            if self.verbose:
+                print(f"⚠️ Assigning do_maths function for: '{intent_text}'")
+            function = "do_maths"
+            agent = "Nova"
+            category = "math and logic"
+        else:
+            # Normal categorization for non-math queries
+            category = await open_ai_categorisation_async(intent_text, csv_path)
+            if self.verbose:
+                print(f"Intent '{intent_text}' categorized as: {category}")
+
+            if not function:
+                # THIS IS THE KEY FIX - ADD "data analysis" mapping
+                function = {
+                    "copywriting and proofreading": "write_report",
+                    "energy model": "process_emil_request",
+                    "data analysis": "process_emil_request",  # This was missing!
+                    "math and logic": "do_maths",
+                    "general knowledge": "answer_general_question",
+                    "general_question": "answer_general_question"
+                }.get(category.lower(), None)
+
+            # Determine the appropriate agent based on function
+            if not agent:
+                agent = {
+                    "write_report": "Lola",
+                    "process_emil_request": "Emil",
+                    "do_maths": "Nova",
+                    "answer_general_question": "Nova"
+                }.get(function, "Nova")
+
+        return Task(
+            name=f"Handle Intent: {intent_text}",
+            description=f"Process intent categorized as {category}",
+            agent=agent,
+            function_name=function,
+            args={
+                "prompt": intent_text,
+                "full_prompt": intent_text
+            }
+        )
+
+
     
     async def identify_multiple_intents_async(self, prompt: str) -> List[Dict[str, str]]:
         # ENHANCED: Better intent detection with more robust parsing

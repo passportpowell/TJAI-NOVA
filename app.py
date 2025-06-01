@@ -492,6 +492,213 @@ def show_model_creation_progress_real(progress_container=None, status_container=
     if model_status:
         model_status.empty()
 
+# PLACEHOLDER FUNCTIONS: Used when real backend is not available
+
+async def extract_model_parameters_with_llm_correction_placeholder(prompt, progress_container=None, status_container=None):
+    """
+    Placeholder implementation for when real backend is not available
+    """
+    # Setup progress tracking
+    if progress_container:
+        with progress_container.container():
+            extraction_progress = st.progress(0)
+        with status_container.container():
+            extraction_status = st.empty()
+    else:
+        extraction_progress_container = st.empty()
+        extraction_status_container = st.empty()
+        
+        with extraction_progress_container.container():
+            extraction_progress = st.progress(0)
+        with extraction_status_container.container():
+            extraction_status = st.empty()
+    
+    try:
+        prompt_lower = prompt.lower()
+        params = {"locations": [], "generation_types": [], "energy_carriers": [], "model_type": "single"}
+        
+        # Step 1: Starting extraction - PLACEHOLDER
+        extraction_status.text(f"🔍 [PLACEHOLDER] Extracting parameters from prompt: '{prompt[:50]}...'")
+        extraction_progress.progress(10)
+        await asyncio.sleep(0.3)
+        
+        # Step 2: Simple keyword matching - PLACEHOLDER
+        extraction_status.text(f"🧠 [PLACEHOLDER] Using keyword matching...")
+        extraction_progress.progress(50)
+        await asyncio.sleep(0.3)
+        
+        # Simple keyword detection
+        if "spain" in prompt_lower:
+            params["locations"] = ["Spain"]
+        elif "france" in prompt_lower:
+            params["locations"] = ["France"]
+        elif "denmark" in prompt_lower:
+            params["locations"] = ["Denmark"]
+        else:
+            params["locations"] = ["Unknown"]
+        
+        if "wind" in prompt_lower:
+            params["generation_types"] = ["wind"]
+        elif "solar" in prompt_lower:
+            params["generation_types"] = ["solar"]
+        else:
+            params["generation_types"] = ["unknown"]
+            
+        params["energy_carriers"] = ["electricity"]
+        
+        # Step 3: Completion - PLACEHOLDER
+        extraction_status.text(f"✅ [PLACEHOLDER] Keyword extraction: location='{', '.join(params['locations'])}', generation='{', '.join(params['generation_types'])}'")
+        extraction_progress.progress(100)
+        await asyncio.sleep(0.5)
+        
+        # Clear progress after completion
+        if progress_container:
+            progress_container.empty()
+            status_container.empty()
+        else:
+            extraction_progress_container.empty()
+            extraction_status_container.empty()
+        
+        return params
+        
+    except Exception as e:
+        print(f"Error in placeholder parameter extraction: {str(e)}")
+        return {
+            "locations": ["Unknown"],
+            "generation_types": ["unknown"],
+            "energy_carriers": ["electricity"],
+            "model_type": "single"
+        }
+
+
+async def extract_countries_with_progress_placeholder(prompt, progress_container=None, status_container=None):
+    """
+    Placeholder implementation for when real backend is not available
+    """
+    # Setup progress tracking
+    if progress_container:
+        with progress_container.container():
+            country_progress = st.progress(0)
+        with status_container.container():
+            country_status = st.empty()
+    else:
+        country_progress_container = st.empty()
+        country_status_container = st.empty()
+        
+        with country_progress_container.container():
+            country_progress = st.progress(0)
+        with country_status_container.container():
+            country_status = st.empty()
+    
+    try:
+        # Show extraction header
+        country_status.text(f"🧠 [PLACEHOLDER] Extracting countries from: '{prompt[:50]}...'")
+        country_progress.progress(0)
+        await asyncio.sleep(0.5)
+        
+        # Attempt 1/3
+        country_status.text("🔄 [PLACEHOLDER] Attempt 1/3")
+        country_progress.progress(33)
+        await asyncio.sleep(0.5)
+        
+        # Simple keyword matching
+        countries = []
+        prompt_lower = prompt.lower()
+        
+        if "spain" in prompt_lower:
+            countries.append("ES")
+        if "france" in prompt_lower:
+            countries.append("FR")
+        if "denmark" in prompt_lower:
+            countries.append("DK")
+        if "germany" in prompt_lower:
+            countries.append("DE")
+        
+        if not countries:
+            countries = ['XX']
+        
+        # Response
+        country_status.text(f"🧠 [PLACEHOLDER] Response: {countries}")
+        country_progress.progress(66)
+        await asyncio.sleep(0.3)
+        
+        # Success
+        country_status.text(f"✅ [PLACEHOLDER] Keyword extraction: {countries}")
+        country_progress.progress(100)
+        await asyncio.sleep(0.5)
+        
+        # Clear progress
+        if progress_container:
+            progress_container.empty()
+            status_container.empty()
+        else:
+            country_progress_container.empty()
+            country_status_container.empty()
+        
+        return countries
+        
+    except Exception as e:
+        print(f"Error in placeholder country extraction: {str(e)}")
+        return ['XX']
+
+
+def show_model_creation_progress_placeholder():
+    """
+    Placeholder implementation for when real backend is not available
+    """
+    # Show model creation header
+    st.markdown("### ⚙️ [PLACEHOLDER] Creating Model Components")
+    
+    # Creating Objects
+    st.write("**[PLACEHOLDER] Creating Objects**")
+    objects_progress = st.progress(0)
+    objects_status = st.empty()
+    
+    total_objects = 1931
+    for i in range(0, 101, 5):
+        objects_status.text(f"[PLACEHOLDER] Creating objects... {i}% | {int(total_objects * i / 100)}/{total_objects}")
+        objects_progress.progress(i)
+        time.sleep(0.1)
+    
+    objects_status.text("✅ [PLACEHOLDER] Objects created successfully!")
+    time.sleep(0.5)
+    objects_status.empty()
+    
+    # Creating Memberships  
+    st.write("**[PLACEHOLDER] Creating Memberships**")
+    memberships_progress = st.progress(0)
+    memberships_status = st.empty()
+    
+    total_memberships = 1931
+    for i in range(0, 101, 8):
+        memberships_status.text(f"[PLACEHOLDER] Creating memberships... {i}% | {int(total_memberships * i / 100)}/{total_memberships}")
+        memberships_progress.progress(i)
+        time.sleep(0.08)
+    
+    memberships_status.text("✅ [PLACEHOLDER] Memberships created successfully!")
+    time.sleep(0.5)
+    memberships_status.empty()
+    
+    # Creating Properties
+    st.write("**[PLACEHOLDER] Creating Properties**")
+    properties_progress = st.progress(0)
+    properties_status = st.empty()
+    
+    total_properties = 4105
+    for i in range(0, 35, 3):
+        properties_status.text(f"[PLACEHOLDER] Creating properties... {i}% | {int(total_properties * i / 100)}/{total_properties}")
+        properties_progress.progress(i)
+        time.sleep(0.12)
+    
+    # Final update to match CLI output
+    properties_status.text("[PLACEHOLDER] Creating properties... 34.8% | 1429/4105")
+    properties_progress.progress(35)
+    time.sleep(1)
+    
+    properties_status.text("✅ [PLACEHOLDER] Properties creation in progress...")
+    time.sleep(0.5)
+    properties_status.empty()
+
 # Cache the system initialization to avoid re-initializing on each page refresh
 @st.cache_resource
 def initialize_system():
@@ -1108,212 +1315,6 @@ async def process_prompts_with_ui_params(prompts_text: str, progress_container, 
             st.session_state.continue_processing = False
         raise e
 
-# PLACEHOLDER FUNCTIONS: Used when real backend is not available
-
-async def extract_model_parameters_with_llm_correction_placeholder(prompt, progress_container=None, status_container=None):
-    """
-    Placeholder implementation for when real backend is not available
-    """
-    # Setup progress tracking
-    if progress_container:
-        with progress_container.container():
-            extraction_progress = st.progress(0)
-        with status_container.container():
-            extraction_status = st.empty()
-    else:
-        extraction_progress_container = st.empty()
-        extraction_status_container = st.empty()
-        
-        with extraction_progress_container.container():
-            extraction_progress = st.progress(0)
-        with extraction_status_container.container():
-            extraction_status = st.empty()
-    
-    try:
-        prompt_lower = prompt.lower()
-        params = {"locations": [], "generation_types": [], "energy_carriers": [], "model_type": "single"}
-        
-        # Step 1: Starting extraction - PLACEHOLDER
-        extraction_status.text(f"🔍 [PLACEHOLDER] Extracting parameters from prompt: '{prompt[:50]}...'")
-        extraction_progress.progress(10)
-        await asyncio.sleep(0.3)
-        
-        # Step 2: Simple keyword matching - PLACEHOLDER
-        extraction_status.text(f"🧠 [PLACEHOLDER] Using keyword matching...")
-        extraction_progress.progress(50)
-        await asyncio.sleep(0.3)
-        
-        # Simple keyword detection
-        if "spain" in prompt_lower:
-            params["locations"] = ["Spain"]
-        elif "france" in prompt_lower:
-            params["locations"] = ["France"]
-        elif "denmark" in prompt_lower:
-            params["locations"] = ["Denmark"]
-        else:
-            params["locations"] = ["Unknown"]
-        
-        if "wind" in prompt_lower:
-            params["generation_types"] = ["wind"]
-        elif "solar" in prompt_lower:
-            params["generation_types"] = ["solar"]
-        else:
-            params["generation_types"] = ["unknown"]
-            
-        params["energy_carriers"] = ["electricity"]
-        
-        # Step 3: Completion - PLACEHOLDER
-        extraction_status.text(f"✅ [PLACEHOLDER] Keyword extraction: location='{', '.join(params['locations'])}', generation='{', '.join(params['generation_types'])}'")
-        extraction_progress.progress(100)
-        await asyncio.sleep(0.5)
-        
-        # Clear progress after completion
-        if progress_container:
-            progress_container.empty()
-            status_container.empty()
-        else:
-            extraction_progress_container.empty()
-            extraction_status_container.empty()
-        
-        return params
-        
-    except Exception as e:
-        print(f"Error in placeholder parameter extraction: {str(e)}")
-        return {
-            "locations": ["Unknown"],
-            "generation_types": ["unknown"],
-            "energy_carriers": ["electricity"],
-            "model_type": "single"
-        }
-
-
-async def extract_countries_with_progress_placeholder(prompt, progress_container=None, status_container=None):
-    """
-    Placeholder implementation for when real backend is not available
-    """
-    # Setup progress tracking
-    if progress_container:
-        with progress_container.container():
-            country_progress = st.progress(0)
-        with status_container.container():
-            country_status = st.empty()
-    else:
-        country_progress_container = st.empty()
-        country_status_container = st.empty()
-        
-        with country_progress_container.container():
-            country_progress = st.progress(0)
-        with country_status_container.container():
-            country_status = st.empty()
-    
-    try:
-        # Show extraction header
-        country_status.text(f"🧠 [PLACEHOLDER] Extracting countries from: '{prompt[:50]}...'")
-        country_progress.progress(0)
-        await asyncio.sleep(0.5)
-        
-        # Attempt 1/3
-        country_status.text("🔄 [PLACEHOLDER] Attempt 1/3")
-        country_progress.progress(33)
-        await asyncio.sleep(0.5)
-        
-        # Simple keyword matching
-        countries = []
-        prompt_lower = prompt.lower()
-        
-        if "spain" in prompt_lower:
-            countries.append("ES")
-        if "france" in prompt_lower:
-            countries.append("FR")
-        if "denmark" in prompt_lower:
-            countries.append("DK")
-        if "germany" in prompt_lower:
-            countries.append("DE")
-        
-        if not countries:
-            countries = ['XX']
-        
-        # Response
-        country_status.text(f"🧠 [PLACEHOLDER] Response: {countries}")
-        country_progress.progress(66)
-        await asyncio.sleep(0.3)
-        
-        # Success
-        country_status.text(f"✅ [PLACEHOLDER] Keyword extraction: {countries}")
-        country_progress.progress(100)
-        await asyncio.sleep(0.5)
-        
-        # Clear progress
-        if progress_container:
-            progress_container.empty()
-            status_container.empty()
-        else:
-            country_progress_container.empty()
-            country_status_container.empty()
-        
-        return countries
-        
-    except Exception as e:
-        print(f"Error in placeholder country extraction: {str(e)}")
-        return ['XX']
-
-
-def show_model_creation_progress_placeholder():
-    """
-    Placeholder implementation for when real backend is not available
-    """
-    # Show model creation header
-    st.markdown("### ⚙️ [PLACEHOLDER] Creating Model Components")
-    
-    # Creating Objects
-    st.write("**[PLACEHOLDER] Creating Objects**")
-    objects_progress = st.progress(0)
-    objects_status = st.empty()
-    
-    total_objects = 1931
-    for i in range(0, 101, 5):
-        objects_status.text(f"[PLACEHOLDER] Creating objects... {i}% | {int(total_objects * i / 100)}/{total_objects}")
-        objects_progress.progress(i)
-        time.sleep(0.1)
-    
-    objects_status.text("✅ [PLACEHOLDER] Objects created successfully!")
-    time.sleep(0.5)
-    objects_status.empty()
-    
-    # Creating Memberships  
-    st.write("**[PLACEHOLDER] Creating Memberships**")
-    memberships_progress = st.progress(0)
-    memberships_status = st.empty()
-    
-    total_memberships = 1931
-    for i in range(0, 101, 8):
-        memberships_status.text(f"[PLACEHOLDER] Creating memberships... {i}% | {int(total_memberships * i / 100)}/{total_memberships}")
-        memberships_progress.progress(i)
-        time.sleep(0.08)
-    
-    memberships_status.text("✅ [PLACEHOLDER] Memberships created successfully!")
-    time.sleep(0.5)
-    memberships_status.empty()
-    
-    # Creating Properties
-    st.write("**[PLACEHOLDER] Creating Properties**")
-    properties_progress = st.progress(0)
-    properties_status = st.empty()
-    
-    total_properties = 4105
-    for i in range(0, 35, 3):
-        properties_status.text(f"[PLACEHOLDER] Creating properties... {i}% | {int(total_properties * i / 100)}/{total_properties}")
-        properties_progress.progress(i)
-        time.sleep(0.12)
-    
-    # Final update to match CLI output
-    properties_status.text("[PLACEHOLDER] Creating properties... 34.8% | 1429/4105")
-    properties_progress.progress(35)
-    time.sleep(1)
-    
-    properties_status.text("✅ [PLACEHOLDER] Properties creation in progress...")
-    time.sleep(0.5)
-    properties_status.empty()
 
 # Function to display results in an organized way
 def display_results(results: List[tuple]):
@@ -1371,6 +1372,7 @@ def display_results(results: List[tuple]):
                 else:
                     # Show other types of results
                     st.write(f"**Result:** {str(result)}")
+
 
 def main():
     """Main Streamlit app function - uses REAL backend instead of placeholders"""
