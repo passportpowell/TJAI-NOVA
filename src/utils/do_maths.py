@@ -1,38 +1,3 @@
-# # utils/do_maths.py
-# from utils.function_logger import log_function_call
-# from utils.open_ai_utils import run_open_ai_ns
-# from core.knowledge_base import KnowledgeBase
-
-# @log_function_call
-# def do_maths(kb: KnowledgeBase, prompt: str, input2="-"):
-#     """
-#     Solves mathematical problems using LLM.
-    
-#     Parameters:
-#         kb (KnowledgeBase): The knowledge base
-#         prompt (str): The mathematical question to solve
-#         input2 (str): Optional secondary input (required by function mapping)
-        
-#     Returns:
-#         str: The result of the calculation
-#     """
-#     print(f"Solving math problem: {prompt}")
-    
-#     context = (
-#         "You are a math problem solver. Calculate the answer to the given problem. "
-#         "For simple arithmetic, just provide the answer. "
-#         "For complex calculations, show your work step by step."
-#     )
-    
-#     result = run_open_ai_ns(prompt, context)
-    
-#     # Store the result in the knowledge base
-#     kb.set_item("math_result", result)
-#     kb.set_item("final_report", result)  # This will be shown as the final output
-    
-#     return result
-
-
 import re
 from utils.function_logger import *
 from core.knowledge_base import KnowledgeBase
@@ -45,7 +10,8 @@ from core.knowledge_base import KnowledgeBase
 
 
 @log_function_call
-def do_maths(kb: KnowledgeBase, prompt: str, full_prompt=None, input2: str = "-") -> str:
+#def do_maths(kb: KnowledgeBase, prompt: str, full_prompt=None, input2: str = "-") -> str:
+def do_maths(kb: KnowledgeBase, prompt: str, full_prompt=None, original_prompt=None, input2: str = "-") -> str:
     """
     Performs mathematical calculations based on the input prompt.
     Enhanced to handle a wide range of math expressions including percentages.
@@ -64,7 +30,9 @@ def do_maths(kb: KnowledgeBase, prompt: str, full_prompt=None, input2: str = "-"
     
     # Try to solve with local calculation logic
     result, answer = attempt_local_calculation(prompt)
-    
+    # Handle both parameter names for backward compatibility
+    actual_full_prompt = full_prompt or original_prompt
+
     # If local calculation failed, use LLM as fallback
     if result is None:
         print(f"Local calculation failed, using LLM for: {prompt}")
@@ -105,15 +73,19 @@ def attempt_local_calculation(prompt):
     """
     try:
         # Normalize the prompt
-        normalized_prompt = prompt.lower().replace('×', '*').replace('÷', '/')
+        #normalized_prompt = prompt.lower().replace('×', '*').replace('÷', '/')
+        normalized_prompt = prompt.lower().replace('×', '*').replace('÷', '/').replace('x', '*')
         
         # Pattern for percentage calculations
         percentage_pattern = r'(?:what\s+is\s+)?(\d+\.?\d*)%\s+(?:of)\s+(\d+\.?\d*)'
         percentage_of_pattern = r'(?:what\s+is\s+)?(\d+\.?\d*)\s+(?:percent\s+of)\s+(\d+\.?\d*)'
         
         # Pattern for basic arithmetic operations with "what is" optional
+        # FIXED: Enhanced basic arithmetic pattern with better spacing handling
         basic_math_pattern = r'(?:what\s+is\s+)?(\d+\.?\d*)\s*([\+\-\*\/])\s*(\d+\.?\d*)'
-        
+        # Alternative pattern for "2 * 2" format
+        simple_math_pattern = r'(\d+\.?\d*)\s*([\+\-\*\/])\s*(\d+\.?\d*)'
+
         # Pattern for square root
         sqrt_pattern = r'(?:what\s+is\s+)?(?:the\s+)?(?:square\s+root\s+of)\s+(\d+\.?\d*)'
         
@@ -157,6 +129,9 @@ def attempt_local_calculation(prompt):
         
         # Check for basic arithmetic
         math_match = re.search(basic_math_pattern, normalized_prompt)
+        # FIXED: Check for basic arithmetic - try both patterns
+        math_match = re.search(basic_math_pattern, normalized_prompt) or re.search(simple_math_pattern, normalized_prompt)
+        
         if math_match:
             num1 = float(math_match.group(1))
             op = math_match.group(2)
