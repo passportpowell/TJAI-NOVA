@@ -7,11 +7,13 @@ import tempfile
 import datetime
 from pathlib import Path
 import sys
+import threading
+import queue
+from typing import Dict, Any, List
 
-# MUST BE FIRST STREAMLIT COMMAND - set_page_config()
+# Set Streamlit page config immediately
 st.set_page_config(layout="wide", page_title="AI Model Builder")
 
-# Initialize session state variables IMMEDIATELY - using more robust initialization
 def init_session_state():
     """Initialize all session state variables with default values"""
     defaults = {
@@ -26,26 +28,35 @@ def init_session_state():
         'logged_messages_set': set(),
         'backend_task_active': False,
         'cli_output_displayed': [],
-        'last_cli_length': 0
+        'last_cli_length': 0,
+        'error_occurred': False,
+        'error_message': '',
+        'message_queue': queue.Queue(),
+        'result_queue': queue.Queue(),
+        'agents': None,
+        'kb': None,
+        'session_manager': None,
+        'nova': None,
+        'progress_history': [],  # Store completed progress steps
+        'current_progress': {},  # Store current active progress
+        'created_files': [],     # Store created files for download
+        'task_progress': {},     # NEW: Track individual task progress
+        'total_tasks': 0,        # NEW: Total number of tasks
+        'completed_tasks': 0     # NEW: Number of completed tasks
     }
-    
     for key, default_value in defaults.items():
         if key not in st.session_state:
             st.session_state[key] = default_value
 
-# Initialize session state
 init_session_state()
 
-# Adjust system path to import project modules
-# This assumes streamlit_app.py is in the root,
-# and your project modules (agents, core, etc.) are WITHIN the 'src' subdirectory.
+# Fix import path for modules (assuming src/ is next to this file)
 ROOT_DIR = Path(__file__).parent
 SRC_DIR = ROOT_DIR / "src"
-
 if str(SRC_DIR) not in sys.path:
     sys.path.append(str(SRC_DIR))
 
-# Attempt to import necessary components from your project
+# Import your project modules with error handling
 try:
     from agents import Nova, Emil, Ivan, Lola
     from core.knowledge_base import KnowledgeBase
@@ -55,21 +66,19 @@ try:
         generate_python_script, extract_model_parameters, create_single_location_model,
         create_simple_xml, create_multi_location_model, create_simple_multi_location_xml,
         create_comprehensive_model, create_simple_comprehensive_xml,
-        process_emil_request_enhanced, # Make sure this is correctly named and imported
+        process_emil_request_enhanced,
         NOVA_FUNCTIONS, EMIL_FUNCTIONS, IVAN_FUNCTIONS, LOLA_FUNCTIONS
     )
     from utils.csv_function_mapper import FunctionMapLoader
     from utils.do_maths import do_maths
     from utils.general_knowledge import answer_general_question
-    from agents.emil import extract_energy_parameters_from_prompt # Specific import for clarity
+    from agents.emil import extract_energy_parameters_from_prompt
+    IMPORTS_SUCCESSFUL = True
 except ImportError as e:
-    st.error(f"Failed to import project modules from '{SRC_DIR}'. Please ensure paths are correct and __init__.py files exist. Error: {e}")
-    st.error(f"Current sys.path: {sys.path}")
-    st.stop()
+    st.error(f"❌ Failed to import project modules: {e}")
+    IMPORTS_SUCCESSFUL = False
 
-# --- Configuration ---
-# This tells parameter_collection.py to attempt using the Streamlit version
-os.environ["NOVA_PARAM_MODE"] = "streamlit"
+# --- Progress file location ---
 PROGRESS_FILE = os.path.join(tempfile.gettempdir(), "plexos_progress.json")
 
 # --- CLI Output Capture Setup ---
@@ -80,383 +89,615 @@ captured_cli_output = []
 class CLICapture:
     def write(self, text):
         captured_cli_output.append(text)
-        original_stdout.write(text)  # Still show in terminal
+        original_stdout.write(text)
         original_stdout.flush()
-        
     def flush(self):
         original_stdout.flush()
 
 def start_cli_capture():
-    """Start capturing CLI output"""
     global captured_cli_output
     captured_cli_output.clear()
     sys.stdout = CLICapture()
     sys.stderr = CLICapture()
 
 def stop_cli_capture():
-    """Stop capturing CLI output"""
     sys.stdout = original_stdout
     sys.stderr = original_stderr
 
 def get_new_cli_output():
-    """Get new CLI output since last check"""
     if 'last_cli_length' not in st.session_state:
         st.session_state.last_cli_length = 0
-    
     new_output = captured_cli_output[st.session_state.last_cli_length:]
     st.session_state.last_cli_length = len(captured_cli_output)
     return new_output
 
-# --- Helper Functions ---
+# --- Helper: Service Initialization with Error Handling ---
 def initialize_services():
-    """Initializes KnowledgeBase, SessionManager, and Agents."""
-    if 'kb' not in st.session_state:
-        st.session_state.kb = KnowledgeBase(storage_path="knowledge_db", use_persistence=True)
-        # Mimic CLI: "Loaded 204 items from persistent storage"
-        st.session_state.processing_log.append(f"Loaded {len(st.session_state.kb.storage)} items from persistent storage.") #
+    if not IMPORTS_SUCCESSFUL:
+        st.error("Cannot initialize services due to import failures.")
+        return False
+        
+    try:
+        if st.session_state.kb is None:
+            st.session_state.kb = KnowledgeBase(storage_path="knowledge_db", use_persistence=True)
+            st.session_state.processing_log.append(f"✅ Loaded {len(st.session_state.kb.storage)} items from persistent storage.")
 
+        if st.session_state.session_manager is None:
+            st.session_state.session_manager = SessionManager(base_path="sessions")
 
-    if 'session_manager' not in st.session_state:
-        st.session_state.session_manager = SessionManager(base_path="sessions")
+        if st.session_state.agents is None:
+            kb = st.session_state.kb
+            function_loader = FunctionMapLoader(verbose=False)
+            function_map_dict = {
+                "build_plexos_model": build_plexos_model, "run_plexos_model": run_plexos_model,
+                "analyze_results": analyze_results, "write_report": write_report,
+                "generate_python_script": generate_python_script, "extract_model_parameters": extract_model_parameters,
+                "create_single_location_model": create_single_location_model, "create_simple_xml": create_simple_xml,
+                "create_multi_location_model": create_multi_location_model, "create_simple_multi_location_xml": create_simple_multi_location_xml,
+                "create_comprehensive_model": create_comprehensive_model, "create_simple_comprehensive_xml": create_simple_comprehensive_xml,
+                "process_emil_request": process_emil_request_enhanced,
+                "do_maths": do_maths, "answer_general_question": answer_general_question
+            }
+            function_loader.register_functions(function_map_dict)
+            
+            # Initialize agents with error handling
+            nova_functions = function_loader.load_function_map("Nova") or {}
+            nova_functions.setdefault("answer_general_question", answer_general_question)
+            nova_functions.setdefault("do_maths", do_maths)
+            nova = Nova("Nova", kb, nova_functions, verbose=True)
 
-    if 'agents' not in st.session_state:
-        kb = st.session_state.kb
-        function_loader = FunctionMapLoader(verbose=False) #
-        function_map_dict = {
-            "build_plexos_model": build_plexos_model, "run_plexos_model": run_plexos_model, #
-            "analyze_results": analyze_results, "write_report": write_report, #
-            "generate_python_script": generate_python_script, "extract_model_parameters": extract_model_parameters, #
-            "create_single_location_model": create_single_location_model, "create_simple_xml": create_simple_xml, #
-            "create_multi_location_model": create_multi_location_model, "create_simple_multi_location_xml": create_simple_multi_location_xml, #
-            "create_comprehensive_model": create_comprehensive_model, "create_simple_comprehensive_xml": create_simple_comprehensive_xml, #
-            "process_emil_request": process_emil_request_enhanced, #
-            "do_maths": do_maths, "answer_general_question": answer_general_question #
-        }
-        function_loader.register_functions(function_map_dict)
+            emil_functions = function_loader.load_function_map("Emil") or {}
+            emil_functions.setdefault("process_emil_request", process_emil_request_enhanced)
+            emil_functions.setdefault("analyze_results", analyze_results)
+            emil_functions.setdefault("build_plexos_model", build_plexos_model)
+            emil = Emil("Emil", kb, emil_functions, verbose=True)
 
-        nova_functions = function_loader.load_function_map("Nova") or {} #
-        nova_functions.setdefault("answer_general_question", answer_general_question) #
-        nova_functions.setdefault("do_maths", do_maths) #
-        nova = Nova("Nova", kb, nova_functions, verbose=True) #
+            ivan = Ivan("Ivan", kb, function_loader.load_function_map("Ivan") or IVAN_FUNCTIONS)
+            lola = Lola("Lola", kb, function_loader.load_function_map("Lola") or LOLA_FUNCTIONS)
+            st.session_state.agents = {"Nova": nova, "Emil": emil, "Ivan": ivan, "Lola": lola}
+            st.session_state.nova = nova
 
-        emil_functions = function_loader.load_function_map("Emil") or {} #
-        emil_functions.setdefault("process_emil_request", process_emil_request_enhanced) #
-        emil_functions.setdefault("analyze_results", analyze_results) #
-        emil_functions.setdefault("build_plexos_model", build_plexos_model) #
-        # ... Add other Emil functions as in main.py ...
-        emil = Emil("Emil", kb, emil_functions, verbose=True) #
+        # Session management
+        if not st.session_state.session_manager.current_session_id:
+            existing_session = st.session_state.kb.get_item("current_session")
+            existing_file = st.session_state.kb.get_item("current_session_file")
+            loaded_existing = False
+            if existing_session and existing_file and os.path.exists(existing_file):
+                try:
+                    with open(existing_file, 'r') as f:
+                        session_data = json.load(f)
+                    if session_data["metadata"].get("session_active", False):
+                        st.session_state.session_manager.current_session_id = existing_session
+                        st.session_state.session_manager.current_session_file = existing_file
+                        st.session_state.session_manager.session_data = session_data
+                        st.session_state.processing_log.append(f"✅ Continuing existing session: {existing_session}")
+                        loaded_existing = True
+                except Exception as e:
+                    st.warning(f"Could not load existing session: {e}")
+            if not loaded_existing:
+                session_id, session_file = st.session_state.session_manager.create_session()
+                st.session_state.kb.set_item("current_session", session_id)
+                st.session_state.kb.set_item("current_session_file", session_file)
+                st.session_state.processing_log.append(f"✅ Started new session: {session_id}")
 
-        ivan = Ivan("Ivan", kb, function_loader.load_function_map("Ivan") or IVAN_FUNCTIONS) #
-        lola = Lola("Lola", kb, function_loader.load_function_map("Lola") or LOLA_FUNCTIONS) #
+            # Clear previous model data
+            st.session_state.kb.set_item("latest_model_file", None)
+            st.session_state.kb.set_item("latest_model_details", None)
+            st.session_state.kb.set_item("latest_analysis_results", None)
+            st.session_state.kb.set_item("latest_model_location", None)
+            st.session_state.kb.set_item("latest_model_generation_type", None)
+            st.session_state.kb.set_item("latest_model_energy_carrier", None)
+        
+        return True
+        
+    except Exception as e:
+        st.error(f"❌ Error initializing services: {e}")
+        st.session_state.processing_log.append(f"❌ Service initialization error: {e}")
+        return False
 
-        st.session_state.agents = {"Nova": nova, "Emil": emil, "Ivan": ivan, "Lola": lola} #
-        st.session_state.nova = nova
-
-    if not st.session_state.session_manager.current_session_id: #
-        existing_session = st.session_state.kb.get_item("current_session") #
-        existing_file = st.session_state.kb.get_item("current_session_file") #
-        loaded_existing = False
-        if existing_session and existing_file and os.path.exists(existing_file): #
-            try:
-                with open(existing_file, 'r') as f: #
-                    session_data = json.load(f) #
-                if session_data["metadata"].get("session_active", False): #
-                    st.session_state.session_manager.current_session_id = existing_session #
-                    st.session_state.session_manager.current_session_file = existing_file #
-                    st.session_state.session_manager.session_data = session_data #
-                    st.session_state.processing_log.append(f"Continuing existing session: {existing_session}") #
-                    loaded_existing = True
-            except Exception as e:
-                st.warning(f"Could not load existing session: {e}") #
-
-        if not loaded_existing:
-            session_id, session_file = st.session_state.session_manager.create_session() #
-            st.session_state.kb.set_item("current_session", session_id) #
-            st.session_state.kb.set_item("current_session_file", session_file) #
-            st.session_state.processing_log.append(f"Started new session: {session_id}")
-
-        # Clear previous run KB items
-        st.session_state.kb.set_item("latest_model_file", None)
-        st.session_state.kb.set_item("latest_model_details", None)
-        st.session_state.kb.set_item("latest_analysis_results", None)
-        st.session_state.kb.set_item("latest_model_location", None)
-        st.session_state.kb.set_item("latest_model_generation_type", None)
-        st.session_state.kb.set_item("latest_model_energy_carrier", None)
-
-
-def simplify_context(ctx): # From main.py
+def create_task_progress_entry(task_name, status="starting"):
+    """NEW: Create progress entry for individual tasks"""
     return {
-        "file": ctx.get("latest_model_file") or ctx.get("file"), #
-        "location": ctx.get("location") or ctx.get("latest_model_location"), #
-        "generation_type": ctx.get("generation_type") or ctx.get("latest_model_generation_type"), #
-        "energy_carrier": ctx.get("energy_carrier") or ctx.get("latest_model_energy_carrier"), #
+        'name': task_name,
+        'status': status,
+        'start_time': datetime.datetime.now().isoformat(),
+        'progress': 0.0,
+        'message': f"{status.capitalize()} {task_name}..."
     }
 
-async def process_single_prompt_batch(prompts_list):
-    kb = st.session_state.kb
-    session_manager = st.session_state.session_manager
-    agents = st.session_state.agents
-    nova = st.session_state.nova
-
-    def log_to_streamlit(message):
-        cleaned_message = str(message).strip()
-        # Add to set first to ensure it's tracked even if not appended to visible log immediately
-        if 'logged_messages_set' not in st.session_state:
-            st.session_state.logged_messages_set = set()
-
-        if cleaned_message and cleaned_message not in st.session_state.logged_messages_set:
-            st.session_state.processing_log.append(cleaned_message)
-            st.session_state.logged_messages_set.add(cleaned_message)
-
-    # Start CLI capture
-    start_cli_capture()
-
-    if not session_manager.session_data.get("prompts"): #
-        session_manager.session_data["prompts"] = [] #
-    session_manager.session_data["prompts"].extend(prompts_list) #
-    session_manager._save_current_session()
-
+def update_task_progress(message_queue, task_name, progress, message, status="in_progress"):
+    """NEW: Update task progress"""
     try:
-        task_lists = await asyncio.gather(*(nova.create_task_list_from_prompt_async(p) for p in prompts_list)) #
-    except Exception as e:
-        log_to_streamlit(f"Error creating task list: {e}")
-        st.error(f"Error during task creation: {e}")
-        st.session_state.processing_complete = True
-        st.session_state.backend_task_active = False
-        stop_cli_capture()
-        return
+        message_queue.put(("task_progress", {
+            'task_name': task_name,
+            'progress': progress,
+            'message': message,
+            'status': status,
+            'timestamp': datetime.datetime.now().isoformat()
+        }))
+    except:
+        pass
 
-    results_accumulator = [] #
-    all_parameters_accumulator = [] #
-
-    # Resume with collected parameters if they exist
-    if st.session_state.get('collected_user_parameters'):
-        # This assumes we are resuming for a specific task.
-        # The logic to associate these params with the correct task needs to be robust.
-        # For simplicity, we'll assume it's for the current task being processed if this flag is set.
-        # This part is tricky and might need more context about which task was pending.
-        # The current design has the form directly in app_main_flow, which then sets collected_user_parameters.
-        # The backend needs to pick this up.
-        log_to_streamlit(f"Resuming with collected parameters: {st.session_state.collected_user_parameters}")
-        # Find the task that was waiting for parameters and update its args.
-        # This is simplified; a more robust system would tag the pending task.
-        # For now, if we have collected_user_parameters, we assume they are for the next Emil task.
-        # This is a potential point of failure if multiple Emil tasks are in a sequence.
-
-    for idx, (prompt, tasks) in enumerate(zip(prompts_list, task_lists)): #
-        log_to_streamlit(f"------------------------\nProcessing prompt {idx+1}/{len(prompts_list)}: {prompt}") #
-
-        if "model" in prompt.lower() and ("solar" in prompt.lower() or "wind" in prompt.lower() or "hydro" in prompt.lower()): #
-             log_to_streamlit(f"⚠️ Pre-check identified energy modeling request: '{prompt}'") #
-
-        for task_idx, task in enumerate(tasks): #
-            agent = agents.get(task.agent) #
-            if not agent:
-                log_to_streamlit(f"Agent {task.agent} not found for task {task.name}. Skipping.")
-                continue
-
-            # Parameter extraction and verification for Emil's process_emil_request
-            if agent.name == "Emil" and task.function_name == "process_emil_request":
-                # If parameters were just collected via the form, apply them
-                if st.session_state.get('collected_user_parameters'):
-                    task.args.update(st.session_state.collected_user_parameters)
-                    log_to_streamlit(f"Applied collected parameters to task {task.name}: {st.session_state.collected_user_parameters}")
-                    st.session_state.collected_user_parameters = None # Clear after use
-
-                if task.args.get("prompt"): #
-                    log_to_streamlit(f"🔍 Extracting parameters from prompt: {task.args['prompt']}") #
-                    extracted_params = await extract_energy_parameters_from_prompt(task.args["prompt"]) #
-                    for k, v in extracted_params.items(): #
-                        if k not in task.args or not task.args[k]: #
-                           task.args[k] = v #
-                           log_to_streamlit(f"✅ Auto-filled parameter {k}: {v}") #
-
-                validation = await agent.verify_parameters_async(task.function_name, task.args) #
-                if not validation["success"] and validation.get("missing"): #
-                    log_to_streamlit(f"🧩 Emil needs: {validation['missing']} for {task.function_name}") #
-                    st.session_state.waiting_for_user_params_info = {
-                        "function_name": task.function_name,
-                        "missing_params": validation["missing"],
-                        "initial_args": task.args.copy()
-                    }
-                    st.session_state.param_collection_pending = True
-                    # Do not proceed further in this backend call; Streamlit will handle UI and rerun.
-                    st.session_state.backend_task_active = False # Pause backend activity
-                    stop_cli_capture()
-                    return # Exit this function to allow Streamlit to take over for param collection
-
-            # Update task context (as in main.py)
-            task.session_context.update({ #
-                "latest_model_file": kb.get_item("latest_model_file"), #
-                "latest_model_details": kb.get_item("latest_model_details"), #
-                "latest_analysis_results": kb.get_item("latest_analysis_results"), #
-                "location": kb.get_item("latest_model_location"), #
-                "generation_type": kb.get_item("latest_model_generation_type"), #
-                "energy_carrier": kb.get_item("latest_model_energy_carrier"), #
-            })
-
-            context_for_handover = {**simplify_context(task.session_context), "prompt": task.args.get("full_prompt", task.args.get("prompt", ""))} #
-            session_manager.add_context_handover("Nova", task.agent, context_for_handover) #
-
-            if task.agent != "Nova": #
-                log_to_streamlit(f"\n📋 Context handover: Nova → {task.agent}") #
-                log_to_streamlit(f"   Task: {task.args.get('prompt', '')}") #
-                if "location" in task.session_context and task.session_context.get("location"): #
-                    log_to_streamlit(f"   Location: {task.session_context.get('location')}") #
-                if "generation_type" in task.session_context and task.session_context.get("generation_type"): #
-                    log_to_streamlit(f"   Generation type: {task.session_context.get('generation_type')}") #
-                if "energy_carrier" in task.session_context and task.session_context.get("energy_carrier"): #
-                    log_to_streamlit(f"   Energy carrier: {task.session_context.get('energy_carrier')}") #
-                if "latest_model_file" in task.session_context and task.session_context.get("latest_model_file"): #
-                    model_file_path = task.session_context.get("latest_model_file", "") #
-                    if model_file_path: #
-                        log_to_streamlit(f"   Model file: {os.path.basename(model_file_path)}") #
-
-
+# ENHANCED: Thread-safe processing function with task progress tracking
+async def process_single_prompt_batch_async(prompts_list, kb, session_manager, agents, nova, message_queue):
+    """Async processing function that communicates via queue instead of session state"""
+    try:
+        def log_message(message):
+            """Thread-safe logging via message queue"""
             try:
-                result = await agent.handle_task_async(task) #
-                results_accumulator.append((task.name, result, task.agent)) #
-                all_parameters_accumulator.append(task.args) #
+                message_queue.put(("log", str(message).strip()))
+            except:
+                pass  # Ignore queue errors
 
-                if isinstance(result, dict): #
-                    if result.get('file'): kb.set_item("latest_model_file", result['file']) #
-                    if result.get('location'): kb.set_item("latest_model_location", result['location']) #
-                    if result.get('generation_type'): kb.set_item("latest_model_generation_type", result['generation_type']) #
-                    if result.get('energy_carrier'): kb.set_item("latest_model_energy_carrier", result['energy_carrier']) #
+        # Start CLI capture
+        start_cli_capture()
 
-            except Exception as e:
-                log_message = f"Error during task execution {task.name} by {task.agent}: {e}"
-                log_to_streamlit(log_message)
-                results_accumulator.append((task.name, {"status": "error", "message": str(e)}, task.agent))
+        if not session_manager.session_data.get("prompts"):
+            session_manager.session_data["prompts"] = []
+        session_manager.session_data["prompts"].extend(prompts_list)
+        session_manager._save_current_session()
 
-            for subtask in task.sub_tasks: #
-                log_to_streamlit(f"  Subtask: {subtask.name} for agent {subtask.agent}") #
-                sub_agent = agents.get(subtask.agent) #
-                if not sub_agent: continue #
-                subtask.session_context.update({ #
-                    "latest_model_file": kb.get_item("latest_model_file"), #
-                    "latest_model_details": kb.get_item("latest_model_details"), #
-                    "latest_analysis_results": kb.get_item("latest_analysis_results"), #
-                    "location": kb.get_item("latest_model_location"), #
-                    "generation_type": kb.get_item("latest_model_generation_type"), #
-                    "energy_carrier": kb.get_item("latest_model_energy_carrier"), #
-                })
-                sub_context_for_handover = {**simplify_context(subtask.session_context), "prompt": subtask.args.get("full_prompt", subtask.args.get("prompt", ""))} #
-                session_manager.add_context_handover(task.agent, subtask.agent, sub_context_for_handover) #
-                if subtask.agent != task.agent: #
-                    log_to_streamlit(f"\n📋 Context handover: {task.agent} → {subtask.agent}") #
-                    log_to_streamlit(f"   Task: {subtask.args.get('prompt', '')[:40]}...") #
+        log_message("🚀 Creating task lists from prompts...")
+        update_task_progress(message_queue, "Task Creation", 0.1, "Analyzing prompts and creating task lists")
+        
+        try:
+            task_lists = await asyncio.gather(*(nova.create_task_list_from_prompt_async(p) for p in prompts_list))
+            log_message(f"✅ Created {len(task_lists)} task lists")
+            update_task_progress(message_queue, "Task Creation", 1.0, f"Created {len(task_lists)} task lists", "completed")
+        except Exception as e:
+            log_message(f"❌ Error creating task list: {e}")
+            message_queue.put(("error", f"Error creating task list: {e}"))
+            return
+
+        # Count total tasks for progress tracking
+        total_tasks = sum(len(tasks) for tasks in task_lists)
+        message_queue.put(("total_tasks", total_tasks))
+
+        results_accumulator = []
+        all_parameters_accumulator = []
+        completed_task_count = 0
+
+        for idx, (prompt, tasks) in enumerate(zip(prompts_list, task_lists)):
+            log_message(f"📝 Processing prompt {idx+1}/{len(prompts_list)}: {prompt[:50]}...")
+            
+            for task_idx, task in enumerate(tasks):
+                task_name = task.name.replace('Handle Intent: ', '')
+                log_message(f"🔧 Executing task: {task_name} (Agent: {task.agent})")
+                
+                # Create task progress entry
+                update_task_progress(message_queue, task_name, 0.0, f"Starting {task_name}", "starting")
+                
+                agent = agents.get(task.agent)
+                if not agent:
+                    log_message(f"❌ Agent {task.agent} not found for task {task_name}")
+                    update_task_progress(message_queue, task_name, 1.0, f"Agent {task.agent} not found", "error")
+                    continue
+                    
                 try:
-                    sub_result = await sub_agent.handle_task_async(subtask) #
-                    results_accumulator.append((subtask.name, sub_result, subtask.agent)) #
-                    all_parameters_accumulator.append(subtask.args) #
+                    # Log handover parameters for Emil tasks
+                    if task.agent == "Emil" and task.args:
+                        handover_info = "🔄 Emil Handover Parameters:"
+                        for key, value in task.args.items():
+                            if key in ['location', 'generation', 'energy_carrier', 'prompt']:
+                                handover_info += f"\n   • {key}: {value}"
+                        log_message(handover_info)
+                    
+                    update_task_progress(message_queue, task_name, 0.3, f"Executing {task_name}", "in_progress")
+                    
+                    result = await agent.handle_task_async(task)
+                    results_accumulator.append((task.name, result, task.agent))
+                    all_parameters_accumulator.append(task.args)
+                    completed_task_count += 1
+                    
+                    log_message(f"✅ Task completed: {task_name}")
+                    update_task_progress(message_queue, task_name, 1.0, f"Completed {task_name}", "completed")
+                    
+                    # Update overall progress
+                    overall_progress = completed_task_count / total_tasks
+                    message_queue.put(("overall_progress", {
+                        'completed': completed_task_count,
+                        'total': total_tasks,
+                        'progress': overall_progress
+                    }))
+                    
+                    # Track created files for download
+                    if isinstance(result, dict) and result.get('file'):
+                        file_info = {
+                            'path': result['file'],
+                            'name': os.path.basename(result['file']),
+                            'task': task.name,
+                            'agent': task.agent,
+                            'timestamp': datetime.datetime.now().isoformat(),
+                            'details': result
+                        }
+                        message_queue.put(("file_created", file_info))
+                        
                 except Exception as e:
-                    log_to_streamlit(f"Error during sub_task execution {subtask.name} by {subtask.agent}: {e}")
-                    results_accumulator.append((subtask.name, {"status": "error", "message": str(e)}, subtask.agent))
+                    log_message(f"❌ Error during task execution {task_name} by {task.agent}: {e}")
+                    update_task_progress(message_queue, task_name, 1.0, f"Error: {str(e)[:50]}...", "error")
+                    results_accumulator.append((task.name, {"status": "error", "message": str(e)}, task.agent))
 
-    clean_results_summary = [] #
-    for name, res, agent_name in results_accumulator: #
-        if isinstance(res, str) and len(res) > 100: res_display = res[:100] + "..." #
-        else: res_display = res
-        clean_results_summary.append({"task": name, "agent": agent_name, "result": res_display}) #
+        # Process results
+        clean_results_summary = []
+        for name, res, agent_name in results_accumulator:
+            if isinstance(res, str) and len(res) > 100: 
+                res_display = res[:100] + "..."
+            else: 
+                res_display = res
+            clean_results_summary.append({"task": name, "agent": agent_name, "result": res_display})
 
-    st.session_state.current_results_full = results_accumulator
+        # Update session
+        session_manager.session_data.update({
+            "parameters": session_manager.session_data.get("parameters", []) + all_parameters_accumulator,
+            "results": session_manager.session_data.get("results", []) + clean_results_summary,
+            "last_modified": datetime.datetime.now().isoformat(),
+            "context_open": True,
+            "session_active": True
+        })
+        session_manager._save_current_session()
+        log_message(f"💾 Session updated: {session_manager.current_session_file}")
 
-    session_manager.session_data.update({ #
-        "parameters": session_manager.session_data.get("parameters", []) + all_parameters_accumulator, #
-        "results": session_manager.session_data.get("results", []) + clean_results_summary, #
-        "last_modified": datetime.datetime.now().isoformat(), #
-        "context_open": True, #
-        "session_active": True #
-    })
-    session_manager._save_current_session() #
-    log_to_streamlit(f"🗂️ Session updated and remains open: {session_manager.current_session_file}") #
+        # Stop CLI capture
+        stop_cli_capture()
+        
+        # Send results via queue
+        message_queue.put(("results", results_accumulator))
+        message_queue.put(("complete", True))
+        
+        return results_accumulator
+        
+    except Exception as e:
+        log_message(f"❌ Critical error in processing: {e}")
+        message_queue.put(("error", f"Critical processing error: {e}"))
+        stop_cli_capture()
+        return []
 
-    # Stop CLI capture
-    stop_cli_capture()
+def run_async_processing(prompts_list):
+    """Run async processing in a thread-safe way with queue communication"""
+    try:
+        # Get references to session state objects before starting thread
+        kb = st.session_state.kb
+        session_manager = st.session_state.session_manager
+        agents = st.session_state.agents
+        nova = st.session_state.nova
+        message_queue = st.session_state.message_queue
+        
+        if not all([kb, session_manager, agents, nova]):
+            st.error("❌ Services not properly initialized")
+            return False
+        
+        # Clear progress history for new run
+        st.session_state.progress_history = []
+        st.session_state.current_progress = {}
+        st.session_state.created_files = []
+        st.session_state.task_progress = {}
+        st.session_state.total_tasks = 0
+        st.session_state.completed_tasks = 0
+        
+        def run_in_thread():
+            try:
+                # Create new event loop for this thread
+                loop = asyncio.new_event_loop()
+                asyncio.set_event_loop(loop)
+                
+                # Run the async function with passed objects
+                result = loop.run_until_complete(
+                    process_single_prompt_batch_async(prompts_list, kb, session_manager, agents, nova, message_queue)
+                )
+                
+                loop.close()
+                return result
+                
+            except Exception as e:
+                try:
+                    message_queue.put(("error", f"Thread processing error: {e}"))
+                except:
+                    pass  # Queue might be full or closed
+        
+        # Start processing in background thread
+        thread = threading.Thread(target=run_in_thread, daemon=True)
+        thread.start()
+        
+        return True
+        
+    except Exception as e:
+        st.session_state.processing_log.append(f"❌ Failed to start async processing: {e}")
+        st.session_state.error_occurred = True
+        st.session_state.error_message = f"Failed to start processing: {e}"
+        return False
+
+def process_message_queue():
+    """Process messages from the background thread"""
+    try:
+        while not st.session_state.message_queue.empty():
+            try:
+                message_type, content = st.session_state.message_queue.get_nowait()
+                
+                if message_type == "log":
+                    if content not in st.session_state.logged_messages_set:
+                        st.session_state.processing_log.append(content)
+                        st.session_state.logged_messages_set.add(content)
+                        
+                elif message_type == "error":
+                    st.session_state.error_occurred = True
+                    st.session_state.error_message = content
+                    st.session_state.processing_complete = True
+                    st.session_state.backend_task_active = False
+                    
+                elif message_type == "results":
+                    st.session_state.current_results_full = content
+                    
+                elif message_type == "file_created":
+                    st.session_state.created_files.append(content)
+                    
+                elif message_type == "total_tasks":
+                    st.session_state.total_tasks = content
+                    
+                elif message_type == "task_progress":
+                    task_name = content['task_name']
+                    st.session_state.task_progress[task_name] = content
+                    
+                elif message_type == "overall_progress":
+                    st.session_state.completed_tasks = content['completed']
+                    
+                elif message_type == "complete":
+                    st.session_state.processing_complete = True
+                    st.session_state.backend_task_active = False
+                    
+            except queue.Empty:
+                break
+            except Exception as e:
+                st.error(f"Error processing message: {e}")
+                break
+    except Exception as e:
+        st.error(f"Error in message processing: {e}")
+
+def display_progress_with_history():
+    """Display progress with history preservation"""
+    current_progress_data = {}
     
-    st.session_state.processing_complete = True
-    st.session_state.backend_task_active = False
+    # Read current progress from PLEXOS progress file
+    if os.path.exists(PROGRESS_FILE):
+        try:
+            with open(PROGRESS_FILE, 'r') as f:
+                current_progress_data = json.load(f)
+        except (json.JSONDecodeError, FileNotFoundError):
+            pass
+    
+    # Update current progress in session state
+    st.session_state.current_progress = current_progress_data
+    
+    # Check for completed steps (100% progress)
+    for task_name, progress_info in current_progress_data.items():
+        if progress_info.get('percent', 0) >= 1.0:
+            # Check if this step is already in history
+            if not any(h['task_name'] == task_name for h in st.session_state.progress_history):
+                st.session_state.progress_history.append({
+                    'task_name': task_name,
+                    'progress_info': progress_info,
+                    'completed_at': datetime.datetime.now().isoformat()
+                })
+    
+    # Display completed steps from PLEXOS
+    if st.session_state.progress_history:
+        st.write("**✅ Completed PLEXOS Steps:**")
+        for completed_step in st.session_state.progress_history:
+            task_name = completed_step['task_name']
+            progress_info = completed_step['progress_info']
+            total = progress_info.get('total', 1)
+            
+            col1, col2 = st.columns([3, 1])
+            with col1:
+                st.text(f"✅ {task_name}: {total}/{total}")
+            with col2:
+                st.text("100%")
+        
+        st.markdown("---")
+    
+    # NEW: Display completed task progress
+    completed_tasks = {k: v for k, v in st.session_state.task_progress.items() 
+                      if v.get('status') == 'completed'}
+    
+    if completed_tasks:
+        st.write("**✅ Completed Tasks:**")
+        for task_name, task_info in completed_tasks.items():
+            col1, col2 = st.columns([3, 1])
+            with col1:
+                st.text(f"✅ {task_name}")
+            with col2:
+                st.text("100%")
+        
+        if current_progress_data or any(v.get('status') != 'completed' for v in st.session_state.task_progress.values()):
+            st.markdown("---")
+    
+    # Display current active progress from PLEXOS
+    active_progress = {k: v for k, v in current_progress_data.items() 
+                      if v.get('percent', 0) < 1.0}
+    
+    if active_progress:
+        st.write("**🔄 Current PLEXOS Progress:**")
+        for task_name, p_info in active_progress.items():
+            percent = p_info.get('percent', 0)
+            current = p_info.get('current', 0)
+            total = p_info.get('total', 1)
+            message = p_info.get('message', task_name)
+            
+            display_message = message
+            if len(display_message) > 80:
+                display_message = display_message[:77] + "..."
+                
+            st.write(f"**{task_name}:** {current}/{total}")
+            progress_text = f"{percent*100:.1f}% - {display_message}"
+            st.progress(percent, text=progress_text)
+            
+            if message and message != task_name:
+                st.caption(f"Currently processing: {display_message}")
+            st.write("")
+    
+    # NEW: Display current active task progress
+    active_tasks = {k: v for k, v in st.session_state.task_progress.items() 
+                   if v.get('status') in ['starting', 'in_progress']}
+    
+    if active_tasks:
+        if active_progress:
+            st.markdown("---")
+        st.write("**🔄 Current Task Progress:**")
+        for task_name, task_info in active_tasks.items():
+            progress = task_info.get('progress', 0)
+            message = task_info.get('message', task_name)
+            status = task_info.get('status', 'in_progress')
+            
+            status_icon = "🔄" if status == "in_progress" else "⏳"
+            st.write(f"**{status_icon} {task_name}**")
+            
+            progress_text = f"{progress*100:.1f}% - {message}"
+            st.progress(progress, text=progress_text)
+            st.write("")
+    
+    # NEW: Display overall progress if tasks are running
+    if st.session_state.total_tasks > 0:
+        if active_progress or active_tasks:
+            st.markdown("---")
+        st.write("**📊 Overall Progress:**")
+        overall_progress = st.session_state.completed_tasks / st.session_state.total_tasks
+        st.progress(overall_progress, text=f"Completed {st.session_state.completed_tasks}/{st.session_state.total_tasks} tasks ({overall_progress*100:.1f}%)")
 
+def create_download_section():
+    """Create download section for created files"""
+    if st.session_state.created_files:
+        st.markdown("---")
+        st.subheader("📥 Download Created Files")
+        
+        for i, file_info in enumerate(st.session_state.created_files):
+            file_path = file_info['path']
+            file_name = file_info['name']
+            task_name = file_info['task']
+            agent_name = file_info['agent']
+            
+            if os.path.exists(file_path):
+                col1, col2, col3 = st.columns([2, 1, 1])
+                
+                with col1:
+                    st.write(f"📁 **{file_name}**")
+                    st.caption(f"Created by {agent_name} - {task_name.replace('Handle Intent: ', '')}")
+                    
+                with col2:
+                    # File size
+                    size_mb = os.path.getsize(file_path) / (1024 * 1024)
+                    st.caption(f"Size: {size_mb:.2f} MB")
+                    
+                with col3:
+                    # Download button
+                    try:
+                        with open(file_path, 'rb') as f:
+                            file_bytes = f.read()
+                        
+                        st.download_button(
+                            label="⬇️ Download",
+                            data=file_bytes,
+                            file_name=file_name,
+                            mime="application/octet-stream",
+                            key=f"download_{i}_{file_name}"
+                        )
+                    except Exception as e:
+                        st.error(f"Error reading file: {e}")
+            else:
+                st.warning(f"⚠️ File not found: {file_name}")
 
-# App title
+# --- Streamlit UI Starts Here ---
 st.title("💡 AI Energy Model Builder Interface")
 
-# Add status indicator at the top when processing
+# Process any messages from background thread
+if st.session_state.backend_task_active:
+    process_message_queue()
+
+# Error Display
+if getattr(st.session_state, 'error_occurred', False):
+    st.error(f"❌ Error: {st.session_state.error_message}")
+    if st.button("🔄 Reset and Try Again"):
+        st.session_state.error_occurred = False
+        st.session_state.error_message = ''
+        st.session_state.backend_task_active = False
+        st.session_state.processing_complete = True
+        # Clear the queue
+        while not st.session_state.message_queue.empty():
+            try:
+                st.session_state.message_queue.get_nowait()
+            except queue.Empty:
+                break
+        st.rerun()
+
+# Status Display
 if getattr(st.session_state, 'backend_task_active', False):
     st.info("🤖 **AI Agents are actively processing your request...** Progress updates below ⬇️")
 
-# Main app logic (synchronous)
+# Service Initialization
 if not st.session_state.services_initialized:
-    with st.spinner("Initializing services..."):
-        initialize_services()
-    st.session_state.services_initialized = True
+    with st.spinner("⚙️ Initializing services..."):
+        if initialize_services():
+            st.session_state.services_initialized = True
+            st.success("✅ Services initialized successfully!")
+        else:
+            st.error("❌ Failed to initialize services. Please check the error messages above.")
+            st.stop()
     st.rerun()
 
-# Display collected logs (condensed to one area)
-log_display_area = st.expander("Backend Processing Log", expanded=False)
+# --- EXPANDED Processing Log Display ---
+log_display_area = st.expander("📋 Backend Processing Log", expanded=True)  # CHANGED: Now expanded by default
 with log_display_area:
     if st.session_state.processing_log:
-        st.text("\n".join(st.session_state.processing_log))
+        # Show last 30 log entries to show more detail
+        recent_logs = st.session_state.processing_log[-30:]
+        for log_entry in recent_logs:
+            st.text(log_entry)
     else:
         st.caption("No log messages yet.")
 
-# Enhanced CLI Output Display Section
+# --- CLI Output Display (Real-time) ---
 if getattr(st.session_state, 'backend_task_active', False):
     st.markdown("---")
-    
-    # Create an expander for CLI output so it doesn't take too much space
     with st.expander("📟 Live Processing Details", expanded=True):
-        # Get new CLI output
         new_cli = get_new_cli_output()
         if new_cli:
             st.session_state.cli_output_displayed.extend(new_cli)
-        
-        # Display CLI output in a more readable format
         if st.session_state.cli_output_displayed:
-            # Get the last 50 lines to avoid overwhelming the user
             recent_lines = st.session_state.cli_output_displayed[-50:]
             cli_text = ''.join(recent_lines)
-            
-            # Show in a code block for better formatting
-            st.code(cli_text, language=None)
-            
-            # Add a small indicator that it's live
+            if cli_text.strip():
+                st.code(cli_text, language=None)
             st.caption("🟢 Live output updating...")
         else:
-            st.info("Waiting for processing output...")
+            st.info("⏳ Waiting for processing output...")
 
-# Handle parameter collection UI if pending
-if getattr(st.session_state, 'param_collection_pending', False):
-    param_info = st.session_state.waiting_for_user_params_info
-    if param_info:
-        with st.form(key=f"form_dyn_{param_info['function_name']}_{'_'.join(param_info['missing_params'])}"):
-            st.subheader(f"Input Needed: {param_info['function_name']}")
-            current_params_form = param_info['initial_args'].copy()
-            for p_name in param_info['missing_params']:
-                # Use a unique key for each input field within the dynamic form
-                input_field_key = f"form_input_dyn_{param_info['function_name']}_{p_name}"
-                current_params_form[p_name] = st.text_input(
-                    f"Enter {p_name.replace('_', ' ').capitalize()}:",
-                    value=current_params_form.get(p_name, ""),
-                    key=input_field_key
-                )
-            submitted = st.form_submit_button("Submit These Parameters")
-            if submitted:
-                st.session_state.collected_user_parameters = {
-                    p_name: current_params_form[p_name] for p_name in param_info['missing_params'] if current_params_form[p_name]
-                }
-                st.session_state.param_collection_pending = False
-                st.session_state.waiting_for_user_params_info = None
-                st.session_state.backend_task_active = True # Resume backend processing
-                st.rerun()
-    st.stop() # Stop further rendering in this run, wait for form submission.
+# --- ENHANCED Progress Display with History ---
+if getattr(st.session_state, 'backend_task_active', False):
+    st.markdown("---")
+    st.subheader("🔄 Live Progress")
+    display_progress_with_history()
+    
+    # Auto-refresh every 2 seconds during processing
+    time.sleep(2)
+    st.rerun()
 
-# --- Input and Main Processing Trigger ---
-if not getattr(st.session_state, 'backend_task_active', False) and getattr(st.session_state, 'processing_complete', True): # Only show input if not already processing
-    user_prompts_str = st.text_area("Enter your prompt(s) (one per line):", height=100, key="prompt_input_main")
-    process_button = st.button("🚀 Process Prompts", key="process_button_main")
-
+# --- Prompt Input ---
+if (not getattr(st.session_state, 'backend_task_active', False) and 
+    getattr(st.session_state, 'processing_complete', True) and
+    not getattr(st.session_state, 'error_occurred', False)):
+    
+    st.markdown("---")
+    st.subheader("🎯 Enter Your Request")
+    
+    # REMOVED: Example prompts section as requested
+    
+    user_prompts_str = st.text_area(
+        "Enter your prompt(s) (one per line):", 
+        height=100, 
+        key="prompt_input_main",
+        placeholder="e.g., Build a wind model for Spain, Greece and Denmark"
+    )
+    
+    process_button = st.button("🚀 Process Prompts", key="process_button_main", type="primary")
+    
     if process_button and user_prompts_str:
         st.session_state.prompts_to_process = [p.strip() for p in user_prompts_str.split('\n') if p.strip()]
         if st.session_state.prompts_to_process:
@@ -464,153 +705,115 @@ if not getattr(st.session_state, 'backend_task_active', False) and getattr(st.se
             st.session_state.processing_complete = False
             st.session_state.backend_task_active = True
             st.session_state.current_results_full = []
-            st.session_state.processing_log = ["Backend processing initiated by user..."]
+            st.session_state.processing_log = ["🚀 Backend processing initiated by user..."]
             st.session_state.logged_messages_set.clear()
-            st.session_state.cli_output_displayed = []  # Clear previous CLI output
+            st.session_state.cli_output_displayed = []
             st.session_state.last_cli_length = 0
-
+            st.session_state.error_occurred = False
+            st.session_state.error_message = ''
+            
+            # Clear message queue
+            while not st.session_state.message_queue.empty():
+                try:
+                    st.session_state.message_queue.get_nowait()
+                except queue.Empty:
+                    break
+            
+            # Clean up progress file
             if os.path.exists(PROGRESS_FILE):
-                try: os.remove(PROGRESS_FILE)
-                except Exception: pass
+                try: 
+                    os.remove(PROGRESS_FILE)
+                except Exception: 
+                    pass
+            
+            # Start async processing
+            if run_async_processing(st.session_state.prompts_to_process):
+                st.success("✅ Processing started successfully!")
+            else:
+                st.error("❌ Failed to start processing.")
+                st.session_state.backend_task_active = False
+                st.session_state.processing_complete = True
+            
             st.rerun()
         else:
-            st.warning("Please enter at least one prompt.")
+            st.warning("⚠️ Please enter at least one prompt.")
+    elif process_button and not user_prompts_str:
+        st.warning("⚠️ Please enter a prompt before processing.")
 
-# --- Active Processing Loop ---
-if getattr(st.session_state, 'backend_task_active', False): # If task is active and not waiting for params
-    with st.spinner("🤖 AI agents are working... this may take a few minutes."):
-        # Run async processing
-        result = asyncio.run(process_single_prompt_batch(st.session_state.prompts_to_process))
-        # process_single_prompt_batch sets backend_task_active to False when done or if params are needed.
-        if st.session_state.param_collection_pending or st.session_state.processing_complete:
-             st.rerun() # Rerun to show param form or results
-
-# --- Enhanced Progress Display ---
-if getattr(st.session_state, 'backend_task_active', False):
-    # Show progress section prominently when backend is active
-    st.markdown("---")  # Visual separator
-    st.subheader("🔄 Live Progress")
-    
-    progress_updated_in_this_run = False
-    
-    if os.path.exists(PROGRESS_FILE):
-        try:
-            with open(PROGRESS_FILE, 'r') as f:
-                progress_data = json.load(f)
-
-            if progress_data:
-                # Create a container for all progress bars
-                progress_container = st.container()
-                
-                with progress_container:
-                    for task_name_progress, p_info in progress_data.items():
-                        # Extract progress info
-                        percent = p_info.get('percent', 0)
-                        current = p_info.get('current', 0)
-                        total = p_info.get('total', 1)
-                        message = p_info.get('message', task_name_progress)
-                        
-                        # Clean up the message for better display
-                        display_message = message
-                        if len(display_message) > 80:
-                            display_message = display_message[:77] + "..."
-                        
-                        # Show task name
-                        st.write(f"**{task_name_progress}:** {current}/{total}")
-                        
-                        # Show progress bar with percentage
-                        progress_text = f"{percent*100:.1f}% - {display_message}"
-                        st.progress(percent, text=progress_text)
-                        
-                        # Show current item being processed
-                        if message and message != task_name_progress:
-                            st.caption(f"Currently processing: {display_message}")
-                        
-                        st.write("")  # Add spacing between tasks
-                        
-                progress_updated_in_this_run = True
-                
-            else:
-                st.info("⏳ Initializing background process...")
-                
-        except (json.JSONDecodeError, FileNotFoundError):
-            st.info("⏳ Waiting for progress data...")
-        except Exception as e:
-            st.warning(f"Error reading progress: {e}")
-    else:
-        st.info("⏳ Starting background task...")
-
-    # Auto-refresh more frequently for better user experience
-    time.sleep(0.3)  # Reduced from 0.5 to 0.3 for more responsive updates
-    st.rerun()
-
-# --- Result Display ---
+# --- Results Display ---
 if (getattr(st.session_state, 'processing_complete', True) and 
-    not getattr(st.session_state, 'backend_task_active', False)):
-    if not getattr(st.session_state, 'param_collection_pending', False): # Ensure not to show this if we are about to show param form
+    not getattr(st.session_state, 'backend_task_active', False) and
+    not getattr(st.session_state, 'error_occurred', False)):
+    
+    results_to_display = st.session_state.get('current_results_full', [])
+    if results_to_display:
+        st.markdown("---")
         st.success("✅ Processing Complete!")
-
-        results_to_display = st.session_state.get('current_results_full', [])
-        if results_to_display:
-            st.subheader("📊 Final Results") #
-            for task_name_result, result_data, agent_name in results_to_display: #
-                st.markdown(f"---") #
-                st.markdown(f"**Task:** `{task_name_result.replace('Handle Intent: ', '')}`") #
-                st.markdown(f"**Agent:** `{agent_name}`") #
-                if isinstance(result_data, dict): #
-                    if result_data.get('status') == 'success' and 'file' in result_data: #
-                        st.success(f"  ✅ {result_data.get('message', 'Operation successful')}") #
-                        params_display = []
-                        if result_data.get('location'): params_display.append(f"Location: {result_data.get('location')}") #
-                        if result_data.get('generation_type'): params_display.append(f"Type: {result_data.get('generation_type')}") #
-                        if result_data.get('energy_carrier'): params_display.append(f"Carrier: {result_data.get('energy_carrier')}") #
-                        if params_display: st.info(f"  Parameters: {', '.join(params_display)}") #
-
-                        file_path = result_data.get('file') #
-                        if file_path and os.path.exists(file_path): #
-                            st.markdown(f"  📄 File: `{os.path.basename(file_path)}`") #
-                            try:
-                                if file_path.endswith(".xml"):
-                                    with open(file_path, "rb") as fp:
-                                        st.download_button(
-                                            label="Download XML Model",
-                                            data=fp,
-                                            file_name=os.path.basename(file_path),
-                                            mime="application/xml"
-                                        )
-                            except Exception as e:
-                                st.warning(f"Could not offer file for download: {e}")
-                        elif file_path:
-                             st.warning(f"  ⚠️ File not found for download: {os.path.basename(file_path)}")
-
-                    elif result_data.get('status') == 'error': #
-                        st.error(f"  ❌ Error: {result_data.get('message', 'Unknown error')}") #
+        st.subheader("📊 Results")
+        
+        for task_name_result, result_data, agent_name in results_to_display:
+            with st.expander(f"📋 {task_name_result.replace('Handle Intent: ', '')} (by {agent_name})", expanded=True):
+                col1, col2 = st.columns([3, 1])
+                
+                with col1:
+                    if isinstance(result_data, dict):
+                        if result_data.get("status") == "success":
+                            st.success(f"✅ {result_data.get('message', 'Operation successful')}")
+                            
+                            # Display model parameters if available
+                            params_display = []
+                            if result_data.get('location'): 
+                                params_display.append(f"📍 **Location:** {result_data.get('location')}")
+                            if result_data.get('generation_type'): 
+                                params_display.append(f"⚡ **Generation:** {result_data.get('generation_type')}")
+                            if result_data.get('energy_carrier'): 
+                                params_display.append(f"🔋 **Carrier:** {result_data.get('energy_carrier')}")
+                            
+                            if params_display:
+                                for param in params_display:
+                                    st.markdown(param)
+                            
+                            if result_data.get('file'):
+                                st.info(f"📁 **Output file:** `{os.path.basename(result_data.get('file'))}`")
+                                
+                        elif result_data.get("status") == "error":
+                            st.error(f"❌ {result_data.get('message')}")
+                        else:
+                            st.write(str(result_data))
                     else:
-                        st.json(result_data) #
-                else:
-                    st.text_area("Result Data:", str(result_data), height=100, disabled=True) #
-        else:
-            if getattr(st.session_state, 'processing_started', False): # only show if processing was actually attempted
-                st.info("No specific results were generated from this run, or an error occurred early.")
+                        # Handle string results (like math calculations, general questions)
+                        if isinstance(result_data, str):
+                            if len(result_data) > 500:
+                                st.text_area("Result:", value=result_data, height=200, disabled=True)
+                            else:
+                                st.info(result_data)
+                        else:
+                            st.write(str(result_data))
+                
+                with col2:
+                    st.caption(f"**Agent:** {agent_name}")
+                    st.caption(f"**Status:** Complete")
+        
+        # Download Section
+        create_download_section()
+        
+        # NEW: Live Progress at the end (collapsed)
+        st.markdown("---")
+        with st.expander("🔄 Final Progress Summary", expanded=False):  # CHANGED: Collapsed by default
+            display_progress_with_history()
+        
+        # Option to start new processing
+        st.markdown("---")
+        if st.button("🔄 Process New Request", key="new_request_button"):
+            st.session_state.current_results_full = []
+            st.session_state.processing_log = []
+            st.session_state.logged_messages_set.clear()
+            st.session_state.task_progress = {}
+            st.session_state.progress_history = []
+            st.session_state.completed_tasks = 0
+            st.session_state.total_tasks = 0
+            st.rerun()
 
-        # Clean up session state for the next full run
-        keys_to_reset_on_completion = [
-            'processing_started', #'processing_complete' is handled by initial state for next run
-            'prompts_to_process',
-            'backend_task_active', 'param_collection_pending',
-            'waiting_for_user_params_info', 'collected_user_parameters',
-            'processing_log', 'logged_messages_set' # Keep current_results_full until next processing starts
-        ]
-        for key in keys_to_reset_on_completion:
-            if key in st.session_state:
-                del st.session_state[key]
-        if os.path.exists(PROGRESS_FILE):
-            try: os.remove(PROGRESS_FILE)
-            except: pass
-        # Set complete to true so the input form shows again.
-        st.session_state.processing_complete = True
-
-# Auto-refresh to capture CLI output
-if getattr(st.session_state, 'backend_task_active', False):
-    time.sleep(0.5)
-    st.rerun()
+# --- Footer ---
+st.markdown("---")
+st.caption("💡 AI Energy Model Builder v2.0 | Powered by Nova, Emil, Ivan & Lola")
